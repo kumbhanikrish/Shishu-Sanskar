@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:shishu_sanskar/module/auth/cubit/auth_cubit.dart';
 import 'package:shishu_sanskar/module/auth/view/sign_up_Screen.dart';
+import 'package:shishu_sanskar/module/auth/view/widget/custom_login_widget.dart';
 import 'package:shishu_sanskar/utils/constant/app_image.dart';
 import 'package:shishu_sanskar/utils/constant/app_page.dart';
 import 'package:shishu_sanskar/utils/theme/colors.dart';
@@ -73,10 +74,7 @@ class LoginScreen extends StatelessWidget {
                   alignment: Alignment.centerRight,
                   child: InkWell(
                     onTap: () {
-                      Navigator.pushNamed(
-                        context,
-                        AppPage.forgotPasswordScreen,
-                      );
+                      Navigator.pushNamed(context, AppPage.forgotFlowScreen);
                     },
                     child: CustomText(text: 'Forgot password?', fontSize: 10),
                   ),
@@ -84,7 +82,13 @@ class LoginScreen extends StatelessWidget {
                 Gap(20),
                 CustomButton(
                   text: 'Continue',
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      AppPage.bottomNavigationScreen,
+                      (route) => false,
+                    );
+                  },
                   backgroundColor: AppColor.themePrimaryColor2,
                 ),
                 Gap(20),
@@ -105,7 +109,8 @@ class LoginScreen extends StatelessWidget {
                       },
                       child: CustomText(
                         text: 'Sign up',
-                        fontSize: 10,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
                         color: AppColor.themePrimaryColor,
                       ),
                     ),

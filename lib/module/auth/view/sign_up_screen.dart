@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:shishu_sanskar/module/auth/cubit/auth_cubit.dart';
+import 'package:shishu_sanskar/module/auth/view/widget/custom_login_widget.dart';
 import 'package:shishu_sanskar/utils/constant/app_image.dart';
 import 'package:shishu_sanskar/utils/constant/app_page.dart';
 import 'package:shishu_sanskar/utils/theme/colors.dart';
@@ -130,7 +131,8 @@ class SignUpScreen extends StatelessWidget {
                   },
                   child: CustomText(
                     text: 'Sign in',
-                    fontSize: 10,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
                     color: AppColor.themePrimaryColor,
                   ),
                 ),
@@ -141,53 +143,4 @@ class SignUpScreen extends StatelessWidget {
       ),
     );
   }
-}
-
-Widget buildOrDivider() {
-  return Row(
-    children: [
-      Expanded(child: Divider(thickness: 1, color: AppColor.dividerColor)),
-      const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 10),
-        child: CustomText(
-          text: 'Or Sign Up With',
-          fontSize: 10,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-      Expanded(child: Divider(thickness: 1, color: AppColor.dividerColor)),
-    ],
-  );
-}
-
-customSocialMediaLogin({
-  required void Function() googleOnTap,
-  required void Function() appleOnTap,
-}) {
-  return Column(
-    children: <Widget>[
-      buildOrDivider(),
-      Gap(20),
-
-      Row(
-        children: <Widget>[
-          Expanded(
-            child: CustomIconTextButton(
-              text: 'Google',
-              onTap: googleOnTap,
-              image: AppImage.google,
-            ),
-          ),
-          Gap(10),
-          Expanded(
-            child: CustomIconTextButton(
-              text: 'Apple',
-              onTap: appleOnTap,
-              image: AppImage.apple,
-            ),
-          ),
-        ],
-      ),
-    ],
-  );
 }

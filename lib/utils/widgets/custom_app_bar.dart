@@ -24,8 +24,8 @@
 //       decoration: BoxDecoration(
 //         boxShadow: [
 //           BoxShadow(
-//             color: AppColor.borderColor, 
-//             offset: Offset(0, -1), 
+//             color: AppColor.borderColor,
+//             offset: Offset(0, -1),
 //             blurRadius: 80,
 //             spreadRadius: 10,
 //           ),
@@ -54,3 +54,44 @@
 //   @override
 //   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 // }
+
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gap/gap.dart';
+import 'package:shishu_sanskar/utils/constant/app_image.dart';
+import 'package:shishu_sanskar/utils/widgets/custom_text.dart';
+import 'package:sizer/sizer.dart';
+
+customAppBar({
+  required String title,
+  required void Function() onTap,
+  bool topGap = true,
+}) {
+  return Column(
+    children: [
+      if (topGap == true) ...[Gap(5.h)],
+
+      Padding(
+        padding: const EdgeInsets.only(
+          top: 20,
+          bottom: 14,
+          right: 20,
+          left: 20,
+        ),
+        child: Row(
+          children: <Widget>[
+            InkWell(
+              onTap: onTap,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 5, right: 10),
+                child: SvgPicture.asset(AppImage.back, height: 12),
+              ),
+            ),
+
+            CustomText(text: title, fontWeight: FontWeight.w600, fontSize: 22),
+          ],
+        ),
+      ),
+    ],
+  );
+}

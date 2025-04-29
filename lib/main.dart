@@ -8,6 +8,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shishu_sanskar/local_data/local_data_sever.dart';
 import 'package:shishu_sanskar/module/auth/cubit/auth_cubit.dart';
+import 'package:shishu_sanskar/module/home/cubit/home_cubit.dart';
 import 'package:shishu_sanskar/services/api_services.dart';
 import 'package:shishu_sanskar/utils/routes/app_routes.dart';
 import 'package:shishu_sanskar/utils/theme/colors.dart';
@@ -89,4 +90,8 @@ dynamic providers = [
   BlocProvider(create: (context) => PasswordVisibilityCubit()),
   BlocProvider(create: (context) => CPasswordVisibilityCubit()),
   BlocProvider(create: (context) => RadioCubit()),
+  BlocProvider(create: (context) => StoreNumberCubit()),
+  BlocProvider(create: (context) => StoreWpNumberCubit()),
+  BlocProvider(create: (context) => CategoryRadioCubit()),
+  BlocProvider(create: (context) => BottomBarCubit()),
 ];

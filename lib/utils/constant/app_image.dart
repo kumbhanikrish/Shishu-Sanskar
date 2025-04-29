@@ -14,6 +14,18 @@ class AppImage {
   static String female = 'assets/image/female.svg';
   static String fillCircle = 'assets/image/fill-circle.svg';
   static String colorCircle = 'assets/image/color-circle.svg';
+  static String downError = 'assets/image/down_error.svg';
+  static String calendar = 'assets/image/calendar.svg';
+  static String home = 'assets/image/home.svg';
+  static String blog = 'assets/image/blog.svg';
+  static String pricing = 'assets/image/pricing.svg';
+  static String graph = 'assets/image/graph.svg';
+  static String profile = 'assets/image/profile.svg';
+  static String homeBG = 'assets/image/home_BG.png';
+  static String notification = 'assets/image/notification.svg';
+  static String seeAll = 'assets/image/see_all.svg';
+  static String back = 'assets/image/back.svg';
+  static String taskDetailCard = 'assets/image/task_detail_card.png';
 }
 
 class AppLogo {
@@ -143,6 +155,7 @@ class AppFlag {
   static String km = 'assets/image/flag/km.svg';
   static String kn = 'assets/image/flag/kn.svg';
   static String kp = 'assets/image/flag/kp.svg';
+  static String jp = 'assets/image/flag/jp.svg';
   static String kr = 'assets/image/flag/kr.svg';
   static String kw = 'assets/image/flag/kw.svg';
   static String ky = 'assets/image/flag/ky.svg';

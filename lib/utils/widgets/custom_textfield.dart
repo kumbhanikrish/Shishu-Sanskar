@@ -1,13 +1,10 @@
-import 'package:country_code_picker/country_code_picker.dart';
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
+import 'package:shishu_sanskar/utils/constant/app_image.dart';
 
 import 'package:shishu_sanskar/utils/theme/colors.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_text.dart';
-import 'package:sizer/sizer.dart';
 
 class CustomTextField extends StatelessWidget {
   final String hintText;
@@ -67,7 +64,11 @@ class CustomTextField extends StatelessWidget {
           onTap: onTap,
           onChanged: onChanged,
           cursorColor: AppColor.blackColor,
-          style: TextStyle(color: AppColor.blackColor),
+          style: TextStyle(
+            color: AppColor.blackColor,
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          ),
 
           decoration: InputDecoration(
             hintText: hintText,
@@ -116,25 +117,46 @@ class CustomTextField extends StatelessWidget {
   }
 }
 
-customPrefixIcon({required String image, void Function()? onTap}) {
+customPrefixIcon({
+  required String image,
+  void Function()? onTap,
+  BorderRadiusGeometry? borderRadius,
+  double? height,
+  double? width,
+}) {
   return InkWell(
     onTap: onTap,
     child: Padding(
       padding: const EdgeInsets.all(13),
-      child: SvgPicture.asset(image),
+      child: ClipRRect(
+        borderRadius: borderRadius ?? BorderRadius.zero,
+        child: SizedBox(
+          height: height,
+          width: width,
+          child: SvgPicture.asset(
+            image,
+            height: height,
+            width: width,
+            fit: BoxFit.fill,
+          ),
+        ),
+      ),
     ),
   );
 }
 
 class CustomCountyTextfield extends StatelessWidget {
   final TextEditingController controller;
-  final void Function(CountryCode) onChanged;
-  final String initialSelection;
+  final void Function() prefixOnTap;
+  final String image;
+  final String code;
+
   const CustomCountyTextfield({
     super.key,
     required this.controller,
-    required this.onChanged,
-    required this.initialSelection,
+    required this.prefixOnTap,
+    required this.code,
+    required this.image,
   });
   @override
   Widget build(BuildContext context) {
@@ -142,19 +164,23 @@ class CustomCountyTextfield extends StatelessWidget {
       hintText: 'Contact number',
       keyboardType: TextInputType.number,
       controller: controller,
-      prefixIcon: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          CountryCodePicker(
-            onChanged: onChanged,
-            initialSelection: initialSelection,
-            favorite: const ["+91", "IN"],
-            showCountryOnly: false,
-            showOnlyCountryWhenClosed: false,
-            alignLeft: false,
-          ),
-          // const Icon(Icons.arrow_drop_down),
-        ],
+      prefixIcon: InkWell(
+        onTap: prefixOnTap,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            customPrefixIcon(
+              image: image,
+              height: 20,
+              width: 30,
+              borderRadius: BorderRadius.circular(3),
+            ),
+
+            SvgPicture.asset(AppImage.downError),
+            Gap(13),
+            CustomText(text: code, fontSize: 12, fontWeight: FontWeight.w500),
+          ],
+        ),
       ),
     );
   }

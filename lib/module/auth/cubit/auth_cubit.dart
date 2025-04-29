@@ -13,12 +13,13 @@ class AuthCubit extends Cubit<AuthState> {
 class StepperCubit extends Cubit<int> {
   StepperCubit() : super(0);
 
-  void nextStep() {
-    if (state < 2) emit(state + 1);
+  void nextStep({required int step}) {
+    log('step ::$step');
+    emit(step);
   }
 
-  void previousStep() {
-    if (state > 0) emit(state - 1);
+  void previousStep({required int step}) {
+    emit(step);
   }
 
   void init() {
@@ -55,5 +56,46 @@ class RadioCubit extends Cubit<UserType> {
   void selectUserType(UserType type) {
     log('typetype ::$type');
     emit(type);
+  }
+
+  init() {
+    emit(UserType.female);
+  }
+}
+
+class CategoryRadioCubit extends Cubit<String> {
+  CategoryRadioCubit() : super('');
+
+  void selectCategory(String category) {
+    log('typetype ::$category');
+    emit(category);
+  }
+
+  init() {
+    emit('');
+  }
+}
+
+class StoreNumberCubit extends Cubit<StoreNumberState> {
+  StoreNumberCubit() : super(StoreNumberInitial());
+
+  selectNumberCountry({required String flag, required String code}) {
+    emit(StoreNumberLoaded(code, flag: flag));
+  }
+
+  init() {
+    emit(StoreNumberInitial());
+  }
+}
+
+class StoreWpNumberCubit extends Cubit<StoreWpNumberState> {
+  StoreWpNumberCubit() : super(StoreWpNumberInitial());
+
+  selectWpNumberCountry({required String flag, required String code}) {
+    emit(StoreWpNumberLoaded(code, flag: flag));
+  }
+
+  init() {
+    emit(StoreWpNumberInitial());
   }
 }

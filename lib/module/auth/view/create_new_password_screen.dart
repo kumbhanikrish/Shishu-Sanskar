@@ -21,80 +21,69 @@ class CreateNewPasswordScreen extends StatelessWidget {
         BlocProvider.of<PasswordVisibilityCubit>(context);
     CPasswordVisibilityCubit cPasswordVisibilityCubit =
         BlocProvider.of<CPasswordVisibilityCubit>(context);
+    StepperCubit stepperCubit = BlocProvider.of<StepperCubit>(context);
+
     passwordVisibilityCubit.init();
     cPasswordVisibilityCubit.init();
-    return Scaffold(
-      body: customLoginTheme(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
 
-            child: Column(
-              children: [
-                CustomText(
-                  text: 'Create New Password',
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                ),
-                Gap(3.6.h),
-
-                BlocBuilder<PasswordVisibilityCubit, bool>(
-                  builder: (context, isHidden) {
-                    return CustomTextField(
-                      text: 'Create New Password',
-                      obscureText: isHidden,
-
-                      hintText: 'Create New Password',
-                      prefixImage: AppImage.lock,
-                      controller: newPasswordController,
-                      suffixIcon: customPrefixIcon(
-                        onTap: () {
-                          passwordVisibilityCubit.toggleVisibility();
-                        },
-                        image: isHidden ? AppImage.eyeSlash : AppImage.eye,
-                      ),
-                    );
-                  },
-                ),
-                Gap(10),
-
-                BlocBuilder<CPasswordVisibilityCubit, bool>(
-                  builder: (context, isHidden) {
-                    return CustomTextField(
-                      text: 'Confirm Password',
-                      obscureText: isHidden,
-
-                      hintText: 'Confirm Password',
-                      prefixImage: AppImage.lock,
-                      controller: cPasswordController,
-                      suffixIcon: customPrefixIcon(
-                        onTap: () {
-                          cPasswordVisibilityCubit.toggleVisibility();
-                        },
-                        image: isHidden ? AppImage.eyeSlash : AppImage.eye,
-                      ),
-                    );
-                  },
-                ),
-
-                Gap(20),
-                CustomButton(text: 'Done', onTap: () {}),
-                Gap(20),
-                CustomTextButton(
-                  text: 'Cancel',
-                  onPressed: () {
-                    Navigator.pushNamedAndRemoveUntil(
-                      context,
-                      AppPage.forgotPasswordScreen,
-                      (route) => false,
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
+    return Column(
+      children: [
+        CustomText(
+          text: 'Create New Password',
+          fontSize: 18,
+          fontWeight: FontWeight.w500,
         ),
-      ),
+        Gap(3.6.h),
+
+        BlocBuilder<PasswordVisibilityCubit, bool>(
+          builder: (context, isHidden) {
+            return CustomTextField(
+              text: 'Create New Password',
+              obscureText: isHidden,
+
+              hintText: 'Create New Password',
+              prefixImage: AppImage.lock,
+              controller: newPasswordController,
+              suffixIcon: customPrefixIcon(
+                onTap: () {
+                  passwordVisibilityCubit.toggleVisibility();
+                },
+                image: isHidden ? AppImage.eyeSlash : AppImage.eye,
+              ),
+            );
+          },
+        ),
+        Gap(10),
+
+        BlocBuilder<CPasswordVisibilityCubit, bool>(
+          builder: (context, isHidden) {
+            return CustomTextField(
+              text: 'Confirm Password',
+              obscureText: isHidden,
+
+              hintText: 'Confirm Password',
+              prefixImage: AppImage.lock,
+              controller: cPasswordController,
+              suffixIcon: customPrefixIcon(
+                onTap: () {
+                  cPasswordVisibilityCubit.toggleVisibility();
+                },
+                image: isHidden ? AppImage.eyeSlash : AppImage.eye,
+              ),
+            );
+          },
+        ),
+
+        Gap(20),
+        CustomButton(text: 'Done', onTap: () {}),
+        Gap(20),
+        CustomTextButton(
+          text: 'Cancel',
+          onPressed: () {
+            stepperCubit.previousStep(step: 1);
+          },
+        ),
+      ],
     );
   }
 }
