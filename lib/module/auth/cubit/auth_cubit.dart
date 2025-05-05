@@ -63,6 +63,19 @@ class RadioCubit extends Cubit<UserType> {
   }
 }
 
+class MaritalRadioCubit extends Cubit<MaritalType> {
+  MaritalRadioCubit() : super(MaritalType.married);
+
+  void selectMaritalType(MaritalType type) {
+    log('typetype ::$type');
+    emit(type);
+  }
+
+  init() {
+    emit(MaritalType.married);
+  }
+}
+
 class CategoryRadioCubit extends Cubit<String> {
   CategoryRadioCubit() : super('');
 

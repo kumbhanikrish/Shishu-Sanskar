@@ -160,6 +160,7 @@ customGenderRadio({
 }) {
   return Container(
     decoration: BoxDecoration(
+      color: AppColor.whiteColor,
       border: Border.all(color: AppColor.themePrimaryColor2, width: 1),
       borderRadius: BorderRadius.circular(10),
     ),
@@ -187,7 +188,7 @@ customGenderRadio({
                 CustomText(
                   text: title,
                   fontSize: 12,
-                  fontWeight: FontWeight.w400,
+                  fontWeight: FontWeight.w500,
                 ),
               ],
             ),

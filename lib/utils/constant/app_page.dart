@@ -8,4 +8,6 @@ class AppPage {
   static String bottomNavigationScreen = '/bottomNavigationScreen';
   static String taskSeeAllScreen = '/todayTaskSeeAllScreen';
   static String taskDetailScreen = '/taskDetailScreen';
+  static String eventSeeAllScreen = '/eventSeeAllScreen';
+  static String eventDetailScreen = '/eventDetailScreen';
 }

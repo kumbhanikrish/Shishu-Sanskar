@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shishu_sanskar/local_data/local_data_sever.dart';
 import 'package:shishu_sanskar/module/auth/cubit/auth_cubit.dart';
 import 'package:shishu_sanskar/module/home/cubit/home_cubit.dart';
+import 'package:shishu_sanskar/module/profile/cubit/profile_cubit.dart';
 import 'package:shishu_sanskar/services/api_services.dart';
 import 'package:shishu_sanskar/utils/routes/app_routes.dart';
 import 'package:shishu_sanskar/utils/theme/colors.dart';
@@ -94,4 +95,8 @@ dynamic providers = [
   BlocProvider(create: (context) => StoreWpNumberCubit()),
   BlocProvider(create: (context) => CategoryRadioCubit()),
   BlocProvider(create: (context) => BottomBarCubit()),
+  BlocProvider(create: (context) => MaritalRadioCubit()),
+  BlocProvider(create: (context) => CounterCubit()),
+  BlocProvider(create: (context) => ProfileCubit()),
+  BlocProvider(create: (context) => EditCubit()),
 ];

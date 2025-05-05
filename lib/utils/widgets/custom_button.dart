@@ -13,6 +13,8 @@ class CustomButton extends StatelessWidget {
   final Color? borderColor;
   final void Function() onTap;
   final EdgeInsetsGeometry? padding;
+  final FontWeight? fontWeight;
+  final double? fontSize;
   const CustomButton({
     super.key,
     required this.text,
@@ -22,6 +24,8 @@ class CustomButton extends StatelessWidget {
     this.textColor,
     this.backgroundColor,
     this.padding,
+    this.fontWeight,
+    this.fontSize,
   });
   @override
   Widget build(BuildContext context) {
@@ -46,8 +50,8 @@ class CustomButton extends StatelessWidget {
             child: CustomText(
               text: text,
               color: textColor ?? AppColor.whiteColor,
-              fontWeight: FontWeight.w500,
-              fontSize: 12,
+              fontWeight: fontWeight ?? FontWeight.w500,
+              fontSize: fontSize ?? 12,
             ),
           ),
         ),

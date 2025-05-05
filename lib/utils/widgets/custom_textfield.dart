@@ -62,6 +62,7 @@ class CustomTextField extends StatelessWidget {
           minLines: line,
           maxLength: maxLength,
           onTap: onTap,
+
           onChanged: onChanged,
           cursorColor: AppColor.blackColor,
           style: TextStyle(
@@ -71,6 +72,8 @@ class CustomTextField extends StatelessWidget {
           ),
 
           decoration: InputDecoration(
+            filled: true,
+            fillColor: AppColor.whiteColor,
             hintText: hintText,
             prefixIcon:
                 prefixImage == ''
@@ -150,6 +153,7 @@ class CustomCountyTextfield extends StatelessWidget {
   final void Function() prefixOnTap;
   final String image;
   final String code;
+  final bool? readOnly;
 
   const CustomCountyTextfield({
     super.key,
@@ -157,6 +161,7 @@ class CustomCountyTextfield extends StatelessWidget {
     required this.prefixOnTap,
     required this.code,
     required this.image,
+    this.readOnly,
   });
   @override
   Widget build(BuildContext context) {
@@ -164,6 +169,7 @@ class CustomCountyTextfield extends StatelessWidget {
       hintText: 'Contact number',
       keyboardType: TextInputType.number,
       controller: controller,
+      readOnly: readOnly ?? false,
       prefixIcon: InkWell(
         onTap: prefixOnTap,
         child: Row(

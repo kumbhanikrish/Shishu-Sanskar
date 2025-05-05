@@ -53,54 +53,52 @@ class TaskDetailScreen extends StatelessWidget {
                 Gap(20),
                 Expanded(
                   child: ListView.separated(
+                    padding: EdgeInsets.all(0),
                     itemCount: 10,
                     separatorBuilder: (BuildContext context, int index) {
                       return customDivider();
                     },
                     itemBuilder: (BuildContext context, int index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Row(
-                              children: <Widget>[
-                                CustomText(
-                                  text: 'Task 1',
-                                  fontSize: 12,
-                                  color: AppColor.seeAllTitleColor,
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Row(
+                            children: <Widget>[
+                              CustomText(
+                                text: 'Task 1',
+                                fontSize: 12,
+                                color: AppColor.seeAllTitleColor,
+                              ),
+                              Gap(10),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: AppColor.themeSecondaryColor,
+                                  borderRadius: BorderRadius.circular(12),
                                 ),
-                                Gap(10),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: AppColor.themeSecondaryColor,
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  padding: EdgeInsets.all(5),
-                                  child: CustomText(
-                                    text: 'Completed',
-                                    fontSize: 10,
-                                    color: AppColor.whiteColor,
-                                  ),
+                                padding: EdgeInsets.all(5),
+                                child: CustomText(
+                                  text: 'Completed',
+                                  fontSize: 10,
+                                  color: AppColor.whiteColor,
                                 ),
-                              ],
-                            ),
-                            Gap(5),
-                            CustomText(
-                              text: 'Lorem Ipsum is simply dummy text',
-                              fontWeight: FontWeight.w600,
-                            ),
-                            Gap(5),
-                            CustomText(
-                              text:
-                                  "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+                              ),
+                            ],
+                          ),
+                          Gap(5),
+                          CustomText(
+                            text: 'Lorem Ipsum is simply dummy text',
+                            fontWeight: FontWeight.w600,
+                          ),
+                          Gap(5),
+                          CustomText(
+                            text:
+                                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
 
-                              fontSize: 12,
-                            ),
-                            Gap(10),
-                            CustomButton(text: 'Completed', onTap: () {}),
-                          ],
-                        ),
+                            fontSize: 12,
+                          ),
+                          Gap(10),
+                          CustomButton(text: 'Completed', onTap: () {}),
+                        ],
                       );
                     },
                   ),

@@ -4,6 +4,8 @@ import 'package:shishu_sanskar/module/auth/view/forgot_flow_screen.dart';
 import 'package:shishu_sanskar/module/auth/view/login_screen.dart';
 import 'package:shishu_sanskar/module/auth/view/splash_screen.dart';
 import 'package:shishu_sanskar/module/home/view/bottom_navigation_screen.dart';
+import 'package:shishu_sanskar/module/home/view/event_detail_screen.dart';
+import 'package:shishu_sanskar/module/home/view/event_see_all_screen.dart';
 import 'package:shishu_sanskar/module/home/view/task_detail_Screen.dart';
 import 'package:shishu_sanskar/module/home/view/task_see_all_screen.dart';
 
@@ -17,6 +19,8 @@ final Map<String, WidgetBuilder> appRoutes = {
   AppPage.bottomNavigationScreen: (context) => BottomNavigationScreen(),
   AppPage.taskSeeAllScreen: (context) => TaskSeeAllScreen(),
   AppPage.taskDetailScreen: (context) => TaskDetailScreen(),
+  AppPage.eventSeeAllScreen: (context) => EventSeeAllScreen(),
+  AppPage.eventDetailScreen: (context) => EventDetailScreen(),
 
   // AppRoutes.referAndEarnScreen:
   //     (context) =>

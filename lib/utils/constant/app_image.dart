@@ -26,6 +26,21 @@ class AppImage {
   static String seeAll = 'assets/image/see_all.svg';
   static String back = 'assets/image/back.svg';
   static String taskDetailCard = 'assets/image/task_detail_card.png';
+  static String eventBG = 'assets/image/event_BG.png';
+  static String clock = 'assets/image/clock.svg';
+  static String share = 'assets/image/share.svg';
+  static String user = 'assets/image/user.png';
+  static String edit = 'assets/image/edit.svg';
+  static String increment = 'assets/image/increment.svg';
+  static String decrement = 'assets/image/decrement.svg';
+  static String mail2 = 'assets/image/mail2.svg';
+  static String call = 'assets/image/call.svg';
+  static String facebook = 'assets/image/facebook.svg';
+  static String instagram = 'assets/image/instagram.svg';
+  static String linkedin = 'assets/image/linkedin.svg';
+  static String twitter = 'assets/image/twitter.svg';
+  static String offline = 'assets/image/offline.svg';
+  static String online = 'assets/image/online.svg';
 }
 
 class AppLogo {

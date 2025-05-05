@@ -1,11 +1,7 @@
 import 'dart:async';
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:shishu_sanskar/utils/constant/app_image.dart';
 import 'package:shishu_sanskar/utils/constant/app_page.dart';
-import 'package:shishu_sanskar/utils/routes/app_routes.dart';
 import 'package:sizer/sizer.dart';
 
 class SplashScreen extends StatefulWidget {
