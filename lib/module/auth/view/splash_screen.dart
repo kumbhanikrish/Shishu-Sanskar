@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:shishu_sanskar/main.dart';
 import 'package:shishu_sanskar/utils/constant/app_image.dart';
 import 'package:shishu_sanskar/utils/constant/app_page.dart';
 import 'package:sizer/sizer.dart';
@@ -15,11 +16,20 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     Timer(const Duration(seconds: 1), () async {
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        AppPage.loginScreen,
-        (route) => false,
-      );
+      String token = await localDataSaver.getAuthToken();
+      if (token.isEmpty) {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          AppPage.loginScreen,
+          (route) => false,
+        );
+      } else {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          AppPage.bottomNavigationScreen,
+          (route) => false,
+        );
+      }
     });
     super.initState();
   }

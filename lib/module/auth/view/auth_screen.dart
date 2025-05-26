@@ -8,6 +8,7 @@ import 'package:shishu_sanskar/module/auth/view/select_categories_screen.dart';
 import 'package:shishu_sanskar/module/auth/view/sign_up_Screen.dart';
 import 'package:shishu_sanskar/module/auth/view/widget/custom_login_widget.dart';
 import 'package:shishu_sanskar/utils/constant/app_image.dart';
+import 'package:shishu_sanskar/utils/enum/enums.dart';
 import 'package:shishu_sanskar/utils/theme/colors.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_login_theme.dart';
 import 'package:sizer/sizer.dart';
@@ -20,7 +21,9 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
-  final TextEditingController fullNameController = TextEditingController();
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController middleNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController cPasswordController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -31,11 +34,21 @@ class _AuthScreenState extends State<AuthScreen> {
   String numberCode = '';
   String wpNumberFlag = '';
   String wpNumberCode = '';
+
+  final ValueNotifier<String> planningCoupleDate = ValueNotifier<String>(
+    'dd/mm/yyyy',
+  );
+  final ValueNotifier<String> pregnantMotherDate = ValueNotifier<String>(
+    'dd/mm/yyyy',
+  );
+
   @override
   Widget build(BuildContext context) {
     StepperCubit stepperCubit = BlocProvider.of<StepperCubit>(context);
     PasswordVisibilityCubit passwordVisibilityCubit =
         BlocProvider.of<PasswordVisibilityCubit>(context);
+    AuthCubit authCubit = BlocProvider.of<AuthCubit>(context);
+
     StoreNumberCubit storeNumberCubit = BlocProvider.of<StoreNumberCubit>(
       context,
     );
@@ -52,10 +65,13 @@ class _AuthScreenState extends State<AuthScreen> {
       switch (step) {
         case 0:
           return SignUpScreen(
-            fullNameController: fullNameController,
+            firstNameController: firstNameController,
             emailController: emailController,
             cPasswordController: cPasswordController,
             passwordController: passwordController,
+            middleNameController: middleNameController,
+            lastNameController: lastNameController,
+
             onTap: () {
               stepperCubit.nextStep(step: 1);
             },
@@ -64,7 +80,11 @@ class _AuthScreenState extends State<AuthScreen> {
           return BlocBuilder<PasswordVisibilityCubit, bool>(
             builder: (context, verifyState) {
               return verifyState == false
-                  ? OtpVerificationScreen(verifyState: verifyState)
+                  ? OtpVerificationScreen(
+                    verifyState: verifyState,
+                    number: numberController.text.trim(),
+                    wNumber: wpNumberController.text.trim(),
+                  )
                   : BlocBuilder<StoreNumberCubit, StoreNumberState>(
                     builder: (context, state) {
                       if (state is StoreNumberLoaded) {
@@ -81,9 +101,6 @@ class _AuthScreenState extends State<AuthScreen> {
                             wpNumberCode = state.code;
                           }
                           return NumberScreen(
-                            verifyOnTap: () {
-                              passwordVisibilityCubit.toggleVisibility();
-                            },
                             onTap: () {
                               stepperCubit.nextStep(step: 2);
                             },
@@ -92,10 +109,8 @@ class _AuthScreenState extends State<AuthScreen> {
                             },
                             numberController: numberController,
                             wpNumberController: wpNumberController,
-                            numberText: 'Verified',
-                            wpNumberText: 'Verify',
-                            wpNumberColor: AppColor.themePrimaryColor,
-                            numberColor: AppColor.themeSecondaryColor,
+                          
+                          
                             numberPrefixOnTap: () {
                               customCountryBottomSheet(
                                 context,
@@ -121,10 +136,39 @@ class _AuthScreenState extends State<AuthScreen> {
             },
           );
         case 2:
-          return SelectCategoriesScreen(
-            onTap: () {},
-            backOnTap: () {
-              stepperCubit.nextStep(step: 1);
+          return BlocBuilder<RadioCubit, UserType>(
+            builder: (context, selectedType) {
+              return BlocBuilder<CategoryRadioCubit, int>(
+                builder: (context, selectedCategory) {
+                  return SelectCategoriesScreen(
+                    onTap: () {
+                      authCubit.register(
+                        context,
+                        firstName: firstNameController.text.trim(),
+                        middleName: middleNameController.text.trim(),
+                        lastName: lastNameController.text.trim(),
+                        contactNumber: numberController.text.trim(),
+                        whatsappNumber: wpNumberController.text.trim(),
+                        categoryId: selectedCategory,
+                        email: emailController.text.trim(),
+                        password: passwordController.text.trim(),
+                        passwordConfirmation: cPasswordController.text.trim(),
+                        gender:
+                            selectedType == UserType.male ? 'male' : 'female',
+                        lmp:
+                            selectedCategory == 2
+                                ? planningCoupleDate.value
+                                : pregnantMotherDate.value,
+                      );
+                    },
+                    backOnTap: () {
+                      stepperCubit.nextStep(step: 1);
+                    },
+                    planningCoupleDate: planningCoupleDate,
+                    pregnantMotherDate: pregnantMotherDate,
+                  );
+                },
+              );
             },
           );
         default:

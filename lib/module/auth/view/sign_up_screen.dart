@@ -1,8 +1,5 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:shishu_sanskar/module/auth/cubit/auth_cubit.dart';
 import 'package:shishu_sanskar/module/auth/view/widget/custom_login_widget.dart';
@@ -15,17 +12,21 @@ import 'package:shishu_sanskar/utils/widgets/custom_textfield.dart';
 import 'package:sizer/sizer.dart';
 
 class SignUpScreen extends StatelessWidget {
-  final TextEditingController fullNameController;
+  final TextEditingController firstNameController;
+  final TextEditingController middleNameController;
+  final TextEditingController lastNameController;
   final TextEditingController emailController;
   final TextEditingController passwordController;
   final TextEditingController cPasswordController;
   final Function() onTap;
   const SignUpScreen({
     super.key,
-    required this.fullNameController,
+    required this.firstNameController,
     required this.emailController,
     required this.cPasswordController,
     required this.passwordController,
+    required this.middleNameController,
+    required this.lastNameController,
     required this.onTap,
   });
   @override
@@ -34,8 +35,12 @@ class SignUpScreen extends StatelessWidget {
         BlocProvider.of<PasswordVisibilityCubit>(context);
     CPasswordVisibilityCubit cPasswordVisibilityCubit =
         BlocProvider.of<CPasswordVisibilityCubit>(context);
+    CategoryRadioCubit categoryRadioCubit = BlocProvider.of<CategoryRadioCubit>(
+      context,
+    );
     passwordVisibilityCubit.init();
     cPasswordVisibilityCubit.init();
+    categoryRadioCubit.init();
 
     return Expanded(
       child: SingleChildScrollView(
@@ -55,10 +60,24 @@ class SignUpScreen extends StatelessWidget {
             Gap(3.6.h),
 
             CustomTextField(
-              text: 'Full Name',
-              hintText: 'Full Name',
+              text: 'First Name',
+              hintText: 'First Name',
               prefixImage: AppImage.fullName,
-              controller: fullNameController,
+              controller: firstNameController,
+            ),
+            Gap(10),
+            CustomTextField(
+              text: 'Middle Name',
+              hintText: 'Middle Name',
+              prefixImage: AppImage.fullName,
+              controller: middleNameController,
+            ),
+            Gap(10),
+            CustomTextField(
+              text: 'Last Name',
+              hintText: 'Last Name',
+              prefixImage: AppImage.fullName,
+              controller: lastNameController,
             ),
             Gap(10),
             CustomTextField(

@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:shishu_sanskar/module/auth/cubit/auth_cubit.dart';
 import 'package:shishu_sanskar/module/auth/view/widget/custom_login_widget.dart';
 import 'package:shishu_sanskar/utils/constant/app_image.dart';
-import 'package:shishu_sanskar/utils/constant/app_page.dart';
 import 'package:shishu_sanskar/utils/enum/enums.dart';
 import 'package:shishu_sanskar/utils/theme/colors.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_button.dart';
@@ -16,17 +14,15 @@ import 'package:sizer/sizer.dart';
 class NumberScreen extends StatelessWidget {
   final void Function() onTap;
   final void Function() backOnTap;
-  final void Function() verifyOnTap;
+
   final TextEditingController numberController;
   final TextEditingController wpNumberController;
-  final String numberText;
-  final String wpNumberText;
+
   final String numberFlag;
   final String numberCode;
   final String wpNumberFlag;
   final String wpNumberCode;
-  final Color? numberColor;
-  final Color? wpNumberColor;
+
   final void Function() numberPrefixOnTap;
   final void Function() wpNumberPrefixOnTap;
   const NumberScreen({
@@ -35,11 +31,7 @@ class NumberScreen extends StatelessWidget {
     required this.backOnTap,
     required this.numberController,
     required this.wpNumberController,
-    required this.verifyOnTap,
-    required this.numberText,
-    required this.wpNumberText,
-    this.wpNumberColor,
-    this.numberColor,
+
     required this.numberPrefixOnTap,
     required this.wpNumberPrefixOnTap,
     required this.numberFlag,
@@ -50,6 +42,9 @@ class NumberScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     RadioCubit radioCubit = BlocProvider.of<RadioCubit>(context);
+    PasswordVisibilityCubit passwordVisibilityCubit =
+        BlocProvider.of<PasswordVisibilityCubit>(context);
+    AuthCubit authCubit = BlocProvider.of<AuthCubit>(context);
 
     radioCubit.init();
 
@@ -115,7 +110,7 @@ class NumberScreen extends StatelessWidget {
                             onTap: () {
                               radioCubit.selectUserType(UserType.female);
                             },
-                            title: 'Male',
+                            title: 'Female',
                           ),
                         ),
                       ],
@@ -123,11 +118,28 @@ class NumberScreen extends StatelessWidget {
                   },
                 ),
                 Gap(10),
-                customNumberAndVerifiedText(
-                  text: 'Contact number',
-                  verifiedText: numberText,
-                  color: numberColor,
-                  onTap: verifyOnTap,
+                BlocBuilder<VerifiedNumber, bool>(
+                  builder: (context, verifiedNumber) {
+                    return customNumberAndVerifiedText(
+                      text: 'Contact number',
+                      verifiedText: verifiedNumber ? 'Verified' : 'Verify',
+                      color:
+                          verifiedNumber
+                              ? AppColor.themeSecondaryColor
+                              : AppColor.themePrimaryColor,
+                      onTap:
+                          verifiedNumber
+                              ? () {}
+                              : () {
+                                authCubit.sendOtp(
+                                  context,
+                                  mobile: numberController.text.trim(),
+                                  passwordVisibilityCubit:
+                                      passwordVisibilityCubit,
+                                );
+                              },
+                    );
+                  },
                 ),
                 Gap(10),
                 CustomCountyTextfield(
@@ -137,11 +149,24 @@ class NumberScreen extends StatelessWidget {
                   code: numberCode,
                 ),
                 Gap(10),
-                customNumberAndVerifiedText(
-                  text: 'WhatsApp number',
-                  verifiedText: wpNumberText,
-                  color: wpNumberColor,
-                  onTap: verifyOnTap,
+                BlocBuilder<VerifiedWNumber, bool>(
+                  builder: (context, wNumberState) {
+                    return customNumberAndVerifiedText(
+                      text: 'WhatsApp number',
+                      verifiedText: wNumberState ? 'Verified' : 'Verify',
+                      color:
+                          wNumberState
+                              ? AppColor.themeSecondaryColor
+                              : AppColor.themePrimaryColor,
+                      onTap: () {
+                        authCubit.sendOtp(
+                          context,
+                          mobile: wpNumberController.text.trim(),
+                          passwordVisibilityCubit: passwordVisibilityCubit,
+                        );
+                      },
+                    );
+                  },
                 ),
                 Gap(10),
                 CustomCountyTextfield(

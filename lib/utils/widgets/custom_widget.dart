@@ -7,9 +7,17 @@ customDivider() {
   return Column(
     children: [
       Gap(20),
-      
+
       Container(height: 0.5, width: 100.w, color: AppColor.unselectedColor),
       Gap(20),
     ],
+  );
+}
+
+customDividerWithOutTopBottomSpace({Color? color}) {
+  return Container(
+    height: 0.5,
+    width: 100.w,
+    color: color ?? AppColor.unselectedColor,
   );
 }

@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:gap/gap.dart';
 import 'package:shishu_sanskar/module/home/view/widget/custom_home_widget.dart';
-import 'package:shishu_sanskar/utils/constant/app_image.dart';
 import 'package:shishu_sanskar/utils/constant/app_page.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_app_bar.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_bg.dart';
-import 'package:shishu_sanskar/utils/widgets/custom_text.dart';
 import 'package:sizer/sizer.dart';
 
 class TaskSeeAllScreen extends StatelessWidget {
@@ -31,13 +27,14 @@ class TaskSeeAllScreen extends StatelessWidget {
                   child: GridView.builder(
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 4,
+                          crossAxisCount: 2,
                           mainAxisSpacing: 10,
-                          childAspectRatio: 0.75,
                         ),
                     itemCount: 8,
                     itemBuilder: (BuildContext context, int index) {
                       return customCardView(
+                        width: 100.w,
+                        height: 17.h,
                         onTap: () {
                           Navigator.pushNamed(
                             context,

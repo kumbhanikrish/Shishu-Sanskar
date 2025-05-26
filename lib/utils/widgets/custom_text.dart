@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:shishu_sanskar/utils/theme/colors.dart';
 
 class CustomText extends StatelessWidget {

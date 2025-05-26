@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,6 +18,4 @@ class LocalDataSaver {
     SharedPreferences sharedPreference = await SharedPreferences.getInstance();
     return sharedPreference.getString('authToken') ?? '';
   }
-
- 
 }

@@ -4,11 +4,13 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:shishu_sanskar/local_data/local_data_sever.dart';
+import 'package:shishu_sanskar/services/model/api_response_model.dart';
 import 'package:shishu_sanskar/utils/constant/app_page.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_error_toast.dart';
 
 // Local data storage
 LocalDataSaver dataSaver = LocalDataSaver();
+ApiServices apiServices = ApiServices();
 
 class ApiServices {
   final Dio dio = Dio();
@@ -24,7 +26,7 @@ class ApiServices {
   }
 
   /// GET Request
-  Future<Response?> getDynamicData(BuildContext context, String url) async {
+  Future<Response> getDynamicData(BuildContext context, String url) async {
     log("GET URL: $url");
     try {
       await EasyLoading.show();
@@ -45,39 +47,44 @@ class ApiServices {
       await EasyLoading.dismiss();
       log("Unhandled Error: $e");
     }
-    return null;
+    return Response(requestOptions: RequestOptions());
   }
 
   /// POST Request
-  Future<Response?> postDynamicData(
+
+  Future postDynamicData(
     BuildContext context,
     String url,
     Map<String, dynamic> params,
   ) async {
-    log("POST URL: $url");
-    log("Parameters: $params");
+    log("params :: $params");
+    log("Url :: $url");
 
     try {
       await EasyLoading.show();
 
-      final response = await dio.post(
+      Response response = await dio.post(
         url,
         data: params,
         options: Options(headers: await _buildHeaders()),
       );
+      log("statusCode ::${response.statusCode}");
+      log("response.data :: ${response.data}");
 
-      log("Status Code: ${response.statusCode}");
-      log("Response Data: ${response.data}");
-
-      await EasyLoading.dismiss();
-      if (response.statusCode == 200) return response;
+      if (response.statusCode == 201) {
+        await EasyLoading.dismiss();
+        return response;
+      } else if (response.statusCode == 200) {
+        await EasyLoading.dismiss();
+        return response;
+      }
     } on DioException catch (e) {
       _handleDioError(context, e);
     } catch (e) {
       await EasyLoading.dismiss();
-      log("Unhandled Error: $e");
+
+      log("Error :: $e");
     }
-    return null;
   }
 
   /// DELETE Request
@@ -150,10 +157,11 @@ class ApiServices {
   void _handleDioError(BuildContext context, DioException e) async {
     await EasyLoading.dismiss();
     final statusCode = e.response?.statusCode;
-    final errorMessage = e.response?.data['message'];
+    final responseData = e.response?.data;
 
-    log("DioException: $errorMessage, Status Code: $statusCode");
+    log("DioException: $responseData, Status Code: $statusCode");
 
+    // Handle 401 Unauthorized
     if (statusCode == 401) {
       await dataSaver.setAuthToken('');
       Navigator.pushNamedAndRemoveUntil(
@@ -161,12 +169,34 @@ class ApiServices {
         AppPage.authScreen,
         (route) => false,
       );
+      return;
     }
 
-    customToast(
-      context,
-      text: errorMessage ?? 'Something went wrong',
-      animatedSnackBarType: AnimatedSnackBarType.error,
-    );
+    // Extract Validation Errors
+    String errorMessage = 'Something went wrong';
+
+    if (responseData != null) {
+      if (responseData['data'] != null && responseData['data'] is Map) {
+        final dataErrors = responseData['data'] as Map<String, dynamic>;
+        List<String> errorMessages = [];
+
+        dataErrors.forEach((key, value) {
+          if (value is List) {
+            errorMessages.addAll(value.map((e) => e.toString()));
+          }
+        });
+
+        if (errorMessages.isNotEmpty) {
+          errorMessage = errorMessages.join('\n');
+        } else if (responseData['message'] != null) {
+          errorMessage = responseData['message'];
+        }
+      } else if (responseData['message'] != null) {
+        errorMessage = responseData['message'];
+      }
+    }
+
+    // Show Toast or SnackBar
+    customErrorToast(context, text: errorMessage);
   }
 }

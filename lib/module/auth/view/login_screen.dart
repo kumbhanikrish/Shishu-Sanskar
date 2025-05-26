@@ -1,10 +1,7 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:shishu_sanskar/module/auth/cubit/auth_cubit.dart';
-import 'package:shishu_sanskar/module/auth/view/sign_up_Screen.dart';
 import 'package:shishu_sanskar/module/auth/view/widget/custom_login_widget.dart';
 import 'package:shishu_sanskar/utils/constant/app_image.dart';
 import 'package:shishu_sanskar/utils/constant/app_page.dart';
@@ -24,6 +21,7 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     PasswordVisibilityCubit passwordVisibilityCubit =
         BlocProvider.of<PasswordVisibilityCubit>(context);
+    AuthCubit authCubit = BlocProvider.of<AuthCubit>(context);
     passwordVisibilityCubit.init();
     return Scaffold(
       body: customLoginTheme(
@@ -83,10 +81,10 @@ class LoginScreen extends StatelessWidget {
                 CustomButton(
                   text: 'Continue',
                   onTap: () {
-                    Navigator.pushNamedAndRemoveUntil(
+                    authCubit.login(
                       context,
-                      AppPage.bottomNavigationScreen,
-                      (route) => false,
+                      email: emailController.text.trim(),
+                      password: passwordController.text.trim(),
                     );
                   },
                   backgroundColor: AppColor.themePrimaryColor2,

@@ -3,16 +3,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:pinput/pinput.dart';
 import 'package:shishu_sanskar/module/auth/cubit/auth_cubit.dart';
-import 'package:shishu_sanskar/utils/constant/app_page.dart';
 import 'package:shishu_sanskar/utils/theme/colors.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_button.dart';
-import 'package:shishu_sanskar/utils/widgets/custom_login_theme.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_text.dart';
 import 'package:sizer/sizer.dart';
 
 class OtpVerificationScreen extends StatelessWidget {
   final bool verifyState;
-  OtpVerificationScreen({super.key, required this.verifyState});
+  final String number;
+  final String wNumber;
+
+  OtpVerificationScreen({
+    super.key,
+    required this.verifyState,
+    required this.number,
+    required this.wNumber,
+  });
   final defaultPinTheme = PinTheme(
     width: 42,
     height: 40,
@@ -33,55 +39,80 @@ class OtpVerificationScreen extends StatelessWidget {
     StepperCubit stepperCubit = BlocProvider.of<StepperCubit>(context);
     PasswordVisibilityCubit passwordVisibilityCubit =
         BlocProvider.of<PasswordVisibilityCubit>(context);
-    return Column(
-      children: [
-        CustomText(
-          text: 'OTP Verification',
-          fontSize: 18,
-          fontWeight: FontWeight.w500,
-        ),
-        Gap(5),
-        CustomText(
-          text: 'Send to +91 81550 75910',
-          fontSize: 12,
-          color: AppColor.subTitleColor,
-        ),
-        Gap(3.6.h),
-        Center(
-          child: Pinput(
-            controller: pinController,
-            length: 4,
-            animationCurve: Curves.easeInOut,
-            defaultPinTheme: defaultPinTheme,
-          ),
-        ),
+    AuthCubit authCubit = BlocProvider.of<AuthCubit>(context);
+    VerifiedNumber verifiedNumber = BlocProvider.of<VerifiedNumber>(context);
+    VerifiedWNumber verifiedWNumber = BlocProvider.of<VerifiedWNumber>(context);
 
-        CustomTextButton(
-          text: 'Didn’t get a code?',
-          onPressed: () {},
-          color: AppColor.themeSecondaryColor,
-        ),
-        Gap(10.h),
+    return Expanded(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            CustomText(
+              text: 'OTP Verification',
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+            ),
+            Gap(5),
+            CustomText(
+              text: 'Send to +91 ${number.isEmpty ? wNumber : number}',
+              fontSize: 12,
+              color: AppColor.subTitleColor,
+            ),
+            Gap(3.6.h),
+            Center(
+              child: Pinput(
+                controller: pinController,
+                length: 4,
+                animationCurve: Curves.easeInOut,
+                defaultPinTheme: defaultPinTheme,
+              ),
+            ),
 
-        CustomButton(
-          text: 'Verify',
-          onTap: () {
-            stepperCubit.nextStep(step: 2);
-          },
-        ),
-        Gap(10),
+            CustomTextButton(
+              text: 'Didn’t get a code?',
+              onPressed: () {},
+              color: AppColor.themeSecondaryColor,
+            ),
+            Gap(10.h),
 
-        CustomTextButton(
-          text: 'Cancel',
-          onPressed: () {
-            if (verifyState == true) {
-              stepperCubit.previousStep(step: 0);
-            } else {
-              passwordVisibilityCubit.toggleVisibility();
-            }
-          },
+            BlocBuilder<VerifiedWNumber, bool>(
+              builder: (context, wNumberState) {
+                return BlocBuilder<VerifiedNumber, bool>(
+                  builder: (context, numberState) {
+                    return CustomButton(
+                      text: 'Verify',
+                      onTap: () {
+                        authCubit.verifyOtp(
+                          context,
+                          opt: pinController.text.trim(),
+                          mobile: wNumber.isEmpty ? number : wNumber,
+                          passwordVisibilityCubit: passwordVisibilityCubit,
+                          verifiedNumber: verifiedNumber,
+                          verifiedWNumber: verifiedWNumber,
+                          number: numberState,
+                          wNumber: wNumberState,
+                        );
+                      },
+                    );
+                  },
+                );
+              },
+            ),
+            Gap(10),
+
+            CustomTextButton(
+              text: 'Cancel',
+              onPressed: () {
+                if (verifyState == true) {
+                  stepperCubit.previousStep(step: 0);
+                } else {
+                  passwordVisibilityCubit.toggleVisibility();
+                }
+              },
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

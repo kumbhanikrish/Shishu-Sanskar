@@ -27,7 +27,11 @@ class ForgotFlowScreen extends StatelessWidget {
                     currentStep == 0
                         ? ForgotPasswordScreen()
                         : currentStep == 1
-                        ? OtpVerificationScreen(verifyState: false)
+                        ? OtpVerificationScreen(
+                          verifyState: false,
+                          number: '',
+                          wNumber: '',
+                        )
                         : currentStep == 2
                         ? CreateNewPasswordScreen()
                         : Container(),

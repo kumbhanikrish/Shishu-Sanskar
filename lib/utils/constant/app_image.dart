@@ -41,6 +41,8 @@ class AppImage {
   static String twitter = 'assets/image/twitter.svg';
   static String offline = 'assets/image/offline.svg';
   static String online = 'assets/image/online.svg';
+  static String setting = 'assets/image/setting.svg';
+  static String tools = 'assets/image/tools.svg';
 }
 
 class AppLogo {

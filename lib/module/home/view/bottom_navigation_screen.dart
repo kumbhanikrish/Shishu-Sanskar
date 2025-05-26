@@ -8,9 +8,9 @@ import 'package:shishu_sanskar/module/home/view/widget/custom_home_widget.dart';
 import 'package:shishu_sanskar/module/pricing/view/pricing_screen.dart';
 import 'package:shishu_sanskar/module/profile/view/profile_screen.dart';
 import 'package:shishu_sanskar/utils/constant/app_image.dart';
+import 'package:shishu_sanskar/utils/constant/app_page.dart';
 import 'package:shishu_sanskar/utils/theme/colors.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_bg.dart';
-import 'package:shishu_sanskar/utils/widgets/custom_list_tile.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_text.dart';
 import 'package:sizer/sizer.dart';
 
@@ -26,7 +26,7 @@ class BottomNavigationScreen extends StatelessWidget {
               customBg(),
               Column(
                 children: <Widget>[
-                  Gap(5.h),
+                  Gap(4.h),
                   Padding(
                     padding: const EdgeInsets.only(
                       top: 20,
@@ -51,7 +51,32 @@ class BottomNavigationScreen extends StatelessWidget {
                                   ),
                                 ),
                                 if (state == 0) ...[
-                                  SvgPicture.asset(AppImage.notification),
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                        context,
+                                        AppPage.settingScreen,
+                                      );
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8),
+                                      child: SvgPicture.asset(AppImage.setting),
+                                    ),
+                                  ),
+
+                                  InkWell(
+                                    onTap: () {},
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                        top: 8,
+                                        left: 8,
+                                        bottom: 8,
+                                      ),
+                                      child: SvgPicture.asset(
+                                        AppImage.notification,
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ],
                             )
@@ -71,7 +96,7 @@ class BottomNavigationScreen extends StatelessWidget {
                               fontSize: 22,
                             )
                             : CustomText(
-                              text: 'My Profile',
+                              text: 'Tools',
                               textAlign: TextAlign.center,
                               fontWeight: FontWeight.w600,
                               fontSize: 22,
@@ -132,8 +157,8 @@ class BottomNavigationScreen extends StatelessWidget {
                             context,
                             currentIndex: state,
                             index: 4,
-                            icon: AppImage.profile,
-                            label: "My Profile",
+                            icon: AppImage.tools,
+                            label: "Tools",
                           ),
                         ],
                       ),
@@ -160,7 +185,7 @@ Widget _buildScreen(int index) {
     case 3:
       return Center(child: Text('Graph Screen'));
     case 4:
-      return ProfileScreen();
+      return Center(child: Text('Tools Screen'));
 
     default:
       return Container();

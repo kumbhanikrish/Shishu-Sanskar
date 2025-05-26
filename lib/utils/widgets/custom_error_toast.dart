@@ -15,3 +15,19 @@ customToast(
     duration: const Duration(seconds: 2),
   ).show(context);
 }
+
+customSuccessToast(BuildContext context, {required String text}) {
+  return customToast(
+    context,
+    text: text,
+    animatedSnackBarType: AnimatedSnackBarType.success,
+  );
+}
+
+customErrorToast(BuildContext context, {required String text}) {
+  return customToast(
+    context,
+    text: text,
+    animatedSnackBarType: AnimatedSnackBarType.error,
+  );
+}

@@ -8,6 +8,9 @@ import 'package:shishu_sanskar/module/home/view/event_detail_screen.dart';
 import 'package:shishu_sanskar/module/home/view/event_see_all_screen.dart';
 import 'package:shishu_sanskar/module/home/view/task_detail_Screen.dart';
 import 'package:shishu_sanskar/module/home/view/task_see_all_screen.dart';
+import 'package:shishu_sanskar/module/profile/view/profile_screen.dart';
+import 'package:shishu_sanskar/module/setting/view/contact_us_screen.dart';
+import 'package:shishu_sanskar/module/setting/view/setting_screen.dart';
 
 import 'package:shishu_sanskar/utils/constant/app_page.dart';
 
@@ -21,6 +24,9 @@ final Map<String, WidgetBuilder> appRoutes = {
   AppPage.taskDetailScreen: (context) => TaskDetailScreen(),
   AppPage.eventSeeAllScreen: (context) => EventSeeAllScreen(),
   AppPage.eventDetailScreen: (context) => EventDetailScreen(),
+  AppPage.settingScreen: (context) => SettingScreen(),
+  AppPage.profileScreen: (context) => ProfileScreen(),
+  AppPage.contactUsScreen: (context) => ContactUsScreen(),
 
   // AppRoutes.referAndEarnScreen:
   //     (context) =>

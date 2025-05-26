@@ -10,6 +10,7 @@ class CustomListTile extends StatelessWidget {
   final String leadingImage;
   final void Function()? onTap;
   final Color? leadingColor;
+  final Color? trailingColor;
   final EdgeInsetsGeometry? contentPadding;
   final Widget? trailing;
   final Color? textColor;
@@ -28,6 +29,7 @@ class CustomListTile extends StatelessWidget {
     this.leadingColor,
     this.trailing,
     this.tileColor,
+    this.trailingColor,
     this.textColor,
     this.fontWeight,
     this.fontSize,
@@ -55,7 +57,7 @@ class CustomListTile extends StatelessWidget {
             trailing ??
             Icon(
               Icons.keyboard_arrow_right_rounded,
-              color: AppColor.themePrimaryColor,
+              color: trailingColor ?? AppColor.themePrimaryColor,
             ),
         title: CustomText(
           text: text,

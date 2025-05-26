@@ -1,7 +1,7 @@
 // import 'package:country_code_picker/country_code_picker.dart';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -17,10 +17,10 @@ import 'package:sizer/sizer.dart';
 
 void configLoading() {
   EasyLoading.instance
-    ..backgroundColor = AppColor.themePrimaryColor2
-    ..indicatorColor = AppColor.themeSecondaryColor
-    ..textColor = AppColor.themeSecondaryColor
-    ..progressColor = AppColor.themeSecondaryColor
+    ..backgroundColor = AppColor.themeSecondaryColor
+    ..indicatorColor = AppColor.lightThemePrimaryColor
+    ..textColor = AppColor.lightThemePrimaryColor
+    ..progressColor = AppColor.lightThemePrimaryColor
     ..maskType = EasyLoadingMaskType.black
     ..userInteractions = false
     ..loadingStyle = EasyLoadingStyle.custom
@@ -37,6 +37,7 @@ void main() async {
   await dotenv.load();
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPreferences.getInstance();
+  await Firebase.initializeApp();
 
   runApp(const MyApp());
   configLoading();
@@ -99,4 +100,6 @@ dynamic providers = [
   BlocProvider(create: (context) => CounterCubit()),
   BlocProvider(create: (context) => ProfileCubit()),
   BlocProvider(create: (context) => EditCubit()),
+  BlocProvider(create: (context) => VerifiedNumber()),
+  BlocProvider(create: (context) => VerifiedWNumber()),
 ];
