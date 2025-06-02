@@ -13,4 +13,10 @@ class AppPage {
   static String settingScreen = '/settingScreen';
   static String profileScreen = '/profileScreen';
   static String contactUsScreen = '/contactUsScreen';
+
+  static String privacyPolicyScreen = '/privacyPolicyScreen';
+  static String deleteAccountScreen = '/deleteAccountScreen';
+  static String deletePasswordScreen = '/deletePasswordScreen';
+  static String blogDetailScreen = '/blogDetailScreen';
+  static String payDetailScreen = '/payDetailScreen';
 }

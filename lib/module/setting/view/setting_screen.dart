@@ -5,6 +5,7 @@ import 'package:shishu_sanskar/utils/constant/app_page.dart';
 import 'package:shishu_sanskar/utils/theme/colors.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_app_bar.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_bg.dart';
+import 'package:shishu_sanskar/utils/widgets/custom_dialog.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_list_tile.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_text.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_widget.dart';
@@ -122,11 +123,23 @@ class SettingScreen extends StatelessWidget {
                       leadingImage: '',
                       fontSize: 14,
                       trailingColor: AppColor.blackColor,
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          AppPage.deleteAccountScreen,
+                        );
+                      },
                     ),
                     customDividerWithOutTopBottomSpace(
                       color: AppColor.themePrimaryColor2,
                     ),
                     CustomListTile(
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          AppPage.privacyPolicyScreen,
+                        );
+                      },
                       text: 'Privacy Police',
                       leadingImage: '',
                       fontSize: 14,
@@ -136,6 +149,16 @@ class SettingScreen extends StatelessWidget {
                       color: AppColor.themePrimaryColor2,
                     ),
                     CustomListTile(
+                      onTap: () {
+                        customDialog(
+                          context,
+                          title: 'Log out?',
+                          subtitle: "Are you sure you want to logout?",
+                          cancelText: 'No',
+                          submitText: 'Yes',
+                          submitOnTap: () {},
+                        );
+                      },
                       text: 'Log out',
                       leadingImage: '',
                       fontSize: 14,

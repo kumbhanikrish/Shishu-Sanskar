@@ -102,4 +102,5 @@ dynamic providers = [
   BlocProvider(create: (context) => EditCubit()),
   BlocProvider(create: (context) => VerifiedNumber()),
   BlocProvider(create: (context) => VerifiedWNumber()),
+  BlocProvider(create: (context) => ReasonCubit()),
 ];

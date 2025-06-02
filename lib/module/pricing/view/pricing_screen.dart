@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:shishu_sanskar/module/pricing/view/widget/custom_pricing_widget.dart';
 import 'package:shishu_sanskar/utils/constant/app_image.dart';
+import 'package:shishu_sanskar/utils/constant/app_page.dart';
 import 'package:shishu_sanskar/utils/theme/colors.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_text.dart';
 import 'package:sizer/sizer.dart';
@@ -36,7 +37,12 @@ class PricingScreen extends StatelessWidget {
                             image: AppImage.offline,
                             name: 'Offline',
                             price: '₹15,000',
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                AppPage.payDetailScreen,
+                              );
+                            },
                             backgroundColor: AppColor.themePrimaryColor,
                             child: Column(
                               children: [
@@ -67,7 +73,12 @@ class PricingScreen extends StatelessWidget {
                             image: AppImage.online,
                             name: 'Online',
                             price: '₹15,000',
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                AppPage.payDetailScreen,
+                              );
+                            },
                             textColor: AppColor.themePrimaryColor,
                             backgroundColor: AppColor.whiteColor,
                             borderColor: AppColor.themePrimaryColor,

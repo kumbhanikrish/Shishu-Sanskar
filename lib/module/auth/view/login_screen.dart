@@ -81,13 +81,17 @@ class LoginScreen extends StatelessWidget {
                 CustomButton(
                   text: 'Continue',
                   onTap: () {
-                    authCubit.login(
+                    Navigator.pushNamedAndRemoveUntil(
                       context,
-                      email: emailController.text.trim(),
-                      password: passwordController.text.trim(),
+                      AppPage.bottomNavigationScreen,
+                      (route) => false,
                     );
+                    // authCubit.login(
+                    //   context,
+                    //   email: emailController.text.trim(),
+                    //   password: passwordController.text.trim(),
+                    // );
                   },
-                  backgroundColor: AppColor.themePrimaryColor2,
                 ),
                 Gap(20),
 

@@ -65,3 +65,22 @@ customDoneIconAndText({IconData? icon, Color? color, required String text}) {
     ),
   );
 }
+
+pricingTextWithAmount({
+  required String text,
+  required String amount,
+  Color? color,
+}) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: <Widget>[
+      CustomText(text: text, fontSize: 12),
+      CustomText(
+        text: amount,
+        fontSize: 12,
+        fontWeight: FontWeight.w500,
+        color: color ?? AppColor.seeAllTitleColor,
+      ),
+    ],
+  );
+}

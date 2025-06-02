@@ -8,9 +8,12 @@ class HomeCubit extends Cubit<HomeState> {
 }
 
 class BottomBarCubit extends Cubit<int> {
-  BottomBarCubit() : super(0);
+  BottomBarCubit() : super(2);
 
   void changeTab(int index) {
     emit(index);
+  }
+  init() {
+    emit(2); // Default to Home tab
   }
 }

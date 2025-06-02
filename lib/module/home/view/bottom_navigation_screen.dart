@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
+import 'package:shishu_sanskar/module/blog/view/blog_screen.dart';
 import 'package:shishu_sanskar/module/home/cubit/home_cubit.dart';
 import 'package:shishu_sanskar/module/home/view/home_screen.dart';
 import 'package:shishu_sanskar/module/home/view/widget/custom_home_widget.dart';
 import 'package:shishu_sanskar/module/pricing/view/pricing_screen.dart';
-import 'package:shishu_sanskar/module/profile/view/profile_screen.dart';
+import 'package:shishu_sanskar/module/tools/view/tools_screen.dart';
 import 'package:shishu_sanskar/utils/constant/app_image.dart';
 import 'package:shishu_sanskar/utils/constant/app_page.dart';
 import 'package:shishu_sanskar/utils/theme/colors.dart';
@@ -18,6 +19,9 @@ class BottomNavigationScreen extends StatelessWidget {
   const BottomNavigationScreen({super.key});
   @override
   Widget build(BuildContext context) {
+    BottomBarCubit bottomBarCubit = BlocProvider.of<BottomBarCubit>(context);
+    // bottomBarCubit.init();
+
     return Scaffold(
       body: BlocBuilder<BottomBarCubit, int>(
         builder: (context, state) {
@@ -25,6 +29,7 @@ class BottomNavigationScreen extends StatelessWidget {
             children: [
               customBg(),
               Column(
+                
                 children: <Widget>[
                   Gap(4.h),
                   Padding(
@@ -35,7 +40,7 @@ class BottomNavigationScreen extends StatelessWidget {
                       left: 20,
                     ),
                     child:
-                        state == 0 || state == 2
+                        state == 2 || state == 3
                             ? Row(
                               children: <Widget>[
                                 Expanded(
@@ -50,7 +55,7 @@ class BottomNavigationScreen extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                if (state == 0) ...[
+                                if (state == 2) ...[
                                   InkWell(
                                     onTap: () {
                                       Navigator.pushNamed(
@@ -87,7 +92,7 @@ class BottomNavigationScreen extends StatelessWidget {
                               fontWeight: FontWeight.w600,
                               fontSize: 22,
                             )
-                            : state == 3
+                            : state == 0
                             ? CustomText(
                               text: 'Graph',
                               textAlign: TextAlign.center,
@@ -127,10 +132,10 @@ class BottomNavigationScreen extends StatelessWidget {
                         children: [
                           bottomBarTab(
                             context,
-                            index: 0,
                             currentIndex: state,
-                            icon: AppImage.home,
-                            label: "Home",
+                            index: 0,
+                            icon: AppImage.graph,
+                            label: "Graph",
                           ),
                           bottomBarTab(
                             context,
@@ -143,16 +148,18 @@ class BottomNavigationScreen extends StatelessWidget {
                             context,
                             index: 2,
                             currentIndex: state,
+                            icon: AppImage.home,
+                            label: "Home",
+                          ),
+
+                          bottomBarTab(
+                            context,
+                            index: 3,
+                            currentIndex: state,
                             icon: AppImage.pricing,
                             label: "Pricing",
                           ),
-                          bottomBarTab(
-                            context,
-                            currentIndex: state,
-                            index: 3,
-                            icon: AppImage.graph,
-                            label: "Graph",
-                          ),
+
                           bottomBarTab(
                             context,
                             currentIndex: state,
@@ -177,15 +184,15 @@ class BottomNavigationScreen extends StatelessWidget {
 Widget _buildScreen(int index) {
   switch (index) {
     case 0:
-      return HomeScreen();
-    case 1:
-      return Center(child: Text('Blog Screen'));
-    case 2:
-      return PricingScreen();
-    case 3:
       return Center(child: Text('Graph Screen'));
+    case 1:
+      return BlogScreen();
+    case 2:
+      return HomeScreen();
+    case 3:
+      return PricingScreen();
     case 4:
-      return Center(child: Text('Tools Screen'));
+      return ToolsScreen();
 
     default:
       return Container();

@@ -32,9 +32,9 @@ class CustomButton extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: backgroundColor ?? AppColor.themePrimaryColor2,
+        color: backgroundColor ?? AppColor.themePrimaryColor,
         border: Border.all(
-          color: borderColor ?? AppColor.themePrimaryColor2,
+          color: borderColor ?? AppColor.themePrimaryColor,
           width: 1,
         ),
         borderRadius: borderRadius ?? BorderRadius.circular(10),
@@ -121,18 +121,25 @@ class CustomTextButton extends StatelessWidget {
   final Color? color;
   final double fontSize;
   final void Function() onPressed;
+  final FontWeight? fontWeight;
   const CustomTextButton({
     super.key,
     required this.text,
     required this.onPressed,
     this.color,
+    this.fontWeight,
     this.fontSize = 12,
   });
   @override
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: onPressed,
-      child: CustomText(text: text, color: color, fontSize: fontSize),
+      child: CustomText(
+        text: text,
+        color: color,
+        fontSize: fontSize,
+        fontWeight: fontWeight ?? FontWeight.w500,
+      ),
     );
   }
 }

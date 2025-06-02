@@ -14,10 +14,10 @@ customDivider() {
   );
 }
 
-customDividerWithOutTopBottomSpace({Color? color}) {
+customDividerWithOutTopBottomSpace({Color? color, double? width}) {
   return Container(
     height: 0.5,
-    width: 100.w,
+    width: width ?? 100.w,
     color: color ?? AppColor.unselectedColor,
   );
 }

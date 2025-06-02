@@ -43,6 +43,17 @@ class AppImage {
   static String online = 'assets/image/online.svg';
   static String setting = 'assets/image/setting.svg';
   static String tools = 'assets/image/tools.svg';
+  static String checkboxChecked = 'assets/image/checkbox_checked.svg';
+  static String checkboxUnchecked = 'assets/image/checkbox_unchecked.svg';
+  static String privacyPolicy = 'assets/image/privacy_policy.svg';
+  static String searchIcon = 'assets/image/search.svg';
+  static String arrowRightIcon = 'assets/image/arrow-right.svg';
+  static String likeIcon = 'assets/image/like.svg';
+  static String dislikeIcon = 'assets/image/dislike.svg';
+  static String likeIconFilled = 'assets/image/like_fill.svg';
+  static String dislikeIconFilled = 'assets/image/dislike_fill.svg';
+  static String toolsImage = 'assets/image/toolsImage.svg';
+  static String promoCodeIcon = 'assets/image/promo_code.svg';
 }
 
 class AppLogo {

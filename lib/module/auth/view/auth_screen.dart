@@ -9,7 +9,6 @@ import 'package:shishu_sanskar/module/auth/view/sign_up_Screen.dart';
 import 'package:shishu_sanskar/module/auth/view/widget/custom_login_widget.dart';
 import 'package:shishu_sanskar/utils/constant/app_image.dart';
 import 'package:shishu_sanskar/utils/enum/enums.dart';
-import 'package:shishu_sanskar/utils/theme/colors.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_login_theme.dart';
 import 'package:sizer/sizer.dart';
 
@@ -34,7 +33,7 @@ class _AuthScreenState extends State<AuthScreen> {
   String numberCode = '';
   String wpNumberFlag = '';
   String wpNumberCode = '';
-
+ 
   final ValueNotifier<String> planningCoupleDate = ValueNotifier<String>(
     'dd/mm/yyyy',
   );
@@ -74,6 +73,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
             onTap: () {
               stepperCubit.nextStep(step: 1);
+              passwordVisibilityCubit.init();
             },
           );
         case 1:
@@ -109,8 +109,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             },
                             numberController: numberController,
                             wpNumberController: wpNumberController,
-                          
-                          
+
                             numberPrefixOnTap: () {
                               customCountryBottomSheet(
                                 context,

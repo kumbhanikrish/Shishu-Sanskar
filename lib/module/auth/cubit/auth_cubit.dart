@@ -262,3 +262,15 @@ class VerifiedWNumber extends Cubit<bool> {
     emit(false);
   }
 }
+
+class ReasonCubit extends Cubit<int> {
+  ReasonCubit() : super(-1); // -1 means none selected
+
+  void selectReason(int index) {
+    emit(index);
+  }
+
+  void clearSelection() {
+    emit(-1);
+  }
+}

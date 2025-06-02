@@ -3,13 +3,18 @@ import 'package:shishu_sanskar/module/auth/view/auth_screen.dart';
 import 'package:shishu_sanskar/module/auth/view/forgot_flow_screen.dart';
 import 'package:shishu_sanskar/module/auth/view/login_screen.dart';
 import 'package:shishu_sanskar/module/auth/view/splash_screen.dart';
+import 'package:shishu_sanskar/module/blog/view/blog_detail_screen.dart';
 import 'package:shishu_sanskar/module/home/view/bottom_navigation_screen.dart';
 import 'package:shishu_sanskar/module/home/view/event_detail_screen.dart';
 import 'package:shishu_sanskar/module/home/view/event_see_all_screen.dart';
 import 'package:shishu_sanskar/module/home/view/task_detail_Screen.dart';
 import 'package:shishu_sanskar/module/home/view/task_see_all_screen.dart';
+import 'package:shishu_sanskar/module/pricing/view/pay_detail_Screen.dart';
 import 'package:shishu_sanskar/module/profile/view/profile_screen.dart';
 import 'package:shishu_sanskar/module/setting/view/contact_us_screen.dart';
+import 'package:shishu_sanskar/module/setting/view/delete_account_screen.dart';
+import 'package:shishu_sanskar/module/setting/view/delete_password_screen.dart';
+import 'package:shishu_sanskar/module/setting/view/privacy_police_screen.dart';
 import 'package:shishu_sanskar/module/setting/view/setting_screen.dart';
 
 import 'package:shishu_sanskar/utils/constant/app_page.dart';
@@ -27,6 +32,12 @@ final Map<String, WidgetBuilder> appRoutes = {
   AppPage.settingScreen: (context) => SettingScreen(),
   AppPage.profileScreen: (context) => ProfileScreen(),
   AppPage.contactUsScreen: (context) => ContactUsScreen(),
+
+  AppPage.privacyPolicyScreen: (context) => const PrivacyPoliceScreen(),
+  AppPage.deleteAccountScreen: (context) => DeleteAccountScreen(),
+  AppPage.deletePasswordScreen: (context) => DeletePasswordScreen(),
+  AppPage.blogDetailScreen: (context) => BlogDetailScreen(),
+  AppPage.payDetailScreen: (context) => PayDetailScreen(),
 
   // AppRoutes.referAndEarnScreen:
   //     (context) =>
