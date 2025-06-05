@@ -12,12 +12,14 @@ class OtpVerificationScreen extends StatelessWidget {
   final bool verifyState;
   final String number;
   final String wNumber;
+  final bool forgotOtp;
 
   OtpVerificationScreen({
     super.key,
     required this.verifyState,
     required this.number,
     required this.wNumber,
+    required this.forgotOtp,
   });
   final defaultPinTheme = PinTheme(
     width: 42,
@@ -43,75 +45,100 @@ class OtpVerificationScreen extends StatelessWidget {
     VerifiedNumber verifiedNumber = BlocProvider.of<VerifiedNumber>(context);
     VerifiedWNumber verifiedWNumber = BlocProvider.of<VerifiedWNumber>(context);
 
-    return Expanded(
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            CustomText(
-              text: 'OTP Verification',
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          CustomText(
+            text: 'OTP Verification',
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+          ),
+          Gap(5),
+          CustomText(
+            text:
+                'Send to ${forgotOtp == true ? number : '+91 ${number.isEmpty ? wNumber : number}'}',
+            fontSize: 12,
+            color: AppColor.subTitleColor,
+          ),
+          Gap(3.6.h),
+          Center(
+            child: Pinput(
+              controller: pinController,
+              length: 4,
+              animationCurve: Curves.easeInOut,
+              defaultPinTheme: defaultPinTheme,
             ),
-            Gap(5),
-            CustomText(
-              text: 'Send to +91 ${number.isEmpty ? wNumber : number}',
-              fontSize: 12,
-              color: AppColor.subTitleColor,
-            ),
-            Gap(3.6.h),
-            Center(
-              child: Pinput(
-                controller: pinController,
-                length: 4,
-                animationCurve: Curves.easeInOut,
-                defaultPinTheme: defaultPinTheme,
-              ),
-            ),
+          ),
 
-            CustomTextButton(
-              text: 'Didn’t get a code?',
-              onPressed: () {},
-              color: AppColor.themeSecondaryColor,
-            ),
-            Gap(10.h),
-
-            BlocBuilder<VerifiedWNumber, bool>(
-              builder: (context, wNumberState) {
-                return BlocBuilder<VerifiedNumber, bool>(
-                  builder: (context, numberState) {
-                    return CustomButton(
-                      text: 'Verify',
-                      onTap: () {
-                        authCubit.verifyOtp(
-                          context,
-                          opt: pinController.text.trim(),
-                          mobile: wNumber.isEmpty ? number : wNumber,
-                          passwordVisibilityCubit: passwordVisibilityCubit,
-                          verifiedNumber: verifiedNumber,
-                          verifiedWNumber: verifiedWNumber,
-                          number: numberState,
-                          wNumber: wNumberState,
-                        );
-                      },
-                    );
-                  },
+          CustomTextButton(
+            text: 'Didn’t get a code?',
+            onPressed: () {
+              if (forgotOtp == true) {
+                authCubit.forgotPassword(
+                  context,
+                  email: number,
+                  resend: true,
+                  stepperCubit: stepperCubit,
                 );
-              },
-            ),
-            Gap(10),
+              } else {
+                authCubit.sendOtp(
+                  context,
+                  mobile: wNumber.isEmpty ? number : wNumber,
+                  passwordVisibilityCubit: passwordVisibilityCubit,
+                );
+              }
+            },
+            color: AppColor.themeSecondaryColor,
+          ),
+          Gap(10.h),
 
-            CustomTextButton(
-              text: 'Cancel',
-              onPressed: () {
-                if (verifyState == true) {
-                  stepperCubit.previousStep(step: 0);
-                } else {
-                  passwordVisibilityCubit.toggleVisibility();
-                }
-              },
-            ),
-          ],
-        ),
+          BlocBuilder<VerifiedWNumber, bool>(
+            builder: (context, wNumberState) {
+              return BlocBuilder<VerifiedNumber, bool>(
+                builder: (context, numberState) {
+                  return CustomButton(
+                    text: 'Verify',
+                    onTap:
+                        forgotOtp == true
+                            ? () {
+                              authCubit.forgotOtpVerify(
+                                context,
+                                email: number,
+                                otp: pinController.text.trim(),
+                                stepperCubit: stepperCubit,
+                              );
+                            }
+                            : () {
+                              authCubit.verifyOtp(
+                                context,
+                                opt: pinController.text.trim(),
+                                mobile: wNumber.isEmpty ? number : wNumber,
+                                passwordVisibilityCubit:
+                                    passwordVisibilityCubit,
+                                verifiedNumber: verifiedNumber,
+                                verifiedWNumber: verifiedWNumber,
+                                number: numberState,
+                                wNumber: wNumberState,
+                              );
+                            },
+                  );
+                },
+              );
+            },
+          ),
+          Gap(10),
+
+          CustomTextButton(
+            text: 'Cancel',
+            onPressed: () {
+              if (forgotOtp == true) {
+                stepperCubit.previousStep(step: 0);
+              } else {
+                passwordVisibilityCubit.toggleVisibility();
+              }
+            },
+          ),
+        ],
       ),
     );
   }

@@ -206,7 +206,6 @@ customEventCardView({
                           text: 'Register',
                           onTap: () {},
                           padding: EdgeInsets.symmetric(vertical: 8),
-                          backgroundColor: AppColor.themePrimaryColor,
                         ),
                       ],
                     ],

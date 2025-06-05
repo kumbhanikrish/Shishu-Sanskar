@@ -11,6 +11,8 @@ class ForgotFlowScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     StepperCubit stepperCubit = BlocProvider.of<StepperCubit>(context);
+    final TextEditingController emailController = TextEditingController();
+
     stepperCubit.init();
     return Scaffold(
       body: customLoginTheme(
@@ -25,15 +27,18 @@ class ForgotFlowScreen extends StatelessWidget {
                 child: Column(
                   children: <Widget>[
                     currentStep == 0
-                        ? ForgotPasswordScreen()
+                        ? ForgotPasswordScreen(emailController: emailController)
                         : currentStep == 1
                         ? OtpVerificationScreen(
                           verifyState: false,
-                          number: '',
+                          forgotOtp: true,
+                          number: emailController.text.trim(),
                           wNumber: '',
                         )
                         : currentStep == 2
-                        ? CreateNewPasswordScreen()
+                        ? CreateNewPasswordScreen(
+                          email: emailController.text.trim(),
+                        )
                         : Container(),
                   ],
                 ),

@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shishu_sanskar/main.dart';
+import 'package:shishu_sanskar/module/auth/model/login_model.dart';
 import 'package:shishu_sanskar/module/auth/repo/auth_repo.dart';
 import 'package:shishu_sanskar/utils/constant/app_page.dart';
 import 'package:shishu_sanskar/utils/enum/enums.dart';
@@ -34,7 +35,9 @@ class AuthCubit extends Cubit<AuthState> {
     );
 
     if (response.data['success'] == true) {
-      await localDataSaver.setAuthToken(response.data['data']['token'] ?? '');
+      LoginModel loginModel = LoginModel.fromJson(response.data['data']);
+      await localDataSaver.setAuthToken(loginModel.token);
+      await localDataSaver.setLoginData(loginModel);
       Navigator.pushNamedAndRemoveUntil(
         context,
         AppPage.bottomNavigationScreen,
@@ -78,7 +81,7 @@ class AuthCubit extends Cubit<AuthState> {
     );
 
     if (response.data['success'] == true) {
-      await localDataSaver.setAuthToken(response.data['data']['token'] ?? '');
+      // await localDataSaver.setAuthToken(response.data['data']['token'] ?? '');
       Navigator.pushNamedAndRemoveUntil(
         context,
         AppPage.loginScreen,
@@ -99,6 +102,121 @@ class AuthCubit extends Cubit<AuthState> {
 
     if (response.data['success'] == true) {
       passwordVisibilityCubit.toggleVisibility();
+    }
+
+    return response;
+  }
+
+  Future<Response> logout(BuildContext context) async {
+    Response response = await authRepo.logout(context, params: {});
+
+    if (response.data['success'] == true) {
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        AppPage.loginScreen,
+        (route) => false,
+      );
+      await localDataSaver.setAuthToken('');
+    }
+
+    return response;
+  }
+
+  Future<Response> deleteAccount(
+    BuildContext context, {
+    required String password,
+    required List<String> reasons,
+    required String feedback,
+  }) async {
+    Map<String, dynamic> params = {
+      "password": password,
+      "reasons": reasons,
+      "feedback": feedback,
+    };
+    Response response = await authRepo.deleteAccount(context, params: params);
+
+    if (response.data['success'] == true) {
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        AppPage.loginScreen,
+        (route) => false,
+      );
+      await localDataSaver.setAuthToken('');
+    }
+
+    return response;
+  }
+
+  Future<Response> forgotPassword(
+    BuildContext context, {
+    required String email,
+    bool resend = false,
+    required StepperCubit stepperCubit,
+  }) async {
+    Map<String, dynamic> sendOtpParams = {"email": email};
+
+    Response response = await authRepo.forgotPassword(
+      context,
+      params: sendOtpParams,
+    );
+
+    if (response.data['success'] == true) {
+      if (resend == false) {
+        stepperCubit.nextStep(step: 1);
+      }
+    }
+
+    return response;
+  }
+
+  Future<Response> resetPassword(
+    BuildContext context, {
+
+    required StepperCubit stepperCubit,
+    String passwordConfirmation = "",
+
+    String newPassword = "",
+    String email = "",
+  }) async {
+    Map<String, dynamic> sendOtpParams = {
+      'email': email,
+      "password": newPassword,
+      "password_confirmation": passwordConfirmation,
+    };
+
+    Response response = await authRepo.resetPassword(
+      context,
+      params: sendOtpParams,
+    );
+
+    if (response.data['success'] == true) {
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        AppPage.loginScreen,
+        (route) => false,
+      );
+    }
+
+    return response;
+  }
+
+  Future<Response> forgotOtpVerify(
+    BuildContext context, {
+
+    required StepperCubit stepperCubit,
+    String otp = "",
+
+    String email = "",
+  }) async {
+    Map<String, dynamic> sendOtpParams = {"email": email, "otp": otp};
+
+    Response response = await authRepo.forgotOtpVerify(
+      context,
+      params: sendOtpParams,
+    );
+
+    if (response.data['success'] == true) {
+      stepperCubit.nextStep(step: 2);
     }
 
     return response;
@@ -263,14 +381,18 @@ class VerifiedWNumber extends Cubit<bool> {
   }
 }
 
-class ReasonCubit extends Cubit<int> {
-  ReasonCubit() : super(-1); // -1 means none selected
+class ReasonCubit extends Cubit<List<String>> {
+  ReasonCubit() : super([]);
 
-  void selectReason(int index) {
-    emit(index);
+  void toggleReason(String reason) {
+    if (state.contains(reason)) {
+      emit(List.from(state)..remove(reason));
+    } else {
+      emit(List.from(state)..add(reason));
+    }
   }
 
   void clearSelection() {
-    emit(-1);
+    emit([]);
   }
 }

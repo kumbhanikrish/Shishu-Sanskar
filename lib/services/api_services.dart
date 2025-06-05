@@ -24,7 +24,11 @@ class ApiServices {
   }
 
   /// GET Request
-  Future<Response> getDynamicData(BuildContext context, String url) async {
+  Future<Response> getDynamicData(
+    BuildContext context,
+    String url, {
+    bool showSuccessMessage = false,
+  }) async {
     log("GET URL: $url");
     try {
       await EasyLoading.show();
@@ -38,7 +42,16 @@ class ApiServices {
       log("Response Data: ${response.data}");
 
       await EasyLoading.dismiss();
-      if (response.statusCode == 200) return response;
+      if (response.statusCode == 200) {
+        if (showSuccessMessage) {
+          // Show success message
+          customSuccessToast(
+            context,
+            text: response.data['message'] ?? 'Success',
+          );
+        }
+        return response;
+      }
     } on DioException catch (e) {
       _handleDioError(context, e);
     } catch (e) {
@@ -53,8 +66,10 @@ class ApiServices {
   Future postDynamicData(
     BuildContext context,
     String url,
-    Map<String, dynamic> params,
-  ) async {
+    Map<String, dynamic> params, {
+    bool showSuccessMessage = false,
+    bool isFormData = false,
+  }) async {
     log("params :: $params");
     log("Url :: $url");
 
@@ -63,7 +78,7 @@ class ApiServices {
 
       Response response = await dio.post(
         url,
-        data: params,
+        data: isFormData ? FormData.fromMap(params) : params,
         options: Options(headers: await _buildHeaders()),
       );
       log("statusCode ::${response.statusCode}");
@@ -73,6 +88,13 @@ class ApiServices {
         await EasyLoading.dismiss();
         return response;
       } else if (response.statusCode == 200) {
+        if (showSuccessMessage) {
+          // Show success message
+          customSuccessToast(
+            context,
+            text: response.data['message'] ?? 'Success',
+          );
+        }
         await EasyLoading.dismiss();
         return response;
       }

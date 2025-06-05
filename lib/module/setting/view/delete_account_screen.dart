@@ -8,6 +8,7 @@ import 'package:shishu_sanskar/utils/widgets/custom_app_bar.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_bg.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_button.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_check_box.dart';
+import 'package:shishu_sanskar/utils/widgets/custom_error_toast.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_text.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_textfield.dart';
 import 'package:sizer/sizer.dart';
@@ -21,10 +22,11 @@ class DeleteAccountScreen extends StatelessWidget {
     'Worried about account security.',
     "Facing problems with the app's functionality.",
   ];
-  final TextEditingController messageController = TextEditingController();
+  final TextEditingController feedBackController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     ReasonCubit reasonCubit = BlocProvider.of<ReasonCubit>(context);
+
     reasonCubit.clearSelection();
     return Scaffold(
       body: Stack(
@@ -39,66 +41,95 @@ class DeleteAccountScreen extends StatelessWidget {
                 },
               ),
 
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 10,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    BlocBuilder<ReasonCubit, int>(
-                      builder: (context, selectedIndex) {
-                        return ListView.builder(
-                          padding: EdgeInsets.zero,
-                          itemBuilder: (context, index) {
-                            final isSelected = selectedIndex == index;
-                            return CustomCheckbox(
-                              title: deleteType[index],
-                              isSelected: isSelected,
-                              onTap: () {
-                                reasonCubit.selectReason(index);
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 10,
+                  ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        BlocBuilder<ReasonCubit, List<String>>(
+                          builder: (context, selectedReasons) {
+                            return ListView.builder(
+                              padding: EdgeInsets.zero,
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: deleteType.length,
+                              itemBuilder: (context, index) {
+                                final isSelected = selectedReasons.contains(
+                                  deleteType[index],
+                                );
+                                return CustomCheckbox(
+                                  title: deleteType[index],
+                                  isSelected: isSelected,
+                                  onTap: () {
+                                    context.read<ReasonCubit>().toggleReason(
+                                      deleteType[index],
+                                    );
+                                  },
+                                );
                               },
                             );
                           },
-                          itemCount: deleteType.length,
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                        );
-                      },
+                        ),
+
+                        Gap(20),
+                        CustomText(
+                          text:
+                              'Is there anything else you want to share with us?',
+                          fontSize: 12,
+                        ),
+                        Gap(14),
+                        CustomTextField(
+                          hintText: 'Type your message....',
+                          controller: feedBackController,
+                          line: 3,
+                        ),
+                        Gap(10.h),
+                        CustomButton(
+                          text: 'Continue',
+                          onTap: () {
+                            if (reasonCubit.state.isEmpty) {
+                              customErrorToast(
+                                context,
+                                text:
+                                    'Please select at least one reason for account deletion.',
+                              );
+                              return;
+                            }
+                            if (feedBackController.text.isEmpty) {
+                              customErrorToast(
+                                context,
+                                text:
+                                    'Please provide feedback for account deletion.',
+                              );
+                              return;
+                            }
+                            Navigator.pushNamed(
+                              context,
+                              AppPage.deletePasswordScreen,
+                              arguments: {
+                                'feedback': feedBackController.text,
+                                'reasons': reasonCubit.state,
+                              },
+                            );
+                          },
+                        ),
+                        Align(
+                          alignment: Alignment.center,
+                          child: CustomTextButton(
+                            text: 'Cancel',
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ),
+                      ],
                     ),
-                    Gap(20),
-                    CustomText(
-                      text: 'Is there anything else you want to share with us?',
-                      fontSize: 12,
-                    ),
-                    Gap(14),
-                    CustomTextField(
-                      hintText: 'Type your message....',
-                      controller: messageController,
-                      line: 3,
-                    ),
-                    Gap(10.h),
-                    CustomButton(
-                      text: 'Continue',
-                      onTap: () {
-                        Navigator.pushNamed(
-                          context,
-                          AppPage.deletePasswordScreen,
-                        );
-                      },
-                      backgroundColor: AppColor.themePrimaryColor,
-                    ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: CustomTextButton(
-                        text: 'Cancel',
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ],

@@ -59,7 +59,6 @@ customDialog(
                     child: CustomButton(
                       borderColor: AppColor.borderColor,
                       text: submitText,
-                      backgroundColor: AppColor.themePrimaryColor,
                       onTap: submitOnTap,
                     ),
                   ),

@@ -11,7 +11,7 @@ class AppPage {
   static String eventSeeAllScreen = '/eventSeeAllScreen';
   static String eventDetailScreen = '/eventDetailScreen';
   static String settingScreen = '/settingScreen';
-  static String profileScreen = '/profileScreen';
+  static String profileScreen = '/editProfileScreen';
   static String contactUsScreen = '/contactUsScreen';
 
   static String privacyPolicyScreen = '/privacyPolicyScreen';

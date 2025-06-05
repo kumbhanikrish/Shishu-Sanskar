@@ -10,12 +10,13 @@ import 'package:shishu_sanskar/utils/widgets/custom_textfield.dart';
 import 'package:sizer/sizer.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
-  ForgotPasswordScreen({super.key});
-  final TextEditingController emailController = TextEditingController();
+  final TextEditingController emailController;
+  const ForgotPasswordScreen({super.key, required this.emailController});
 
   @override
   Widget build(BuildContext context) {
     StepperCubit stepperCubit = BlocProvider.of<StepperCubit>(context);
+    AuthCubit authCubit = BlocProvider.of<AuthCubit>(context);
 
     return Column(
       children: <Widget>[
@@ -36,7 +37,11 @@ class ForgotPasswordScreen extends StatelessWidget {
         CustomButton(
           text: 'Next',
           onTap: () {
-            stepperCubit.nextStep(step: 1);
+            authCubit.forgotPassword(
+              context,
+              email: emailController.text.trim(),
+              stepperCubit: stepperCubit,
+            );
           },
         ),
         Gap(10),

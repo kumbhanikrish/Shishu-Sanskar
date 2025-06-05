@@ -7,16 +7,22 @@ import 'package:shishu_sanskar/utils/widgets/custom_app_bar.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_bg.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_button.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_dialog.dart';
+import 'package:shishu_sanskar/utils/widgets/custom_error_toast.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_textfield.dart';
 import 'package:sizer/sizer.dart';
 
 class DeletePasswordScreen extends StatelessWidget {
-  DeletePasswordScreen({super.key});
+  final dynamic arguments;
+  DeletePasswordScreen({super.key, required this.arguments});
   final TextEditingController passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     CPasswordVisibilityCubit cPasswordVisibilityCubit =
         BlocProvider.of<CPasswordVisibilityCubit>(context);
+    AuthCubit authCubit = BlocProvider.of<AuthCubit>(context);
+
+    String feedback = arguments['feedback'];
+    List<String> reasons = arguments['reasons'];
     return Scaffold(
       body: Stack(
         children: [
@@ -59,6 +65,14 @@ class DeletePasswordScreen extends StatelessWidget {
                     CustomButton(
                       text: 'Confirm',
                       onTap: () {
+
+                        if (passwordController.text.isEmpty) {
+                          customErrorToast(
+                            context,
+                            text: 'Please enter your password.',
+                          );
+                          return;
+                        }
                         customDialog(
                           context,
                           title: 'Account Deletion Policy',
@@ -66,7 +80,14 @@ class DeletePasswordScreen extends StatelessWidget {
                               "Return within 15 days to keep your account and data. Otherwise, it's gone forever.",
                           cancelText: 'Cancel',
                           submitText: 'Delete account',
-                          submitOnTap: () {},
+                          submitOnTap: () {
+                            authCubit.deleteAccount(
+                              context,
+                              password: passwordController.text,
+                              feedback: feedback,
+                              reasons: reasons,
+                            );
+                          },
                         );
                       },
                     ),

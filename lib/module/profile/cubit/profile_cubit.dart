@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
 
 part 'profile_state.dart';
@@ -15,19 +18,26 @@ class CounterCubit extends Cubit<int> {
     if (state > 0) emit(state - 1);
   }
 
+  void setInitialCount(int value) => emit(value);
+
   init() {
     emit(0);
   }
 }
 
-class EditCubit extends Cubit<bool> {
-  EditCubit() : super(false);
+class ProfileImageCubit extends Cubit<File?> {
+  ProfileImageCubit() : super(null);
 
-  void toggleVisibility() {
-    emit(!state);
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> pickImage() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      emit(File(image.path));
+    }
   }
 
-  init() {
-    emit(false);
+  void clearImage() {
+    emit(null);
   }
 }

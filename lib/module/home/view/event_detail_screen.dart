@@ -51,7 +51,6 @@ class EventDetailScreen extends StatelessWidget {
                               child: CustomButton(
                                 text: 'Book Your Seat',
                                 padding: EdgeInsets.symmetric(vertical: 8),
-                                backgroundColor: AppColor.themePrimaryColor,
                                 onTap: () {},
                               ),
                             ),

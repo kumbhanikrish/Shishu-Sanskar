@@ -30,16 +30,17 @@ final Map<String, WidgetBuilder> appRoutes = {
   AppPage.eventSeeAllScreen: (context) => EventSeeAllScreen(),
   AppPage.eventDetailScreen: (context) => EventDetailScreen(),
   AppPage.settingScreen: (context) => SettingScreen(),
-  AppPage.profileScreen: (context) => ProfileScreen(),
+  AppPage.profileScreen:
+      (context) =>
+          ProfileScreen(argument: ModalRoute.of(context)?.settings.arguments),
   AppPage.contactUsScreen: (context) => ContactUsScreen(),
 
   AppPage.privacyPolicyScreen: (context) => const PrivacyPoliceScreen(),
   AppPage.deleteAccountScreen: (context) => DeleteAccountScreen(),
-  AppPage.deletePasswordScreen: (context) => DeletePasswordScreen(),
+  AppPage.deletePasswordScreen:
+      (context) => DeletePasswordScreen(
+        arguments: ModalRoute.of(context)?.settings.arguments,
+      ),
   AppPage.blogDetailScreen: (context) => BlogDetailScreen(),
   AppPage.payDetailScreen: (context) => PayDetailScreen(),
-
-  // AppRoutes.referAndEarnScreen:
-  //     (context) =>
-  //         ReferAndEarnScreen(data: ModalRoute.of(context)?.settings.arguments),
 };

@@ -33,7 +33,7 @@ class _AuthScreenState extends State<AuthScreen> {
   String numberCode = '';
   String wpNumberFlag = '';
   String wpNumberCode = '';
- 
+
   final ValueNotifier<String> planningCoupleDate = ValueNotifier<String>(
     'dd/mm/yyyy',
   );
@@ -81,6 +81,7 @@ class _AuthScreenState extends State<AuthScreen> {
             builder: (context, verifyState) {
               return verifyState == false
                   ? OtpVerificationScreen(
+                    forgotOtp: false,
                     verifyState: verifyState,
                     number: numberController.text.trim(),
                     wNumber: wpNumberController.text.trim(),

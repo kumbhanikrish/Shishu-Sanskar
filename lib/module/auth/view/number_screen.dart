@@ -48,7 +48,6 @@ class NumberScreen extends StatelessWidget {
 
     radioCubit.init();
 
-
     return Expanded(
       child: SingleChildScrollView(
         child: Column(

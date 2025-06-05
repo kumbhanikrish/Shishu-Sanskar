@@ -12,6 +12,7 @@ class AuthRepo {
       context,
       AppApi.login,
       params,
+      showSuccessMessage: true,
     );
 
     return response;
@@ -24,6 +25,7 @@ class AuthRepo {
     Response response = await apiServices.postDynamicData(
       context,
       AppApi.register,
+      showSuccessMessage: true,
       params,
     );
 
@@ -37,6 +39,8 @@ class AuthRepo {
     Response response = await apiServices.postDynamicData(
       context,
       AppApi.sendOtp,
+      showSuccessMessage: true,
+
       params,
     );
 
@@ -50,6 +54,82 @@ class AuthRepo {
     Response response = await apiServices.postDynamicData(
       context,
       AppApi.verifyOtp,
+      showSuccessMessage: true,
+
+      params,
+    );
+
+    return response;
+  }
+
+  Future<Response> forgotPassword(
+    BuildContext context, {
+    required Map<String, dynamic> params,
+  }) async {
+    Response response = await apiServices.postDynamicData(
+      context,
+      AppApi.forgotPassword,
+      showSuccessMessage: true,
+
+      params,
+    );
+
+    return response;
+  }
+
+  Future<Response> resetPassword(
+    BuildContext context, {
+    required Map<String, dynamic> params,
+  }) async {
+    Response response = await apiServices.postDynamicData(
+      context,
+      AppApi.resetPassword,
+      showSuccessMessage: true,
+
+      params,
+    );
+
+    return response;
+  }
+
+  Future<Response> forgotOtpVerify(
+    BuildContext context, {
+    required Map<String, dynamic> params,
+  }) async {
+    Response response = await apiServices.postDynamicData(
+      context,
+      AppApi.forgotOtpVerify,
+      showSuccessMessage: true,
+
+      params,
+    );
+
+    return response;
+  }
+
+  Future<Response> logout(
+    BuildContext context, {
+    required Map<String, dynamic> params,
+  }) async {
+    Response response = await apiServices.postDynamicData(
+      context,
+      AppApi.logout,
+      showSuccessMessage: true,
+
+      params,
+    );
+
+    return response;
+  }
+  Future<Response> deleteAccount(
+    BuildContext context, {
+    required Map<String, dynamic> params,
+  }) async {
+    Response response = await apiServices.postDynamicData(
+      context,
+      AppApi.deleteAccount,
+      showSuccessMessage: true,
+
       params,
     );
 

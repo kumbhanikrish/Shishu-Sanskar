@@ -99,8 +99,9 @@ dynamic providers = [
   BlocProvider(create: (context) => MaritalRadioCubit()),
   BlocProvider(create: (context) => CounterCubit()),
   BlocProvider(create: (context) => ProfileCubit()),
-  BlocProvider(create: (context) => EditCubit()),
+
   BlocProvider(create: (context) => VerifiedNumber()),
   BlocProvider(create: (context) => VerifiedWNumber()),
   BlocProvider(create: (context) => ReasonCubit()),
+  BlocProvider(create: (context) => ProfileImageCubit()),
 ];

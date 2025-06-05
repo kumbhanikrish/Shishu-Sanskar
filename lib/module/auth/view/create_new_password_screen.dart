@@ -9,7 +9,8 @@ import 'package:shishu_sanskar/utils/widgets/custom_textfield.dart';
 import 'package:sizer/sizer.dart';
 
 class CreateNewPasswordScreen extends StatelessWidget {
-  CreateNewPasswordScreen({super.key});
+  final String email;
+  CreateNewPasswordScreen({super.key, required this.email});
 
   final TextEditingController newPasswordController = TextEditingController();
   final TextEditingController cPasswordController = TextEditingController();
@@ -20,6 +21,7 @@ class CreateNewPasswordScreen extends StatelessWidget {
     CPasswordVisibilityCubit cPasswordVisibilityCubit =
         BlocProvider.of<CPasswordVisibilityCubit>(context);
     StepperCubit stepperCubit = BlocProvider.of<StepperCubit>(context);
+    AuthCubit authCubit = BlocProvider.of<AuthCubit>(context);
 
     passwordVisibilityCubit.init();
     cPasswordVisibilityCubit.init();
@@ -73,7 +75,18 @@ class CreateNewPasswordScreen extends StatelessWidget {
         ),
 
         Gap(20),
-        CustomButton(text: 'Done', onTap: () {}),
+        CustomButton(
+          text: 'Done',
+          onTap: () {
+            authCubit.resetPassword(
+              context,
+              email: email,
+              newPassword: newPasswordController.text.trim(),
+              passwordConfirmation: cPasswordController.text.trim(),
+              stepperCubit: stepperCubit,
+            );
+          },
+        ),
         Gap(20),
         CustomTextButton(
           text: 'Cancel',
