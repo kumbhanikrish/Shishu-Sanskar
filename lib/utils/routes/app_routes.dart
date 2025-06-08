@@ -18,6 +18,7 @@ import 'package:shishu_sanskar/module/setting/view/privacy_police_screen.dart';
 import 'package:shishu_sanskar/module/setting/view/setting_screen.dart';
 import 'package:shishu_sanskar/module/tools/view/chinese_gender_predictor/chinese_gender_predictor_screen.dart';
 import 'package:shishu_sanskar/module/tools/view/due_date/due_date_screen.dart';
+import 'package:shishu_sanskar/module/tools/view/ovulation/ovulation_calculator_screen.dart';
 
 import 'package:shishu_sanskar/utils/constant/app_page.dart';
 
@@ -52,4 +53,5 @@ final Map<String, WidgetBuilder> appRoutes = {
   AppPage.chineseGenderPredictorScreen:
       (context) => ChineseGenderPredictorScreen(),
   AppPage.dueDateScreen: (context) => DueDateScreen(),
+  AppPage.ovulationCalculatorScreen: (context) => OvulationCalculatorScreen(),
 };

@@ -122,7 +122,7 @@ class DueDateScreen extends StatelessWidget {
                                 ),
                               ),
                               padding: EdgeInsets.symmetric(
-                                vertical: 10,
+                                vertical: 20,
                                 horizontal: 14,
                               ),
                               child: Column(

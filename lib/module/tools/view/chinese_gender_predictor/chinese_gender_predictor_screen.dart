@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_html/flutter_html.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:shishu_sanskar/module/auth/cubit/auth_cubit.dart';
@@ -132,6 +130,7 @@ class ChineseGenderPredictorScreen extends StatelessWidget {
                             color: AppColor.boyBgColor,
                             borderRadius: BorderRadius.circular(10),
                           ),
+                          padding: EdgeInsets.symmetric(vertical: 20),
                           child: Column(
                             children: [
                               Image.asset(AppImage.boy),
@@ -140,6 +139,7 @@ class ChineseGenderPredictorScreen extends StatelessWidget {
                                 text: "Congratulations!!! It's a Boy.",
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400,
+                                color: AppColor.congratulationsBoyColor,
                               ),
                             ],
                           ),
@@ -151,6 +151,9 @@ class ChineseGenderPredictorScreen extends StatelessWidget {
                             color: AppColor.girlBgColor,
                             borderRadius: BorderRadius.circular(10),
                           ),
+
+                          padding: EdgeInsets.symmetric(vertical: 20),
+
                           child: Column(
                             children: [
                               Image.asset(AppImage.girl),
@@ -159,6 +162,7 @@ class ChineseGenderPredictorScreen extends StatelessWidget {
                                 text: "Congratulations!!! It's a Girl.",
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400,
+                                color: AppColor.congratulationsGirlColor,
                               ),
                             ],
                           ),

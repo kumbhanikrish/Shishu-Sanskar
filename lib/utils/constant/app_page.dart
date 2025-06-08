@@ -21,4 +21,5 @@ class AppPage {
   static String payDetailScreen = '/payDetailScreen';
   static String chineseGenderPredictorScreen = '/chineseGenderPredictorScreen';
   static String dueDateScreen = '/dueDateScreen';
+  static String ovulationCalculatorScreen = '/ovulationCalculatorScreen';
 }

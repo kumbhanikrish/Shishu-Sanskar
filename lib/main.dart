@@ -59,7 +59,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: 'Flutter Demo',
             theme: ThemeData(
-              dialogTheme: DialogTheme(
+              dialogTheme: DialogThemeData(
                 backgroundColor: AppColor.whiteColor,
                 surfaceTintColor: AppColor.whiteColor,
               ),

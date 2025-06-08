@@ -54,6 +54,10 @@ class ToolsScreen extends StatelessWidget {
                 subtitle: toolsModel.subtitle,
                 onTap: () {
                   if (index == 0) {
+                    Navigator.pushNamed(
+                      context,
+                      AppPage.ovulationCalculatorScreen,
+                    );
                     return;
                   }
 
