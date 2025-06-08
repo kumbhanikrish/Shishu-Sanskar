@@ -30,7 +30,7 @@ class ToolsCardView extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         child: Row(
           children: [
-            SvgPicture.asset(imagePath, width: 60, height: 60),
+            Image.asset(imagePath, width: 60, height: 60),
             Gap(20),
             Expanded(
               child: Column(
@@ -49,30 +49,37 @@ class ToolsCardView extends StatelessWidget {
                     color: AppColor.subTitleColor,
                     maxLines: 3,
                   ),
-                  Gap(6),
 
                   InkWell(
                     onTap: onTap,
-                    child: Row(
-                      children: [
-                        CustomText(
-                          text: "Read more",
-                          color: AppColor.themePrimaryColor,
-                          fontSize: 11,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 2, left: 5),
-                          child: SvgPicture.asset(
-                            AppImage.arrowRightIcon,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              CustomText(
+                                text: "Read more",
+                                color: AppColor.themePrimaryColor,
+                                fontSize: 11,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 2, left: 5),
+                                child: SvgPicture.asset(
+                                  AppImage.arrowRightIcon,
+                                  color: AppColor.themePrimaryColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                          customDividerWithOutTopBottomSpace(
+                            width: 75,
                             color: AppColor.themePrimaryColor,
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  customDividerWithOutTopBottomSpace(
-                    width: 75,
-                    color: AppColor.themePrimaryColor,
                   ),
                 ],
               ),

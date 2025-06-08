@@ -396,3 +396,33 @@ class ReasonCubit extends Cubit<List<String>> {
     emit([]);
   }
 }
+
+class DatePickerCubit extends Cubit<DateTime?> {
+  DatePickerCubit() : super(null);
+
+  void selectDate(BuildContext context, DateTime? date) {
+    if (date != null) {
+      emit(date);
+      Navigator.pop(context);
+    }
+  }
+
+  init() {
+    emit(null);
+  }
+}
+
+class DatePicker2Cubit extends Cubit<DateTime?> {
+  DatePicker2Cubit() : super(null);
+
+  void selectDate(BuildContext context, DateTime? date) {
+    if (date != null) {
+      emit(date);
+      Navigator.pop(context);
+    }
+  }
+
+  init() {
+    emit(null);
+  }
+}

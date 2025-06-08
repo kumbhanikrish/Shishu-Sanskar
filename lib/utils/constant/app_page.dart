@@ -11,7 +11,7 @@ class AppPage {
   static String eventSeeAllScreen = '/eventSeeAllScreen';
   static String eventDetailScreen = '/eventDetailScreen';
   static String settingScreen = '/settingScreen';
-  static String profileScreen = '/editProfileScreen';
+  static String editProfileScreen = '/editProfileScreen';
   static String contactUsScreen = '/contactUsScreen';
 
   static String privacyPolicyScreen = '/privacyPolicyScreen';
@@ -19,4 +19,6 @@ class AppPage {
   static String deletePasswordScreen = '/deletePasswordScreen';
   static String blogDetailScreen = '/blogDetailScreen';
   static String payDetailScreen = '/payDetailScreen';
+  static String chineseGenderPredictorScreen = '/chineseGenderPredictorScreen';
+  static String dueDateScreen = '/dueDateScreen';
 }

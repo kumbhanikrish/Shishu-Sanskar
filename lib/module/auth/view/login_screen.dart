@@ -22,6 +22,7 @@ class LoginScreen extends StatelessWidget {
     PasswordVisibilityCubit passwordVisibilityCubit =
         BlocProvider.of<PasswordVisibilityCubit>(context);
     AuthCubit authCubit = BlocProvider.of<AuthCubit>(context);
+    StepperCubit stepperCubit = BlocProvider.of<StepperCubit>(context);
     passwordVisibilityCubit.init();
     return Scaffold(
       body: customLoginTheme(
@@ -98,6 +99,7 @@ class LoginScreen extends StatelessWidget {
                     CustomText(text: 'Already have an account? ', fontSize: 10),
                     InkWell(
                       onTap: () {
+                        stepperCubit.init();
                         Navigator.pushNamedAndRemoveUntil(
                           context,
                           AppPage.authScreen,

@@ -54,11 +54,12 @@ class _AuthScreenState extends State<AuthScreen> {
     StoreWpNumberCubit storeWpNumberCubit = BlocProvider.of<StoreWpNumberCubit>(
       context,
     );
+    VerifiedNumber verifiedNumber = BlocProvider.of<VerifiedNumber>(context);
 
     storeNumberCubit.init();
     storeWpNumberCubit.init();
-
-    // stepperCubit.init();
+    verifiedNumber.init();
+    stepperCubit.init();
 
     Widget getStepText(int step) {
       switch (step) {

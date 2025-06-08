@@ -10,12 +10,14 @@ import 'package:shishu_sanskar/module/home/view/event_see_all_screen.dart';
 import 'package:shishu_sanskar/module/home/view/task_detail_Screen.dart';
 import 'package:shishu_sanskar/module/home/view/task_see_all_screen.dart';
 import 'package:shishu_sanskar/module/pricing/view/pay_detail_Screen.dart';
-import 'package:shishu_sanskar/module/profile/view/profile_screen.dart';
+import 'package:shishu_sanskar/module/profile/view/edit_profile_screen.dart';
 import 'package:shishu_sanskar/module/setting/view/contact_us_screen.dart';
 import 'package:shishu_sanskar/module/setting/view/delete_account_screen.dart';
 import 'package:shishu_sanskar/module/setting/view/delete_password_screen.dart';
 import 'package:shishu_sanskar/module/setting/view/privacy_police_screen.dart';
 import 'package:shishu_sanskar/module/setting/view/setting_screen.dart';
+import 'package:shishu_sanskar/module/tools/view/chinese_gender_predictor/chinese_gender_predictor_screen.dart';
+import 'package:shishu_sanskar/module/tools/view/due_date/due_date_screen.dart';
 
 import 'package:shishu_sanskar/utils/constant/app_page.dart';
 
@@ -30,9 +32,10 @@ final Map<String, WidgetBuilder> appRoutes = {
   AppPage.eventSeeAllScreen: (context) => EventSeeAllScreen(),
   AppPage.eventDetailScreen: (context) => EventDetailScreen(),
   AppPage.settingScreen: (context) => SettingScreen(),
-  AppPage.profileScreen:
-      (context) =>
-          ProfileScreen(argument: ModalRoute.of(context)?.settings.arguments),
+  AppPage.editProfileScreen:
+      (context) => EditProfileScreen(
+        argument: ModalRoute.of(context)?.settings.arguments,
+      ),
   AppPage.contactUsScreen: (context) => ContactUsScreen(),
 
   AppPage.privacyPolicyScreen: (context) => const PrivacyPoliceScreen(),
@@ -41,6 +44,12 @@ final Map<String, WidgetBuilder> appRoutes = {
       (context) => DeletePasswordScreen(
         arguments: ModalRoute.of(context)?.settings.arguments,
       ),
-  AppPage.blogDetailScreen: (context) => BlogDetailScreen(),
+  AppPage.blogDetailScreen:
+      (context) => BlogDetailScreen(
+        argument: ModalRoute.of(context)?.settings.arguments,
+      ),
   AppPage.payDetailScreen: (context) => PayDetailScreen(),
+  AppPage.chineseGenderPredictorScreen:
+      (context) => ChineseGenderPredictorScreen(),
+  AppPage.dueDateScreen: (context) => DueDateScreen(),
 };

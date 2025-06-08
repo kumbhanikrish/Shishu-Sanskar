@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:shishu_sanskar/local_data/local_data_sever.dart';
+import 'package:shishu_sanskar/utils/constant/app_api.dart';
 import 'package:shishu_sanskar/utils/constant/app_page.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_error_toast.dart';
 
@@ -16,6 +17,8 @@ class ApiServices {
   /// Build headers for all API requests
   Future<Map<String, String>> _buildHeaders() async {
     final token = await dataSaver.getAuthToken();
+
+    log("Auth Token: $token");
     return {
       "Content-device": "application/json",
       "Authorization": "Bearer $token",
@@ -42,7 +45,7 @@ class ApiServices {
       log("Response Data: ${response.data}");
 
       await EasyLoading.dismiss();
-      if (response.statusCode == 200) {
+      if (response.data['success'] == true && response.data != null) {
         if (showSuccessMessage) {
           // Show success message
           customSuccessToast(
@@ -84,10 +87,7 @@ class ApiServices {
       log("statusCode ::${response.statusCode}");
       log("response.data :: ${response.data}");
 
-      if (response.statusCode == 201) {
-        await EasyLoading.dismiss();
-        return response;
-      } else if (response.statusCode == 200) {
+      if (response.data['success'] == true && response.data != null) {
         if (showSuccessMessage) {
           // Show success message
           customSuccessToast(
@@ -97,9 +97,12 @@ class ApiServices {
         }
         await EasyLoading.dismiss();
         return response;
+      } else {
+        // If status code is not 200/201, still return response (or handle error)
+        return response;
       }
     } on DioException catch (e) {
-      _handleDioError(context, e);
+      _handleDioError(context, e, loginEndPoint: AppApi.login);
     } catch (e) {
       await EasyLoading.dismiss();
 
@@ -174,7 +177,11 @@ class ApiServices {
   }
 
   /// Handles Dio errors uniformly across all methods
-  void _handleDioError(BuildContext context, DioException e) async {
+  void _handleDioError(
+    BuildContext context,
+    DioException e, {
+    String loginEndPoint = '',
+  }) async {
     await EasyLoading.dismiss();
     final statusCode = e.response?.statusCode;
     final responseData = e.response?.data;
@@ -182,11 +189,11 @@ class ApiServices {
     log("DioException: $responseData, Status Code: $statusCode");
 
     // Handle 401 Unauthorized
-    if (statusCode == 401) {
+    if (statusCode == 401 && loginEndPoint != AppApi.login) {
       await dataSaver.setAuthToken('');
       Navigator.pushNamedAndRemoveUntil(
         context,
-        AppPage.authScreen,
+        AppPage.loginScreen,
         (route) => false,
       );
       return;

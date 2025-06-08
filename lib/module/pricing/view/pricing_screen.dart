@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:shishu_sanskar/module/pricing/cubit/pricing_cubit.dart';
+import 'package:shishu_sanskar/module/pricing/model/pricing_model.dart';
 import 'package:shishu_sanskar/module/pricing/view/widget/custom_pricing_widget.dart';
 import 'package:shishu_sanskar/utils/constant/app_image.dart';
 import 'package:shishu_sanskar/utils/constant/app_page.dart';
@@ -12,6 +15,10 @@ class PricingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    PricingCubit pricingCubit = BlocProvider.of<PricingCubit>(context);
+    pricingCubit.getPlans(context, categoryId: '1');
+    List<PricingModel> pricingList = [];
+
     return Expanded(
       child: Stack(
         children: [
@@ -29,91 +36,57 @@ class PricingScreen extends StatelessWidget {
                     fontSize: 22,
                   ),
                   Gap(30),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: <Widget>[
-                          customPricingCard(
-                            image: AppImage.offline,
-                            name: 'Offline',
-                            price: '₹15,000',
-                            onTap: () {
-                              Navigator.pushNamed(
-                                context,
-                                AppPage.payDetailScreen,
+
+                  BlocBuilder<PricingCubit, PricingState>(
+                    builder: (context, state) {
+                      if (state is GetPricingState) {
+                        pricingList = state.pricingList;
+                        return Expanded(
+                          child: ListView.separated(
+                            itemCount: pricingList.length,
+                            separatorBuilder: (
+                              BuildContext context,
+                              int index,
+                            ) {
+                              return Gap(20);
+                            },
+                            itemBuilder: (BuildContext context, int index) {
+                              PricingModel pricingModel = pricingList[index];
+                              return customPricingCard(
+                                image:
+                                    pricingModel.title == 'Online'
+                                        ? AppImage.online
+                                        : AppImage.offline,
+                                name: pricingModel.title,
+                                price: '₹${pricingModel.price}',
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    AppPage.payDetailScreen,
+                                  );
+                                },
+                                backgroundColor: AppColor.themePrimaryColor,
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemCount: pricingModel.services.length,
+                                  itemBuilder: (
+                                    BuildContext context,
+                                    int index,
+                                  ) {
+                                    return customDoneIconAndText(
+                                      text: pricingModel.services[index],
+                                    );
+                                  },
+                                ),
                               );
                             },
-                            backgroundColor: AppColor.themePrimaryColor,
-                            child: Column(
-                              children: [
-                                customDoneIconAndText(text: 'Daily Activity'),
-                                customDoneIconAndText(text: 'Family Harmony'),
-                                customDoneIconAndText(
-                                  text: 'Musical Pregnancy',
-                                ),
-                                customDoneIconAndText(text: 'Yoga & Diet'),
-                                customDoneIconAndText(text: 'Advance Workshop'),
-                                customDoneIconAndText(
-                                  text: 'Advance Expert Sessions',
-                                ),
-                                customDoneIconAndText(
-                                  text: 'Advance Material Kit',
-                                ),
-                                customDoneIconAndText(text: 'Live Q&A Session'),
-                                customDoneIconAndText(
-                                  text: 'Counselling & Support',
-                                  icon: Icons.remove_rounded,
-                                  color: AppColor.greyColor,
-                                ),
-                              ],
-                            ),
                           ),
-                          Gap(20),
-                          customPricingCard(
-                            image: AppImage.online,
-                            name: 'Online',
-                            price: '₹15,000',
-                            onTap: () {
-                              Navigator.pushNamed(
-                                context,
-                                AppPage.payDetailScreen,
-                              );
-                            },
-                            textColor: AppColor.themePrimaryColor,
-                            backgroundColor: AppColor.whiteColor,
-                            borderColor: AppColor.themePrimaryColor,
-                            child: Column(
-                              children: [
-                                customDoneIconAndText(text: 'Daily Activity'),
-                                customDoneIconAndText(text: 'Family Harmony'),
-                                customDoneIconAndText(
-                                  text: 'Musical Pregnancy',
-                                ),
-                                customDoneIconAndText(text: 'Yoga & Diet'),
-                                customDoneIconAndText(text: 'Advance Workshop'),
-                                customDoneIconAndText(
-                                  text: 'Advance Expert Sessions',
-                                ),
-                                customDoneIconAndText(
-                                  text: 'Advance Material Kit',
-                                ),
-                                customDoneIconAndText(
-                                  text: 'Live Q&A Session',
-                                  icon: Icons.remove_rounded,
-                                  color: AppColor.greyColor,
-                                ),
-                                customDoneIconAndText(
-                                  text: 'Counselling & Support',
-                                  icon: Icons.remove_rounded,
-                                  color: AppColor.greyColor,
-                                ),
-                              ],
-                            ),
-                          ),
-                          Gap(5.h),
-                        ],
-                      ),
-                    ),
+                        );
+                      } else {
+                        return SizedBox();
+                      }
+                    },
                   ),
                 ],
               ),

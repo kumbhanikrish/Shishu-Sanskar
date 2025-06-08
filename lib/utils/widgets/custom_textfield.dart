@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
@@ -188,6 +191,62 @@ class CustomCountyTextfield extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class CustomDropWonFiled<T> extends StatelessWidget {
+  final String text;
+  final T? initialItem;
+  final String? hintText;
+  final List<T> items;
+  final dynamic Function(T?) onChanged;
+  const CustomDropWonFiled({
+    super.key,
+    required this.text,
+    this.initialItem,
+    this.hintText,
+    required this.items,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (text.isNotEmpty) ...[CustomText(text: text, fontSize: 12), Gap(10)],
+
+        CustomDropdown<T>(
+          hintText: 'Select job role',
+          closedHeaderPadding: EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 14,
+          ),
+          decoration: CustomDropdownDecoration(
+            closedBorder: Border.all(color: AppColor.themePrimaryColor2),
+            hintStyle: TextStyle(
+              fontFamily: 'Caros Soft',
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
+            headerStyle: TextStyle(
+              fontFamily: 'Caros Soft',
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
+            listItemStyle: TextStyle(
+              fontFamily: 'Caros Soft',
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+
+          items: items,
+          initialItem: initialItem,
+          onChanged: onChanged,
+        ),
+      ],
     );
   }
 }

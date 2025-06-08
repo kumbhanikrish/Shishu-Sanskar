@@ -19,9 +19,9 @@ import 'package:shishu_sanskar/utils/widgets/custom_text.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_textfield.dart';
 import 'package:sizer/sizer.dart';
 
-class ProfileScreen extends StatelessWidget {
+class EditProfileScreen extends StatelessWidget {
   final dynamic argument;
-  const ProfileScreen({super.key, required this.argument});
+  const EditProfileScreen({super.key, required this.argument});
 
   @override
   Widget build(BuildContext context) {
@@ -62,10 +62,15 @@ class ProfileScreen extends StatelessWidget {
 
     RadioCubit radioCubit = BlocProvider.of<RadioCubit>(context);
     CounterCubit counterCubit = BlocProvider.of<CounterCubit>(context);
+    ProfileCubit profileCubit = BlocProvider.of<ProfileCubit>(context);
+    ProfileImageCubit profileImageCubit = BlocProvider.of<ProfileImageCubit>(
+      context,
+    );
     MaritalRadioCubit maritalRadioCubit = BlocProvider.of<MaritalRadioCubit>(
       context,
     );
     counterCubit.init();
+    profileImageCubit.clearImage();
 
     radioCubit.selectUserType(
       loginModel.user.gender == 'male' ? UserType.male : UserType.female,
@@ -77,7 +82,6 @@ class ProfileScreen extends StatelessWidget {
           : MaritalType.single,
     );
 
-    counterCubit = context.read<CounterCubit>();
     counterCubit.setInitialCount(loginModel.user.noOfKid);
 
     return Scaffold(
@@ -150,9 +154,7 @@ class ProfileScreen extends StatelessWidget {
                                     ),
                                     child: InkWell(
                                       onTap: () {
-                                        context
-                                            .read<ProfileImageCubit>()
-                                            .pickImage();
+                                        profileImageCubit.pickImage();
                                       },
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
@@ -448,7 +450,38 @@ class ProfileScreen extends StatelessWidget {
                             ],
                           ),
                           Gap(40),
-                          CustomButton(text: 'Save', onTap: () {}),
+                          CustomButton(
+                            text: 'Save',
+                            onTap: () {
+                              final pickedImagePath =
+                                  profileImageCubit.state?.path ?? '';
+                              final imageToUpload =
+                                  pickedImagePath.isNotEmpty
+                                      ? pickedImagePath
+                                      : loginModel.user.profileImage;
+                              profileCubit.editProfile(
+                                context,
+                                firstName: firstNameController.text.trim(),
+                                middleName: middleNameController.text.trim(),
+                                lastName: lastNameController.text.trim(),
+                                contactNumber: numberController.text.trim(),
+                                whatsappNumber: wpNumberController.text.trim(),
+                                email: emailController.text.trim(),
+                                gender:
+                                    radioCubit.state == UserType.male
+                                        ? 'male'
+                                        : 'female',
+                                marital:
+                                    maritalRadioCubit.state ==
+                                            MaritalType.married
+                                        ? 'married'
+                                        : 'single',
+                                noOfKid: counterCubit.state.toString(),
+
+                                profileImage: imageToUpload,
+                              );
+                            },
+                          ),
                         ],
                       ),
                     ),

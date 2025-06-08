@@ -4,7 +4,6 @@ import 'package:gap/gap.dart';
 import 'package:shishu_sanskar/main.dart';
 import 'package:shishu_sanskar/module/auth/cubit/auth_cubit.dart';
 import 'package:shishu_sanskar/module/auth/model/login_model.dart';
-import 'package:shishu_sanskar/utils/constant/app_image.dart';
 import 'package:shishu_sanskar/utils/constant/app_page.dart';
 import 'package:shishu_sanskar/utils/theme/colors.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_app_bar.dart';
@@ -50,7 +49,11 @@ class _SettingScreenState extends State<SettingScreen> {
               customAppBar(
                 title: 'Setting',
                 onTap: () {
-                  Navigator.pop(context);
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    AppPage.bottomNavigationScreen,
+                    (route) => false,
+                  );
                 },
               ),
               Padding(
@@ -120,7 +123,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                   onTap: () {
                                     Navigator.pushNamed(
                                       context,
-                                      AppPage.profileScreen,
+                                      AppPage.editProfileScreen,
                                       arguments: {
                                         'loginModelValue': loginModelValue,
                                       },

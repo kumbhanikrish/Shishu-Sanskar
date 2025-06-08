@@ -1,6 +1,7 @@
 class AppImage {
   static String splashBGImage = 'assets/image/BG.png';
   static String loginBGImage = 'assets/image/login-BG.png';
+  static String titleBG = 'assets/image/title_bg.png';
   static String fullName = 'assets/image/fullName.svg';
   static String email = 'assets/image/email.svg';
   static String lock = 'assets/image/lock.svg';
@@ -52,8 +53,14 @@ class AppImage {
   static String dislikeIcon = 'assets/image/dislike.svg';
   static String likeIconFilled = 'assets/image/like_fill.svg';
   static String dislikeIconFilled = 'assets/image/dislike_fill.svg';
-  static String toolsImage = 'assets/image/toolsImage.svg';
+  static String ovulationCalculator = 'assets/image/ovulationCalculator.png';
   static String promoCodeIcon = 'assets/image/promo_code.svg';
+  static String dueDateCalculator = 'assets/image/dueDateCalculator.png';
+  static String datePick = 'assets/image/datePick.svg';
+  static String chineseGenderPredictor =
+      'assets/image/chineseGenderPredictor.png';
+  static String boy = 'assets/image/boy.png';
+  static String girl = 'assets/image/girl.png';
 }
 
 class AppLogo {

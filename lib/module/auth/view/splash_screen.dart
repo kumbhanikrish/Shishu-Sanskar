@@ -25,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (token.isEmpty) {
         Navigator.pushNamedAndRemoveUntil(
           context,
-          AppPage.loginScreen,
+          AppPage.bottomNavigationScreen,
           (route) => false,
         );
       } else {

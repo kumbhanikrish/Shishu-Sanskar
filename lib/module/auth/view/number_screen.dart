@@ -46,8 +46,6 @@ class NumberScreen extends StatelessWidget {
         BlocProvider.of<PasswordVisibilityCubit>(context);
     AuthCubit authCubit = BlocProvider.of<AuthCubit>(context);
 
-    radioCubit.init();
-
     return Expanded(
       child: SingleChildScrollView(
         child: Column(
@@ -168,13 +166,15 @@ class NumberScreen extends StatelessWidget {
                     );
                   },
                 ),
-                Gap(10),
-                CustomCountyTextfield(
-                  code: wpNumberCode,
-                  image: wpNumberFlag,
-                  controller: wpNumberController,
-                  prefixOnTap: wpNumberPrefixOnTap,
-                ),
+                if (numberCode == '+91') ...[
+                  Gap(10),
+                  CustomCountyTextfield(
+                    code: wpNumberCode,
+                    image: wpNumberFlag,
+                    controller: wpNumberController,
+                    prefixOnTap: wpNumberPrefixOnTap,
+                  ),
+                ],
                 Gap(20),
                 CustomButton(text: 'Continue', onTap: onTap),
 

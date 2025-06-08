@@ -12,16 +12,16 @@ class LoginModel {
 
 class User {
   final int id;
-  final String firstName;
-  final String middleName;
-  final String lastName;
-  final String profileImage;
-  final String email;
-  final String gender;
-  final String marital;
-  final int noOfKid;
-  final String contactNumber;
-  final dynamic whatsappNumber;
+  String firstName;
+  String middleName;
+  String lastName;
+  String profileImage;
+  String email;
+  String gender;
+  String marital;
+  int noOfKid;
+  String contactNumber;
+  dynamic whatsappNumber;
   final int categoryId;
   final DateTime lmp;
   final dynamic googleToken;
@@ -59,22 +59,22 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) => User(
     id: json["id"],
-    firstName: json["first_name"],
-    middleName: json["middle_name"],
-    lastName: json["last_name"],
+    firstName: json["first_name"] ?? '',
+    middleName: json["middle_name"] ?? '',
+    lastName: json["last_name"] ?? '',
     profileImage: json["profile_image"] ?? '',
-    email: json["email"],
-    gender: json["gender"],
-    marital: json["marital"],
-    noOfKid: json["no_of_kid"],
-    contactNumber: json["contact_number"],
-    whatsappNumber: json["whatsapp_number"],
+    email: json["email"] ?? '',
+    gender: json["gender"] ?? '',
+    marital: json["marital"] ?? '',
+    noOfKid: json["no_of_kid"] ?? 0,
+    contactNumber: json["contact_number"] ?? '',
+    whatsappNumber: json["whatsapp_number"] ?? '',
     categoryId: json["category_id"],
-    lmp: DateTime.parse(json["lmp"]),
-    googleToken: json["google_token"],
-    appleToken: json["apple_token"],
-    fcmToken: json["fcm_token"],
-    isActive: json["is_active"],
+    lmp: json["lmp"] == null ? DateTime.now() : DateTime.parse(json["lmp"]),
+    googleToken: json["google_token"] ?? '',
+    appleToken: json["apple_token"] ?? '',
+    fcmToken: json["fcm_token"] ?? '',
+    isActive: json["is_active"] ?? 0,
     markedForDeletionAt: json["marked_for_deletion_at"],
     emailVerifiedAt: json["email_verified_at"],
     createdAt: DateTime.parse(json["created_at"]),

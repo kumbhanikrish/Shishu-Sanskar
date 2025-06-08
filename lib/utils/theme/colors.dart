@@ -8,8 +8,12 @@ class AppColor {
   static Color lightThemePrimaryColor = const Color(0xFFFFF3F4);
   static Color themeSecondaryColor = const Color(0xFF38B5B5);
   static Color themeSecondaryColor2 = const Color(0xFFB3F9F9);
+  static Color dueDateBgColor = const Color(0xFFC9EBEA);
+  static Color boyBgColor = const Color(0xFFD1ECF1);
+  static Color girlBgColor = const Color(0xFFD1ECF1);
   static Color themeSecondaryColor3 = const Color(0xFFA4FFFE);
   static Color dottedColor = const Color(0xFFD2D2D2);
+  static Color calendarControlColor = const Color(0xFF8C8CB7);
 
   static Color whiteColor = Colors.white;
   static Color toolsBgColor = Color(0xFFFFFAFA);

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:gap/gap.dart';
 import 'package:shishu_sanskar/utils/theme/colors.dart';
 
 class CustomText extends StatelessWidget {
@@ -38,6 +40,106 @@ class CustomText extends StatelessWidget {
       textAlign: textAlign,
       maxLines: maxLines,
       overflow: overflow == true ? TextOverflow.ellipsis : TextOverflow.visible,
+    );
+  }
+}
+
+class CustomHTMLText extends StatelessWidget {
+  final String text;
+  final double fontSize;
+  final FontWeight fontWeight;
+  final Color? color;
+  final TextAlign textAlign;
+  final int? maxLines;
+  final bool overflow;
+
+  const CustomHTMLText({
+    super.key,
+    required this.text,
+    this.fontSize = 16,
+    this.fontWeight = FontWeight.w400,
+    this.color,
+    this.textAlign = TextAlign.left,
+    this.maxLines,
+    this.overflow = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Html(
+      data: text.trim(),
+      style: {
+        "html": Style(margin: Margins.zero, padding: HtmlPaddings.zero),
+        "body": Style(
+          fontSize: FontSize(fontSize),
+          fontWeight: fontWeight,
+          color: color ?? Colors.black,
+          fontFamily: 'Caros Soft',
+          textAlign: textAlign,
+          maxLines: maxLines,
+          padding: HtmlPaddings.zero,
+          margin: Margins.zero,
+          textOverflow: overflow ? TextOverflow.ellipsis : TextOverflow.visible,
+        ),
+        "*": Style(margin: Margins.zero, padding: HtmlPaddings.zero),
+      },
+    );
+  }
+}
+
+class CustomEmpty extends StatelessWidget {
+  const CustomEmpty({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return CustomText(
+      text: 'Not Found!!!',
+      fontSize: 12,
+      fontWeight: FontWeight.w500,
+      color: AppColor.subTitleColor,
+    );
+  }
+}
+
+class CustomRowText extends StatelessWidget {
+  final String text;
+  final double fontSize;
+  final FontWeight fontWeight;
+  final Color? color;
+  final TextAlign textAlign;
+  final int? maxLines;
+
+  final TextDecoration? decoration;
+  final Widget? child;
+  const CustomRowText({
+    super.key,
+    required this.text,
+    this.fontSize = 16,
+    this.fontWeight = FontWeight.w400,
+    this.color,
+    this.textAlign = TextAlign.left,
+    this.maxLines,
+
+    this.decoration,
+    this.child,
+  });
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+
+      children: [
+        CustomText(
+          text: text,
+          fontSize: fontSize,
+          fontWeight: fontWeight,
+          color: color,
+          decoration: decoration,
+          textAlign: textAlign,
+          maxLines: maxLines,
+        ),
+        Gap(5),
+        child ?? SizedBox(),
+      ],
     );
   }
 }
