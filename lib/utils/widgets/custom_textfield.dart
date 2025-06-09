@@ -199,11 +199,13 @@ class CustomDropWonFiled<T> extends StatelessWidget {
   final String? hintText;
   final List<T> items;
   final dynamic Function(T?) onChanged;
+  final Color? selectColor;
   const CustomDropWonFiled({
     super.key,
     required this.text,
     this.initialItem,
     this.hintText,
+    this.selectColor,
     required this.items,
     required this.onChanged,
   });
@@ -231,6 +233,7 @@ class CustomDropWonFiled<T> extends StatelessWidget {
             headerStyle: TextStyle(
               fontFamily: 'Caros Soft',
               fontSize: 12,
+              color: selectColor,
               fontWeight: FontWeight.w500,
             ),
             listItemStyle: TextStyle(

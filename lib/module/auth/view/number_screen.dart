@@ -146,12 +146,18 @@ class NumberScreen extends StatelessWidget {
                   prefixOnTap: numberPrefixOnTap,
                   code: numberCode,
                 ),
+
                 Gap(10),
                 BlocBuilder<VerifiedWNumber, bool>(
                   builder: (context, wNumberState) {
                     return customNumberAndVerifiedText(
                       text: 'WhatsApp number',
-                      verifiedText: wNumberState ? 'Verified' : 'Verify',
+                      verifiedText:
+                          wpNumberCode == '+91'
+                              ? wNumberState
+                                  ? 'Verified'
+                                  : 'Verify'
+                              : '',
                       color:
                           wNumberState
                               ? AppColor.themeSecondaryColor
@@ -166,15 +172,14 @@ class NumberScreen extends StatelessWidget {
                     );
                   },
                 ),
-                if (numberCode == '+91') ...[
-                  Gap(10),
-                  CustomCountyTextfield(
-                    code: wpNumberCode,
-                    image: wpNumberFlag,
-                    controller: wpNumberController,
-                    prefixOnTap: wpNumberPrefixOnTap,
-                  ),
-                ],
+                Gap(10),
+                CustomCountyTextfield(
+                  code: wpNumberCode,
+                  image: wpNumberFlag,
+                  controller: wpNumberController,
+                  prefixOnTap: wpNumberPrefixOnTap,
+                ),
+
                 Gap(20),
                 CustomButton(text: 'Continue', onTap: onTap),
 

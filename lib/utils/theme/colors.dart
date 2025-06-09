@@ -17,6 +17,8 @@ class AppColor {
   static Color congratulationsBoyColor = const Color(0xFF0E3C66);
   static Color congratulationsGirlColor = const Color(0xFFFF57AA);
   static Color calenderHeaderBgColor = const Color(0xFFFFEEF0);
+  static Color outDateColor = const Color(0xFFC4C4C4);
+  static Color dateColor = const Color(0xFF383838);
 
   static Color whiteColor = Colors.white;
   static Color toolsBgColor = Color(0xFFFFFAFA);
@@ -31,4 +33,5 @@ class AppColor {
   static Color eventTitleColor = Color(0xFF161616);
   static Color borderColor = Color(0xFFCED8E8);
   static Color disLikeColor = Color(0xFF292D32);
+  static Color weekColor = Color(0xFF8C90A5);
 }

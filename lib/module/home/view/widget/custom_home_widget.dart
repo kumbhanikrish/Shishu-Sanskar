@@ -57,20 +57,23 @@ Widget bottomBarTab(
     onTap: () {
       bottomBarCubit.changeTab(index);
     },
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        SvgPicture.asset(
-          icon,
-          color: isSelected ? selectedColor : unselectedColor,
-        ),
-        Gap(5),
-        CustomText(
-          text: label,
-          fontSize: 10,
-          color: isSelected ? selectedColor : unselectedColor,
-        ),
-      ],
+    child: Padding(
+      padding: const EdgeInsets.all(10),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SvgPicture.asset(
+            icon,
+            color: isSelected ? selectedColor : unselectedColor,
+          ),
+          Gap(5),
+          CustomText(
+            text: label,
+            fontSize: 10,
+            color: isSelected ? selectedColor : unselectedColor,
+          ),
+        ],
+      ),
     ),
   );
 }

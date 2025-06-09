@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shishu_sanskar/main.dart';
+import 'package:shishu_sanskar/module/auth/model/auth_category_model.dart';
 import 'package:shishu_sanskar/module/auth/model/login_model.dart';
 import 'package:shishu_sanskar/module/auth/repo/auth_repo.dart';
 import 'package:shishu_sanskar/utils/constant/app_page.dart';
@@ -72,6 +73,7 @@ class AuthCubit extends Cubit<AuthState> {
       "password": password,
       "password_confirmation": passwordConfirmation,
       "gender": gender,
+
       "lmp": lmp,
     };
 
@@ -251,6 +253,20 @@ class AuthCubit extends Cubit<AuthState> {
     }
 
     return response;
+  }
+
+  Future authCategory(BuildContext context) async {
+    List<AuthCategoryModel> authCategoryList = [];
+
+    Response response = await authRepo.authCategory(context);
+    if (response.data['success'] == true) {
+      authCategoryList =
+          (response.data['data'] as List)
+              .map((e) => AuthCategoryModel.fromJson(e))
+              .toList();
+    }
+
+    emit(AuthCategoryState(authCategoryList: authCategoryList));
   }
 }
 

@@ -1,9 +1,16 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:shishu_sanskar/module/tools/cubit/ovulation_calculator/cubit/ovulation_calculator_cubit.dart';
+import 'package:shishu_sanskar/module/tools/view/ovulation/widget/custom_ovulation_widget.dart';
 import 'package:shishu_sanskar/utils/theme/colors.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_app_bar.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_bg.dart';
+import 'package:shishu_sanskar/utils/widgets/custom_button.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_text.dart';
+import 'package:shishu_sanskar/utils/widgets/custom_textfield.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class OvulationCalculatorScreen extends StatefulWidget {
@@ -15,10 +22,46 @@ class OvulationCalculatorScreen extends StatefulWidget {
 }
 
 class _OvulationCalculatorScreenState extends State<OvulationCalculatorScreen> {
+  DateTime focusedDay = DateTime.now();
+  DateTime? selectedDay;
+
+  List<String> averageCycle = List.generate(
+    36,
+    (index) => (15 + index).toString(),
+  );
+  List<DateTime> fertileWindow = [];
+
+  DateTime? fertileStart;
+  DateTime? fertileEnd;
+  DateTime? ovulationDay;
+  DateTime? nextPeriod;
+  DateTime? pregnancyTestDay;
+  DateTime? estimatedDueDate;
   @override
   Widget build(BuildContext context) {
-    DateTime focusedDay = DateTime(2025, 1, 9);
-    DateTime? selectedDay = DateTime(2025, 1, 9);
+    OvulationCalculatorCubit ovulationCalculatorCubit =
+        BlocProvider.of<OvulationCalculatorCubit>(context);
+    SelectCalenderCubit selectCalenderCubit =
+        BlocProvider.of<SelectCalenderCubit>(context);
+    SelectCycleCubit selectCycleCubit = BlocProvider.of<SelectCycleCubit>(
+      context,
+    );
+
+    ovulationCalculatorCubit.init();
+    selectCalenderCubit.init();
+    selectCycleCubit.init();
+
+    selectCalenderCubit.updateSelectedDay(DateTime.now(), DateTime.now());
+    List<DateTime> fertileWindow = [];
+
+    DateTime? fertileStart = DateTime.now();
+    DateTime? fertileEnd = DateTime.now();
+    DateTime? ovulationDay = DateTime.now();
+    DateTime? nextPeriod = DateTime.now();
+    DateTime? pregnancyTestDay = DateTime.now();
+    DateTime? estimatedDueDate = DateTime.now();
+    DateTime? normalizedDay = DateTime.now();
+
     return Scaffold(
       body: Stack(
         children: [
@@ -32,84 +75,419 @@ class _OvulationCalculatorScreenState extends State<OvulationCalculatorScreen> {
                   Navigator.pop(context);
                 },
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 10,
-                ),
-                child: Column(
-                  children: [
-                    CustomText(
-                      text: 'Select the first day of your last period',
-                      fontWeight: FontWeight.w500,
-                    ),
-                    Gap(10),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: AppColor.blackColor,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: TableCalendar(
-                        firstDay: DateTime(2020),
-                        lastDay: DateTime(2030),
-                        focusedDay: focusedDay,
-                        currentDay: selectedDay,
-                        selectedDayPredicate:
-                            (day) => isSameDay(day, selectedDay),
-                        onDaySelected: (selected, focused) {
-                          setState(() {
-                            selectedDay = selected;
-                            focusedDay = focused;
-                          });
-                        },
-                        headerStyle: HeaderStyle(
-                          titleCentered: true,
-                          formatButtonVisible: false,
-                          titleTextStyle: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          leftChevronIcon: Icon(
-                            Icons.chevron_left,
-                            color: Colors.grey,
-                          ),
-                          rightChevronIcon: Icon(
-                            Icons.chevron_right,
-                            color: Colors.grey,
-                          ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 10,
+                  ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Gap(20),
+                        CustomText(
+                          text: 'Select the first day of your last period',
+                          fontWeight: FontWeight.w500,
+                        ),
+
+                        Gap(10),
+                        Container(
                           decoration: BoxDecoration(
-                            color: AppColor.calenderHeaderBgColor,
-                            borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(0),
-                            ),
+                            color: AppColor.toolsBgColor,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: BlocBuilder<
+                            SelectCalenderCubit,
+                            SelectCalenderState
+                          >(
+                            builder: (context, state) {
+                              if (state is SelectCalenderValueState) {
+                                focusedDay = state.focusedDay;
+                                selectedDay = state.selectedDay;
+                              }
+                              return BlocBuilder<
+                                OvulationCalculatorCubit,
+                                OvulationCalculatorState
+                              >(
+                                builder: (context, state) {
+                                  if (state is OvulationCalculatorResult) {
+                                    fertileStart = state.fertileStart;
+                                    fertileEnd = state.fertileEnd;
+                                    ovulationDay = state.ovulationDay;
+                                    nextPeriod = state.nextPeriod;
+                                    pregnancyTestDay = state.pregnancyTestDay;
+                                    estimatedDueDate = state.estimatedDueDate;
+
+                                    fertileWindow = List.generate(
+                                      state.fertileEnd
+                                              .difference(state.fertileStart)
+                                              .inDays +
+                                          1,
+                                      (index) => DateTime(
+                                        state.fertileStart.year,
+                                        state.fertileStart.month,
+                                        state.fertileStart.day + index,
+                                      ),
+                                    );
+                                  }
+                                  return TableCalendar(
+                                    firstDay: DateTime(2020),
+                                    lastDay: DateTime(2030),
+                                    focusedDay: focusedDay,
+                                    currentDay: selectedDay,
+                                    selectedDayPredicate: (day) {
+                                      return isSameDay(day, selectedDay);
+                                    },
+                                    onDaySelected:
+                                        (state is OvulationCalculatorResult)
+                                            ? null
+                                            : (selected, focused) {
+                                              log(
+                                                'selectedselected ::$selected',
+                                              );
+                                              selectCalenderCubit
+                                                  .updateSelectedDay(
+                                                    selected,
+                                                    focused,
+                                                  );
+                                            },
+                                    calendarBuilders: CalendarBuilders(
+                                      defaultBuilder: (
+                                        context,
+                                        day,
+                                        focusedDay,
+                                      ) {
+                                        normalizedDay = DateTime(
+                                          day.year,
+                                          day.month,
+                                          day.day,
+                                        );
+
+                                        log('normalizedDay ::$normalizedDay');
+
+                                        // Prioritize more specific markers first:
+                                        if (ovulationDay != null &&
+                                            isSameDay(
+                                              normalizedDay,
+                                              ovulationDay,
+                                            )) {
+                                          return DayMarker(
+                                            day: day,
+                                            color:
+                                                (state is OvulationCalculatorResult)
+                                                    ? Color(0xFFDBFCE7)
+                                                    : AppColor.transparentColor,
+                                          );
+                                        }
+
+                                        if (fertileWindow.contains(
+                                          normalizedDay,
+                                        )) {
+                                          return DayMarker(
+                                            day: day,
+                                            color: Color(0xFFDBEAFE),
+                                          );
+                                        }
+
+                                        if (nextPeriod != null &&
+                                            isSameDay(
+                                              normalizedDay,
+                                              nextPeriod,
+                                            )) {
+                                          return DayMarker(
+                                            day: day,
+                                            color: Color(0xFFFFE2E2),
+                                          );
+                                        }
+
+                                        if (pregnancyTestDay != null &&
+                                            isSameDay(
+                                              normalizedDay,
+                                              pregnancyTestDay,
+                                            )) {
+                                          return DayMarker(
+                                            day: day,
+                                            color: Color(0xFFFEF9C2),
+                                          );
+                                        }
+
+                                        if (estimatedDueDate != null &&
+                                            isSameDay(
+                                              normalizedDay,
+                                              estimatedDueDate,
+                                            )) {
+                                          return DayMarker(
+                                            day: day,
+                                            color: Color(0xFFF3E8FF),
+                                          );
+                                        }
+
+                                        return null;
+                                      },
+                                    ),
+
+                                    headerStyle: HeaderStyle(
+                                      headerMargin: EdgeInsets.only(bottom: 10),
+                                      titleCentered: true,
+                                      formatButtonVisible: false,
+                                      headerPadding: EdgeInsets.all(0),
+                                      titleTextStyle: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColor.dateColor,
+                                        fontFamily: 'Caros Soft',
+                                      ),
+                                      leftChevronIcon: Icon(
+                                        Icons.chevron_left,
+                                        color: AppColor.subTitleColor,
+                                      ),
+                                      rightChevronIcon: Icon(
+                                        Icons.chevron_right,
+                                        color: AppColor.subTitleColor,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: AppColor.calenderHeaderBgColor,
+                                        borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(10),
+                                        ),
+                                      ),
+                                    ),
+                                    calendarStyle: CalendarStyle(
+                                      todayDecoration: BoxDecoration(
+                                        color: AppColor.themePrimaryColor,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      selectedDecoration: BoxDecoration(
+                                        color: AppColor.themePrimaryColor,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      selectedTextStyle: TextStyle(
+                                        color: AppColor.whiteColor,
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 14,
+                                        fontFamily: 'Caros Soft',
+                                      ),
+                                      defaultTextStyle: TextStyle(
+                                        color: AppColor.dateColor,
+                                        fontFamily: 'Caros Soft',
+                                      ),
+                                      weekendTextStyle: TextStyle(
+                                        color: AppColor.dateColor,
+                                        fontFamily: 'Caros Soft',
+                                      ),
+                                      outsideDaysVisible: true,
+                                      outsideTextStyle: TextStyle(
+                                        color: AppColor.outDateColor,
+                                        fontFamily: 'Caros Soft',
+                                      ),
+                                    ),
+                                    daysOfWeekStyle: DaysOfWeekStyle(
+                                      weekdayStyle: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 12,
+                                        fontFamily: 'Caros Soft',
+
+                                        color: AppColor.weekColor,
+                                      ),
+                                      weekendStyle: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 12,
+                                        fontFamily: 'Caros Soft',
+
+                                        color: AppColor.weekColor,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
                           ),
                         ),
-                        calendarStyle: CalendarStyle(
-                          todayDecoration: BoxDecoration(
-                            color: Colors.transparent,
+                        Gap(10),
+                        RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: 'Note: ',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 10,
+                                  color: AppColor.blackColor,
+                                  fontFamily: 'Caros Soft',
+                                ),
+                              ),
+                              TextSpan(
+                                text:
+                                    'This tool should not be used alone to prevent pregnancy. Results are estimates as ovulation cycles can vary.',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 10,
+                                  color: AppColor.blackColor,
+                                  fontFamily: 'Caros Soft',
+                                ),
+                              ),
+                            ],
                           ),
-                          selectedDecoration: BoxDecoration(
-                            color: AppColor.themePrimaryColor,
-                            shape: BoxShape.circle,
-                          ),
-                          defaultTextStyle: TextStyle(color: Colors.black87),
-                          weekendTextStyle: TextStyle(color: Colors.black87),
-                          outsideDaysVisible: true,
-                          outsideTextStyle: TextStyle(color: Colors.grey[400]),
                         ),
-                        daysOfWeekStyle: DaysOfWeekStyle(
-                          weekdayStyle: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            color: Colors.grey[700],
-                          ),
-                          weekendStyle: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            color: Colors.grey[700],
-                          ),
+                        Gap(20),
+
+                        BlocBuilder<
+                          OvulationCalculatorCubit,
+                          OvulationCalculatorState
+                        >(
+                          builder: (context, ovulationState) {
+                            return (ovulationState is OvulationCalculatorResult)
+                                ? SizedBox()
+                                : Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    CustomText(
+                                      text: 'How Long Is Your Average Cycle?',
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    Gap(20),
+                                    CustomDropWonFiled<String>(
+                                      text: '',
+                                      selectColor: AppColor.themePrimaryColor,
+                                      items: averageCycle,
+                                      initialItem: '28',
+                                      onChanged: (value) {
+                                        selectCycleCubit.updateValue(
+                                          cycleValue: value ?? '',
+                                        );
+                                      },
+                                    ),
+                                    Gap(20),
+                                  ],
+                                );
+                          },
                         ),
-                      ),
+                        // Gap(10),
+                        // CustomRowText(
+                        //   mainAxisAlignment: MainAxisAlignment.start,
+                        //   text: 'Don’t know? ',
+                        //   fontSize: 14,
+
+                        //   child: CustomText(
+                        //     text: 'Calculate your Cycle Length',
+                        //     fontSize: 14,
+                        //     color: AppColor.themePrimaryColor,
+                        //   ),
+                        // ),
+                        BlocBuilder<
+                          OvulationCalculatorCubit,
+                          OvulationCalculatorState
+                        >(
+                          builder: (context, ovulationState) {
+                            return BlocBuilder<
+                              SelectCalenderCubit,
+                              SelectCalenderState
+                            >(
+                              builder: (context, calendarState) {
+                                if (calendarState is SelectCalenderValueState) {
+                                  selectedDay = calendarState.selectedDay;
+                                }
+
+                                String buttonText = 'Calculate';
+                                if (selectedDay == null) {
+                                  buttonText = 'calculate';
+                                } else if (ovulationState
+                                    is OvulationCalculatorResult) {
+                                  buttonText = 'Recalculate';
+                                }
+
+                                return BlocBuilder<SelectCycleCubit, String>(
+                                  builder: (context, cycleState) {
+                                    return CustomButton(
+                                      text: buttonText,
+                                      onTap:
+                                          (ovulationState
+                                                  is OvulationCalculatorResult)
+                                              ? () {
+                                                ovulationCalculatorCubit.init();
+                                                selectCalenderCubit.init();
+                                                selectCalenderCubit
+                                                    .updateSelectedDay(
+                                                      DateTime.now(),
+                                                      DateTime.now(),
+                                                    );
+                                                selectCycleCubit.init();
+                                                fertileWindow.clear();
+
+                                                fertileStart = DateTime.now();
+                                                fertileEnd = DateTime.now();
+                                                ovulationDay = DateTime.now();
+                                                nextPeriod = DateTime.now();
+                                                pregnancyTestDay =
+                                                    DateTime.now();
+                                                estimatedDueDate =
+                                                    DateTime.now();
+                                              }
+                                              : () {
+                                                ovulationCalculatorCubit
+                                                    .calculateOvulation(
+                                                      periodStart:
+                                                          selectedDay ??
+                                                          DateTime.now(),
+                                                      cycleLength: int.parse(
+                                                        cycleState,
+                                                      ),
+                                                    );
+                                              },
+                                    );
+                                  },
+                                );
+                              },
+                            );
+                          },
+                        ),
+                        Gap(20),
+                        BlocBuilder<
+                          OvulationCalculatorCubit,
+                          OvulationCalculatorState
+                        >(
+                          builder: (context, state) {
+                            if (state is OvulationCalculatorResult) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  OvulationCard(
+                                    title: 'Fertile Window',
+                                    value:
+                                        '${format(state.fertileStart)} - ${format(state.fertileEnd)}',
+                                    color: Color(0xFFDBEAFE),
+                                  ),
+                                  OvulationCard(
+                                    title: 'Approximate Ovulation',
+                                    value: format(state.ovulationDay),
+                                    color: Color(0xFFDBFCE7),
+                                  ),
+                                  OvulationCard(
+                                    title: 'Next Period',
+                                    value: format(state.nextPeriod),
+                                    color: Color(0xFFFFE2E2),
+                                  ),
+                                  OvulationCard(
+                                    title: 'Pregnancy Test Day',
+                                    value: format(state.pregnancyTestDay),
+                                    color: Color(0xFFFEF9C2),
+                                  ),
+                                  OvulationCard(
+                                    title: 'Estimated Due Date',
+                                    value: format(state.estimatedDueDate),
+                                    color: Color(0xFFF3E8FF),
+                                  ),
+                                ],
+                              );
+                            }
+                            return const SizedBox.shrink();
+                          },
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
             ],

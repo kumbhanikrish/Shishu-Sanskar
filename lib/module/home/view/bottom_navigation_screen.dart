@@ -20,7 +20,7 @@ class BottomNavigationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     BottomBarCubit bottomBarCubit = BlocProvider.of<BottomBarCubit>(context);
-    // bottomBarCubit.init();
+    bottomBarCubit.init();
 
     return Scaffold(
       body: BlocBuilder<BottomBarCubit, int>(
@@ -29,7 +29,6 @@ class BottomNavigationScreen extends StatelessWidget {
             children: [
               customBg(),
               Column(
-                
                 children: <Widget>[
                   Gap(4.h),
                   Padding(
@@ -55,35 +54,35 @@ class BottomNavigationScreen extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                if (state == 2) ...[
-                                  InkWell(
-                                    onTap: () {
-                                      Navigator.pushNamed(
-                                        context,
-                                        AppPage.settingScreen,
-                                      );
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8),
-                                      child: SvgPicture.asset(AppImage.setting),
-                                    ),
+                                // if (state == 2) ...[
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                      context,
+                                      AppPage.settingScreen,
+                                    );
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8),
+                                    child: SvgPicture.asset(AppImage.setting),
                                   ),
+                                ),
 
-                                  InkWell(
-                                    onTap: () {},
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                        top: 8,
-                                        left: 8,
-                                        bottom: 8,
-                                      ),
-                                      child: SvgPicture.asset(
-                                        AppImage.notification,
-                                      ),
+                                InkWell(
+                                  onTap: () {},
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                      top: 8,
+                                      left: 8,
+                                      bottom: 8,
+                                    ),
+                                    child: SvgPicture.asset(
+                                      AppImage.notification,
                                     ),
                                   ),
-                                ],
+                                ),
                               ],
+                              // ],
                             )
                             : state == 1
                             ? CustomText(
@@ -118,7 +117,7 @@ class BottomNavigationScreen extends StatelessWidget {
                   builder: (context, state) {
                     return Container(
                       margin: const EdgeInsets.all(16),
-                      padding: const EdgeInsets.symmetric(vertical: 10),
+
                       decoration: BoxDecoration(
                         color: AppColor.whiteColor,
                         borderRadius: BorderRadius.circular(12),

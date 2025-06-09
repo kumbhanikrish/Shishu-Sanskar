@@ -23,4 +23,6 @@ class AppApi {
 
   /// Pricing Flow
   static String plans = '$baseUrl/plans/category/';
+  /// Auth Category
+  static String authCategory = '$baseUrl/auth/categories';
 }

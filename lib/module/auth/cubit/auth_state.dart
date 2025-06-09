@@ -5,6 +5,12 @@ sealed class AuthState {}
 
 final class AuthInitial extends AuthState {}
 
+final class AuthCategoryState extends AuthState {
+  final List<AuthCategoryModel> authCategoryList;
+
+  AuthCategoryState({required this.authCategoryList});
+}
+
 sealed class StoreNumberState {}
 
 final class StoreNumberInitial extends StoreNumberState {}

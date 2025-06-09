@@ -121,6 +121,7 @@ class AuthRepo {
 
     return response;
   }
+
   Future<Response> deleteAccount(
     BuildContext context, {
     required Map<String, dynamic> params,
@@ -131,6 +132,16 @@ class AuthRepo {
       showSuccessMessage: true,
 
       params,
+    );
+
+    return response;
+  }
+
+  Future<Response> authCategory(
+    BuildContext context, ) async {
+    Response response = await apiServices.getDynamicData(
+      context,
+      AppApi.authCategory,
     );
 
     return response;

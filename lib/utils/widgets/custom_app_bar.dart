@@ -73,7 +73,7 @@ customAppBar({
 
       Padding(
         padding: const EdgeInsets.only(
-          top: 20,
+          top: 10,
           bottom: 14,
           right: 20,
           left: 20,
@@ -83,7 +83,7 @@ customAppBar({
             InkWell(
               onTap: onTap,
               child: Padding(
-                padding: const EdgeInsets.only(top: 5, right: 10),
+                padding: const EdgeInsets.only(top: 5, right: 20),
                 child: SvgPicture.asset(AppImage.back, height: 12),
               ),
             ),
@@ -96,6 +96,4 @@ customAppBar({
   );
 }
 
-customAppBar2() {
-  
-}
+customAppBar2() {}

@@ -7,6 +7,7 @@ import 'package:shishu_sanskar/utils/constant/app_image.dart';
 import 'package:shishu_sanskar/utils/constant/app_page.dart';
 import 'package:shishu_sanskar/utils/theme/colors.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_button.dart';
+import 'package:shishu_sanskar/utils/widgets/custom_error_toast.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_login_theme.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_text.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_textfield.dart';
@@ -75,17 +76,66 @@ class LoginScreen extends StatelessWidget {
                     onTap: () {
                       Navigator.pushNamed(context, AppPage.forgotFlowScreen);
                     },
-                    child: CustomText(text: 'Forgot password?', fontSize: 10),
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        top: 10,
+                        bottom: 10,
+                        right: 10,
+                      ),
+                      child: CustomText(text: 'Forgot password?', fontSize: 10),
+                    ),
                   ),
                 ),
                 Gap(20),
                 CustomButton(
                   text: 'Continue',
-                  onTap: () {
-                    authCubit.login(
+                  onTap: () async {
+                    final email = emailController.text.trim();
+                    final password = passwordController.text.trim();
+
+                    if (email.isEmpty) {
+                      // Show error for empty email
+
+                      customErrorToast(
+                        context,
+                        text: 'Please enter your email',
+                      );
+
+                      return;
+                    }
+
+                    final emailRegex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
+                    if (!emailRegex.hasMatch(email)) {
+                      customErrorToast(
+                        context,
+                        text: 'Please enter a valid email address',
+                      );
+
+                      return;
+                    }
+
+                    if (password.isEmpty) {
+                      customErrorToast(
+                        context,
+                        text: 'Please enter your password',
+                      );
+
+                      return;
+                    }
+
+                    if (password.length < 6) {
+                      customErrorToast(
+                        context,
+                        text: 'Password must be at least 6 characters',
+                      );
+
+                      return;
+                    }
+
+                    await authCubit.login(
                       context,
-                      email: emailController.text.trim(),
-                      password: passwordController.text.trim(),
+                      email: email,
+                      password: password,
                     );
                   },
                 ),

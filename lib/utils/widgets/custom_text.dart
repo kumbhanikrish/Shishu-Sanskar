@@ -109,6 +109,7 @@ class CustomRowText extends StatelessWidget {
   final int? maxLines;
 
   final TextDecoration? decoration;
+  final MainAxisAlignment? mainAxisAlignment;
   final Widget? child;
   const CustomRowText({
     super.key,
@@ -116,6 +117,7 @@ class CustomRowText extends StatelessWidget {
     this.fontSize = 16,
     this.fontWeight = FontWeight.w400,
     this.color,
+    this.mainAxisAlignment,
     this.textAlign = TextAlign.left,
     this.maxLines,
 
@@ -125,7 +127,8 @@ class CustomRowText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: mainAxisAlignment ?? MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
 
       children: [
         CustomText(

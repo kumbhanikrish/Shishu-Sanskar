@@ -12,6 +12,7 @@ import 'package:shishu_sanskar/module/blog/cubit/blog_cubit.dart';
 import 'package:shishu_sanskar/module/home/cubit/home_cubit.dart';
 import 'package:shishu_sanskar/module/pricing/cubit/pricing_cubit.dart';
 import 'package:shishu_sanskar/module/profile/cubit/profile_cubit.dart';
+import 'package:shishu_sanskar/module/tools/cubit/ovulation_calculator/cubit/ovulation_calculator_cubit.dart';
 import 'package:shishu_sanskar/services/api_services.dart';
 import 'package:shishu_sanskar/utils/routes/app_routes.dart';
 import 'package:shishu_sanskar/utils/theme/colors.dart';
@@ -110,4 +111,7 @@ dynamic providers = [
   BlocProvider(create: (context) => PricingCubit()),
   BlocProvider(create: (context) => DatePickerCubit()),
   BlocProvider(create: (context) => DatePicker2Cubit()),
+  BlocProvider(create: (context) => OvulationCalculatorCubit()),
+  BlocProvider(create: (context) => SelectCalenderCubit()),
+  BlocProvider(create: (context) => SelectCycleCubit()),
 ];
