@@ -200,12 +200,15 @@ class CustomDropWonFiled<T> extends StatelessWidget {
   final List<T> items;
   final dynamic Function(T?) onChanged;
   final Color? selectColor;
+  final Widget Function(BuildContext, T, bool, void Function())?
+  listItemBuilder;
   const CustomDropWonFiled({
     super.key,
     required this.text,
     this.initialItem,
     this.hintText,
     this.selectColor,
+    this.listItemBuilder,
     required this.items,
     required this.onChanged,
   });
@@ -219,10 +222,12 @@ class CustomDropWonFiled<T> extends StatelessWidget {
 
         CustomDropdown<T>(
           hintText: 'Select job role',
+
           closedHeaderPadding: EdgeInsets.symmetric(
             horizontal: 16,
             vertical: 14,
           ),
+
           decoration: CustomDropdownDecoration(
             closedBorder: Border.all(color: AppColor.themePrimaryColor2),
             hintStyle: TextStyle(
@@ -242,9 +247,77 @@ class CustomDropWonFiled<T> extends StatelessWidget {
               fontWeight: FontWeight.w500,
             ),
           ),
-
+          listItemBuilder: listItemBuilder,
           items: items,
           initialItem: initialItem,
+
+          onChanged: onChanged,
+        ),
+      ],
+    );
+  }
+}
+
+class CustomWithOutDecorationDropWonFiled<T> extends StatelessWidget {
+  final String text;
+  final T? initialItem;
+  final String? hintText;
+  final List<T> items;
+  final dynamic Function(T?) onChanged;
+  final Color? selectColor;
+  final Widget Function(BuildContext, T, bool, void Function())?
+  listItemBuilder;
+  const CustomWithOutDecorationDropWonFiled({
+    super.key,
+    required this.text,
+    this.initialItem,
+    this.hintText,
+    this.selectColor,
+    this.listItemBuilder,
+    required this.items,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (text.isNotEmpty) ...[CustomText(text: text, fontSize: 12), Gap(10)],
+
+        CustomDropdown<T>(
+          hintText: '',
+
+          closedHeaderPadding: EdgeInsets.zero,
+          hideSelectedFieldWhenExpanded: true,
+          decoration: CustomDropdownDecoration(
+            closedSuffixIcon: SizedBox(),
+            expandedSuffixIcon: SizedBox(),
+
+            closedFillColor: AppColor.transparentColor,
+            closedBorder: Border.all(color: AppColor.transparentColor),
+
+            hintStyle: TextStyle(
+              fontFamily: 'Caros Soft',
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
+            headerStyle: TextStyle(
+              fontFamily: 'Caros Soft',
+              fontSize: 20,
+              color: selectColor,
+              fontWeight: FontWeight.w600,
+            ),
+            listItemStyle: TextStyle(
+              fontFamily: 'Caros Soft',
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          listItemBuilder: listItemBuilder,
+          items: items,
+          initialItem: initialItem,
+
           onChanged: onChanged,
         ),
       ],

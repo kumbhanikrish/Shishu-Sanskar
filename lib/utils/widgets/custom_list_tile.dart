@@ -18,12 +18,14 @@ class CustomListTile extends StatelessWidget {
   final Widget? subtitle;
   final double? fontSize;
   final double? height;
+  final Widget? leading;
   const CustomListTile({
     super.key,
     required this.text,
     required this.leadingImage,
     this.onTap,
     this.subtitle,
+    this.leading,
     this.contentPadding,
     this.height,
     this.leadingColor,
@@ -41,32 +43,40 @@ class CustomListTile extends StatelessWidget {
       splashColor: AppColor.greyColor,
       highlightColor: AppColor.greyColor,
       borderRadius: BorderRadius.circular(12),
-
-      child: ListTile(
-        tileColor: tileColor,
-        contentPadding: contentPadding ?? EdgeInsets.zero,
-        leading:
-            leadingImage.isEmpty
-                ? null
-                : SvgPicture.asset(
-                  leadingImage,
-                  color: leadingColor,
-                  height: height ?? 20,
-                ),
-        trailing:
-            trailing ??
-            Icon(
-              Icons.keyboard_arrow_right_rounded,
-              color: trailingColor ?? AppColor.themePrimaryColor,
-            ),
-        title: CustomText(
-          text: text,
-          fontSize: fontSize ?? 10,
-          color: textColor ?? AppColor.blackColor,
-
-          fontWeight: fontWeight ?? FontWeight.w400,
+      child: Container(
+        decoration: BoxDecoration(
+          color: tileColor,
+          borderRadius: BorderRadius.circular(12),
         ),
-        subtitle: subtitle,
+        padding: EdgeInsets.zero, // No outer padding
+        child: ListTile(
+          visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+          contentPadding:
+              contentPadding ??
+              EdgeInsets.zero, // Removes internal content padding
+          dense: true, // Makes ListTile tighter
+          leading:
+              leadingImage.isEmpty
+                  ? leading
+                  : SvgPicture.asset(
+                    leadingImage,
+                    color: leadingColor,
+                    height: height ?? 20,
+                  ),
+          trailing:
+              trailing ??
+              Icon(
+                Icons.keyboard_arrow_right_rounded,
+                color: trailingColor ?? AppColor.themePrimaryColor,
+              ),
+          title: CustomText(
+            text: text,
+            fontSize: fontSize ?? 10,
+            color: textColor ?? AppColor.blackColor,
+            fontWeight: fontWeight ?? FontWeight.w400,
+          ),
+          subtitle: subtitle,
+        ),
       ),
     );
   }

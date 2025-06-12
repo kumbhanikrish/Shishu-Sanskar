@@ -147,6 +147,8 @@ class _SettingScreenState extends State<SettingScreen> {
                       },
                     ),
                     CustomListTile(
+                      contentPadding: EdgeInsets.symmetric(vertical: 10),
+
                       text: 'Contact Us',
                       leadingImage: '',
                       fontSize: 14,
@@ -159,6 +161,8 @@ class _SettingScreenState extends State<SettingScreen> {
                       color: AppColor.themePrimaryColor2,
                     ),
                     CustomListTile(
+                      contentPadding: EdgeInsets.symmetric(vertical: 10),
+
                       text: 'Delete account',
                       leadingImage: '',
                       fontSize: 14,
@@ -174,6 +178,8 @@ class _SettingScreenState extends State<SettingScreen> {
                       color: AppColor.themePrimaryColor2,
                     ),
                     CustomListTile(
+                      contentPadding: EdgeInsets.symmetric(vertical: 10),
+
                       onTap: () {
                         Navigator.pushNamed(
                           context,
@@ -189,6 +195,7 @@ class _SettingScreenState extends State<SettingScreen> {
                       color: AppColor.themePrimaryColor2,
                     ),
                     CustomListTile(
+                      contentPadding: EdgeInsets.symmetric(vertical: 10),
                       onTap: () {
                         customDialog(
                           context,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class AppColor {
   static Color themePrimaryColor2 = const Color(0xFFFFDADD);
   static Color themePrimaryBorderColor = const Color(0xFFFE7986);
+  static Color overallStatusBgColor = const Color(0xFFFFF4F5);
 
   static Color themePrimaryColor = const Color(0xFFFF7988);
   static Color lightThemePrimaryColor = const Color(0xFFFFF3F4);
@@ -22,6 +23,7 @@ class AppColor {
 
   static Color whiteColor = Colors.white;
   static Color toolsBgColor = Color(0xFFFFFAFA);
+  static Color graphBorderColor = Color(0xFFE2E2E2);
   static Color blackColor = Colors.black;
   static Color transparentColor = Colors.transparent;
   static Color greyColor = Color(0xFFB8C1CE);

@@ -1,26 +1,51 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
+import 'package:shishu_sanskar/module/auth/cubit/auth_cubit.dart';
+import 'package:shishu_sanskar/module/auth/model/auth_category_model.dart';
 import 'package:shishu_sanskar/module/blog/view/blog_screen.dart';
+import 'package:shishu_sanskar/module/graph/view/graph_Screen.dart';
 import 'package:shishu_sanskar/module/home/cubit/home_cubit.dart';
 import 'package:shishu_sanskar/module/home/view/home_screen.dart';
 import 'package:shishu_sanskar/module/home/view/widget/custom_home_widget.dart';
+import 'package:shishu_sanskar/module/pricing/cubit/pricing_cubit.dart';
 import 'package:shishu_sanskar/module/pricing/view/pricing_screen.dart';
 import 'package:shishu_sanskar/module/tools/view/tools_screen.dart';
 import 'package:shishu_sanskar/utils/constant/app_image.dart';
 import 'package:shishu_sanskar/utils/constant/app_page.dart';
 import 'package:shishu_sanskar/utils/theme/colors.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_bg.dart';
+import 'package:shishu_sanskar/utils/widgets/custom_list_tile.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_text.dart';
+import 'package:shishu_sanskar/utils/widgets/custom_textfield.dart';
 import 'package:sizer/sizer.dart';
 
-class BottomNavigationScreen extends StatelessWidget {
+class BottomNavigationScreen extends StatefulWidget {
   const BottomNavigationScreen({super.key});
+
+  @override
+  State<BottomNavigationScreen> createState() => _BottomNavigationScreenState();
+}
+
+class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
+  List<AuthCategoryModel> authCategoryList = [];
+  String initialCategoryValue = '';
+
   @override
   Widget build(BuildContext context) {
     BottomBarCubit bottomBarCubit = BlocProvider.of<BottomBarCubit>(context);
-    bottomBarCubit.init();
+    PricingCubit pricingCubit = BlocProvider.of<PricingCubit>(context);
+    AuthCubit authCubit = BlocProvider.of<AuthCubit>(context);
+    CategoryRadioCubit categoryRadioCubit = BlocProvider.of<CategoryRadioCubit>(
+      context,
+    );
+    log('bottomBarCubit.statebottomBarCubit.state ::${bottomBarCubit.state}');
+
+    authCubit.authCategory(context);
+    // bottomBarCubit.init();
 
     return Scaffold(
       body: BlocBuilder<BottomBarCubit, int>(
@@ -45,10 +70,54 @@ class BottomNavigationScreen extends StatelessWidget {
                                 Expanded(
                                   child: Row(
                                     children: [
-                                      CustomText(
-                                        text: 'Wellness Seekers',
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 22,
+                                      SizedBox(
+                                        width: 190,
+                                        child: BlocBuilder<
+                                          AuthCubit,
+                                          AuthState
+                                        >(
+                                          builder: (context, state) {
+                                            if (state is AuthCategoryState) {
+                                              authCategoryList =
+                                                  state.authCategoryList;
+                                            }
+                                            AuthCategoryModel? initialItem;
+                                            if (authCategoryList.isNotEmpty) {
+                                              initialItem = authCategoryList
+                                                  .firstWhere(
+                                                    (item) => item.id == 1,
+                                                    orElse:
+                                                        () =>
+                                                            authCategoryList
+                                                                .first,
+                                                  );
+                                            }
+
+                                            return CustomWithOutDecorationDropWonFiled<
+                                              AuthCategoryModel
+                                            >(
+                                              text: '',
+                                              initialItem: initialItem,
+                                              selectColor: AppColor.blackColor,
+                                              items: authCategoryList,
+
+                                              onChanged: (value) {
+                                                categoryRadioCubit
+                                                    .selectCategory(
+                                                      value?.id ?? 0,
+                                                    );
+
+                                                if (bottomBarCubit.state == 3) {
+                                                  pricingCubit.getPlans(
+                                                    context,
+                                                    categoryId:
+                                                        (value?.id).toString(),
+                                                  );
+                                                }
+                                              },
+                                            );
+                                          },
+                                        ),
                                       ),
                                       Icon(Icons.arrow_drop_down_rounded),
                                     ],
@@ -183,7 +252,7 @@ class BottomNavigationScreen extends StatelessWidget {
 Widget _buildScreen(int index) {
   switch (index) {
     case 0:
-      return Center(child: Text('Graph Screen'));
+      return GraphScreen();
     case 1:
       return BlogScreen();
     case 2:

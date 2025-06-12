@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:shishu_sanskar/module/auth/cubit/auth_cubit.dart';
+import 'package:shishu_sanskar/module/tools/cubit/chinese_gender_predictor/chinese_gender_predictor_cubit.dart';
 import 'package:shishu_sanskar/utils/constant/app_image.dart';
 import 'package:shishu_sanskar/utils/theme/colors.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_bg.dart';
@@ -12,22 +13,44 @@ import 'package:shishu_sanskar/utils/widgets/custom_text.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_textfield.dart';
 import 'package:sizer/sizer.dart';
 
-class ChineseGenderPredictorScreen extends StatelessWidget {
-  ChineseGenderPredictorScreen({super.key});
+class ChineseGenderPredictorScreen extends StatefulWidget {
+  const ChineseGenderPredictorScreen({super.key});
 
+  @override
+  State<ChineseGenderPredictorScreen> createState() =>
+      _ChineseGenderPredictorScreenState();
+}
+
+class _ChineseGenderPredictorScreenState
+    extends State<ChineseGenderPredictorScreen> {
   final TextEditingController yourDateOfConceptionController =
       TextEditingController();
-  final TextEditingController yourDatePfBirthController =
+  final TextEditingController yourDateOfBirthController =
       TextEditingController();
+
+  String? resultShot;
+  String? result;
+
+  final int currentYear = DateTime.now().year;
+  final int dobStartYear = DateTime.now().year - 60;
+  final int dobEndYear = DateTime.now().year - 16;
+  final int conceptionStartYear = 2024;
+  final int conceptionEndYear = 2039;
+
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<DatePickerCubit>(context).init();
+    BlocProvider.of<DatePicker2Cubit>(context).init();
+  }
 
   @override
   Widget build(BuildContext context) {
     DatePickerCubit datePickerCubit = BlocProvider.of<DatePickerCubit>(context);
-    DatePicker2Cubit datePicker2Cubit = BlocProvider.of<DatePicker2Cubit>(
-      context,
-    );
-    datePickerCubit.init();
-    datePicker2Cubit.init();
+    ChineseGenderPredictorCubit chineseGenderPredictorCubit =
+        BlocProvider.of<ChineseGenderPredictorCubit>(context);
+
+    chineseGenderPredictorCubit.init();
     return Scaffold(
       body: Stack(
         children: [
@@ -41,138 +64,150 @@ class ChineseGenderPredictorScreen extends StatelessWidget {
               Gap(40),
               Expanded(
                 child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Column(
-                      children: <Widget>[
-                        BlocBuilder<DatePicker2Cubit, DateTime?>(
-                          builder: (context, dobSelectDate) {
-                            String formattedDate = '';
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    children: [
+                      BlocBuilder<DatePicker2Cubit, DateTime?>(
+                        builder: (context, dobSelectDate) {
+                          final formatted =
+                              dobSelectDate != null
+                                  ? DateFormat(
+                                    'dd/MM/yyyy',
+                                  ).format(dobSelectDate)
+                                  : '';
+                          yourDateOfBirthController.text = formatted;
 
-                            if (dobSelectDate != null) {
-                              formattedDate = DateFormat(
-                                'dd/MM/yyyy',
-                              ).format(dobSelectDate);
-                            }
+                          return CustomTextField(
+                            text: 'Your Date of Birth:',
+                            hintText: 'dd/mm/yyyy',
+                            controller: yourDateOfBirthController,
+                            readOnly: true,
+                            suffixImage: AppImage.datePick,
+                            onTap: () {
+                              customDatePicker(
+                                context,
+                                firstDate: DateTime(dobStartYear),
+                                lastDate: DateTime(dobEndYear),
+                                value: [dobSelectDate],
+                                onValueChanged: (value) {
+                                  BlocProvider.of<DatePicker2Cubit>(
+                                    context,
+                                  ).selectDate(context, value.first);
+                                },
+                              );
+                            },
+                          );
+                        },
+                      ),
+                      Gap(20),
+                      BlocBuilder<DatePickerCubit, DateTime?>(
+                        builder: (context, docSelectDate) {
+                          final formatted =
+                              docSelectDate != null
+                                  ? DateFormat(
+                                    'dd/MM/yyyy',
+                                  ).format(docSelectDate)
+                                  : '';
+                          yourDateOfConceptionController.text = formatted;
 
-                            if (yourDatePfBirthController.text !=
-                                formattedDate) {
-                              yourDatePfBirthController.text = formattedDate;
-                            }
-                            return CustomTextField(
-                              text: 'Your Date of Birth:',
-                              hintText: 'dd/mm/yyyy',
-                              readOnly: true,
-                              controller: yourDatePfBirthController,
-                              suffixImage: AppImage.datePick,
-                              onTap: () {
-                                customDatePicker(
-                                  context,
-                                  value: [dobSelectDate],
-                                  onValueChanged: (value) {
-                                    datePicker2Cubit.selectDate(
-                                      context,
-                                      value.first,
-                                    );
-                                  },
-                                );
-                              },
-                            );
-                          },
-                        ),
-                        Gap(20),
-                        BlocBuilder<DatePickerCubit, DateTime?>(
-                          builder: (context, docSelectedDate) {
-                            String formattedDate = '';
-
-                            if (docSelectedDate != null) {
-                              formattedDate = DateFormat(
-                                'dd/MM/yyyy',
-                              ).format(docSelectedDate);
-                            }
-
-                            if (yourDateOfConceptionController.text !=
-                                formattedDate) {
-                              yourDateOfConceptionController.text =
-                                  formattedDate;
-                            }
-
-                            return CustomTextField(
-                              text: 'Your Date of Conception:',
-                              hintText: 'dd/mm/yyyy',
-                              readOnly: true,
-
-                              onTap: () {
-                                customDatePicker(
-                                  context,
-                                  value: [docSelectedDate],
-                                  onValueChanged: (value) {
-                                    datePickerCubit.selectDate(
-                                      context,
-                                      value.first,
-                                    );
-                                  },
-                                );
-                              },
-                              suffixImage: AppImage.datePick,
-                              controller: yourDateOfConceptionController,
-                            );
-                          },
-                        ),
-                        Gap(20),
-                        CustomButton(text: 'Predict Baby Gender', onTap: () {}),
-
-                        Gap(20),
-
-                        Container(
-                          width: 100.w,
-                          decoration: BoxDecoration(
-                            color: AppColor.boyBgColor,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          padding: EdgeInsets.symmetric(vertical: 20),
-                          child: Column(
-                            children: [
-                              Image.asset(AppImage.boy),
-                              Gap(10),
-                              CustomText(
-                                text: "Congratulations!!! It's a Boy.",
+                          return CustomTextField(
+                            text: 'Your Date of Conception:',
+                            hintText: 'dd/mm/yyyy',
+                            controller: yourDateOfConceptionController,
+                            readOnly: true,
+                            suffixImage: AppImage.datePick,
+                            onTap: () {
+                              customDatePicker(
+                                context,
+                                firstDate: DateTime(conceptionStartYear),
+                                lastDate: DateTime(conceptionEndYear),
+                                value: [docSelectDate],
+                                onValueChanged: (value) {
+                                  datePickerCubit.selectDate(
+                                    context,
+                                    value.first,
+                                  );
+                                },
+                              );
+                            },
+                          );
+                        },
+                      ),
+                      Gap(20),
+                      CustomButton(
+                        text: 'Predict Baby Gender',
+                        onTap: () {
+                          final dob = datePickerCubit.state;
+                          final doc = datePickerCubit.state;
+                          if (dob != null && doc != null) {
+                            chineseGenderPredictorCubit.predictGender(dob, doc);
+                          }
+                        },
+                      ),
+                      Gap(20),
+                      BlocBuilder<
+                        ChineseGenderPredictorCubit,
+                        ChineseGenderPredictorState
+                      >(
+                        builder: (context, state) {
+                          if (state is ChineseGenderPredictorCalculatorState) {
+                            if (state.resultShot == 'Boy') {
+                              return _buildResultBox(
+                                AppImage.boy,
+                                state.result,
+                                AppColor.boyBgColor,
+                                AppColor.congratulationsBoyColor,
+                              );
+                            } else if (state.resultShot == 'Girl') {
+                              return _buildResultBox(
+                                AppImage.girl,
+                                state.result,
+                                AppColor.girlBgColor,
+                                AppColor.congratulationsGirlColor,
+                              );
+                            } else {
+                              return CustomText(
+                                text: state.result,
                                 fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                                color: AppColor.congratulationsBoyColor,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Gap(20),
-                        Container(
-                          width: 100.w,
-                          decoration: BoxDecoration(
-                            color: AppColor.girlBgColor,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-
-                          padding: EdgeInsets.symmetric(vertical: 20),
-
-                          child: Column(
-                            children: [
-                              Image.asset(AppImage.girl),
-                              Gap(10),
-                              CustomText(
-                                text: "Congratulations!!! It's a Girl.",
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                                color: AppColor.congratulationsGirlColor,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                              );
+                            }
+                          }
+                          return SizedBox.shrink();
+                        },
+                      ),
+                    ],
                   ),
                 ),
               ),
             ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildResultBox(
+    String asset,
+    String text,
+    Color bgColor,
+    Color textColor,
+  ) {
+    return Container(
+      width: 100.w,
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      child: Column(
+        children: [
+          Image.asset(asset),
+          Gap(10),
+          CustomText(
+            text: text,
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+            color: textColor,
           ),
         ],
       ),

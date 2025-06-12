@@ -66,7 +66,7 @@ class BlogDetailScreen extends StatelessWidget {
                         Gap(10),
 
                         CustomHTMLText(
-                          text: blogsModel.description,
+                          text: blogsModel.content,
                           color: AppColor.seeAllTitleColor,
                           fontSize: 12,
                           textAlign: TextAlign.start,

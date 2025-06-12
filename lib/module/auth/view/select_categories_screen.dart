@@ -15,7 +15,7 @@ import 'package:shishu_sanskar/utils/widgets/custom_dialog.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_text.dart';
 import 'package:sizer/sizer.dart';
 
-class SelectCategoriesScreen extends StatelessWidget {
+class SelectCategoriesScreen extends StatefulWidget {
   final void Function() onTap;
   final void Function() backOnTap;
 
@@ -24,21 +24,29 @@ class SelectCategoriesScreen extends StatelessWidget {
     required this.onTap,
     required this.backOnTap,
   });
+
+  @override
+  State<SelectCategoriesScreen> createState() => _SelectCategoriesScreenState();
+}
+
+class _SelectCategoriesScreenState extends State<SelectCategoriesScreen> {
+  @override
+  void initState() {
+    AuthCubit authCubit = BlocProvider.of<AuthCubit>(context);
+    authCubit.authCategory(context);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    String planningCoupleValue = '';
-    String pregnantMotherValue = '';
+    String selectDateValue = '';
+
     CategoryRadioCubit categoryRadioCubit = BlocProvider.of<CategoryRadioCubit>(
       context,
     );
     DatePickerCubit datePickerCubit = BlocProvider.of<DatePickerCubit>(context);
-    DatePicker2Cubit datePicker2Cubit = BlocProvider.of<DatePicker2Cubit>(
-      context,
-    );
-    AuthCubit authCubit = BlocProvider.of<AuthCubit>(context);
 
     List<AuthCategoryModel> authCategoryList = [];
-    authCubit.authCategory(context);
 
     return Expanded(
       child: SingleChildScrollView(
@@ -88,105 +96,32 @@ class SelectCategoriesScreen extends StatelessWidget {
                               genderIcon: '',
                               title: authCategoryModel.name,
                               onTap: () {
+                                datePickerCubit.init();
                                 categoryRadioCubit.selectCategory(
                                   authCategoryModel.id,
                                 );
                               },
                               child:
-                                  authCategoryModel.id == 2 ||
-                                          authCategoryModel.id == 3
+                                  (selectedCategory == 2 &&
+                                              authCategoryModel.id == 2) ||
+                                          (selectedCategory == 3 &&
+                                              authCategoryModel.id == 3)
                                       ? BlocBuilder<DatePickerCubit, DateTime?>(
-                                        builder: (context, planningCouple) {
+                                        builder: (context, selectDate) {
                                           String formattedDate = '';
 
-                                          if (planningCouple != null) {
+                                          if (selectDate != null) {
                                             formattedDate = DateFormat(
                                               'dd/MM/yyyy',
-                                            ).format(planningCouple);
+                                            ).format(selectDate);
                                           }
-                                          if (planningCoupleValue !=
+                                          if (selectDateValue !=
                                               formattedDate) {
-                                            planningCoupleValue = formattedDate;
+                                            selectDateValue = formattedDate;
                                           }
-                                          return Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                              vertical: 10,
-                                            ),
-                                            child: Row(
-                                              children: <Widget>[
-                                                Expanded(
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: <Widget>[
-                                                      CustomText(
-                                                        text: 'LMP',
-                                                        fontSize: 12,
-                                                      ),
-                                                      CustomText(
-                                                        text:
-                                                            '(last menstrual period)',
-                                                        fontSize: 10,
-                                                        color:
-                                                            AppColor
-                                                                .subTitleColor,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                Container(
-                                                  decoration: BoxDecoration(
-                                                    color:
-                                                        AppColor.datePickerBk,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          5,
-                                                        ),
-                                                  ),
-                                                  child: InkWell(
-                                                    onTap: () async {
-                                                      customDatePicker(
-                                                        context,
-                                                        value: [planningCouple],
-                                                        onValueChanged: (
-                                                          value,
-                                                        ) {
-                                                          datePickerCubit
-                                                              .selectDate(
-                                                                context,
-                                                                value.first,
-                                                              );
-                                                        },
-                                                      );
-                                                    },
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.symmetric(
-                                                            vertical: 14,
-                                                            horizontal: 10,
-                                                          ),
-                                                      child: Row(
-                                                        children: [
-                                                          CustomText(
-                                                            text:
-                                                                planningCoupleValue ==
-                                                                        ''
-                                                                    ? 'dd/mm/yyyy'
-                                                                    : planningCoupleValue,
-                                                            fontSize: 10,
-                                                          ),
-                                                          Gap(10),
-                                                          SvgPicture.asset(
-                                                            AppImage.calendar,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
+                                          return CustomLmpCard(
+                                            selectDate: selectDate,
+                                            selectDateValue: selectDateValue,
                                           );
                                         },
                                       )
@@ -199,275 +134,14 @@ class SelectCategoriesScreen extends StatelessWidget {
                         );
                       },
                     ),
-
-                    // customGenderRadio(
-                    //   fillImage:
-                    //       selectedCategory == 1
-                    //           ? AppImage.fillCircle
-                    //           : AppImage.circle,
-                    //   buttonImage:
-                    //       selectedCategory == 1
-                    //           ? AppImage.colorCircle
-                    //           : AppImage.circle,
-                    //   genderIcon: '',
-                    //   title: 'Wellness Seekers',
-                    //   onTap: () {
-                    //     categoryRadioCubit.selectCategory(1);
-                    //   },
-                    // ),
-                    // Gap(10),
-                    // BlocBuilder<DatePickerCubit, DateTime?>(
-                    //   builder: (context, planningCouple) {
-                    //     String formattedDate = '';
-
-                    //     if (planningCouple != null) {
-                    //       formattedDate = DateFormat(
-                    //         'dd/MM/yyyy',
-                    //       ).format(planningCouple);
-                    //     }
-                    //     if (planningCoupleValue != formattedDate) {
-                    //       planningCoupleValue = formattedDate;
-                    //     }
-                    //     return customGenderRadio(
-                    //       fillImage:
-                    //           selectedCategory == 2
-                    //               ? AppImage.fillCircle
-                    //               : AppImage.circle,
-                    //       buttonImage:
-                    //           selectedCategory == 2
-                    //               ? AppImage.colorCircle
-                    //               : AppImage.circle,
-                    //       onTap: () {
-                    //         datePicker2Cubit.init();
-
-                    //         categoryRadioCubit.selectCategory(2);
-                    //       },
-                    //       genderIcon: '',
-                    //       title: 'Planning Couple',
-                    //       child:
-                    //           selectedCategory != 2
-                    //               ? SizedBox()
-                    //               : Padding(
-                    //                 padding: const EdgeInsets.symmetric(
-                    //                   vertical: 10,
-                    //                 ),
-                    //                 child: Row(
-                    //                   children: <Widget>[
-                    //                     Expanded(
-                    //                       child: Column(
-                    //                         crossAxisAlignment:
-                    //                             CrossAxisAlignment.start,
-                    //                         children: <Widget>[
-                    //                           CustomText(
-                    //                             text: 'LMP',
-                    //                             fontSize: 12,
-                    //                           ),
-                    //                           CustomText(
-                    //                             text: '(last menstrual period)',
-                    //                             fontSize: 10,
-                    //                             color: AppColor.subTitleColor,
-                    //                           ),
-                    //                         ],
-                    //                       ),
-                    //                     ),
-                    //                     Container(
-                    //                       decoration: BoxDecoration(
-                    //                         color: AppColor.datePickerBk,
-                    //                         borderRadius: BorderRadius.circular(
-                    //                           5,
-                    //                         ),
-                    //                       ),
-                    //                       child: InkWell(
-                    //                         onTap:
-                    //                             selectedCategory != 2
-                    //                                 ? () {}
-                    //                                 : () async {
-                    //                                   customDatePicker(
-                    //                                     context,
-                    //                                     value: [planningCouple],
-                    //                                     onValueChanged: (
-                    //                                       value,
-                    //                                     ) {
-                    //                                       datePickerCubit
-                    //                                           .selectDate(
-                    //                                             context,
-                    //                                             value.first,
-                    //                                           );
-                    //                                     },
-                    //                                   );
-                    //                                 },
-                    //                         child: Padding(
-                    //                           padding:
-                    //                               const EdgeInsets.symmetric(
-                    //                                 vertical: 14,
-                    //                                 horizontal: 10,
-                    //                               ),
-                    //                           child: Row(
-                    //                             children: [
-                    //                               CustomText(
-                    //                                 text:
-                    //                                     planningCoupleValue ==
-                    //                                             ''
-                    //                                         ? 'dd/mm/yyyy'
-                    //                                         : planningCoupleValue,
-                    //                                 fontSize: 10,
-                    //                               ),
-                    //                               Gap(10),
-                    //                               SvgPicture.asset(
-                    //                                 AppImage.calendar,
-                    //                               ),
-                    //                             ],
-                    //                           ),
-                    //                         ),
-                    //                       ),
-                    //                     ),
-                    //                   ],
-                    //                 ),
-                    //               ),
-                    //     );
-                    //   },
-                    // ),
-                    // Gap(10),
-                    // BlocBuilder<DatePicker2Cubit, DateTime?>(
-                    //   builder: (context, pregnantMother) {
-                    //     String formattedDate = '';
-
-                    //     log('pregnantMotherpregnantMother ::$pregnantMother');
-
-                    //     if (pregnantMother != null) {
-                    //       formattedDate = DateFormat(
-                    //         'dd/MM/yyyy',
-                    //       ).format(pregnantMother);
-                    //     }
-
-                    //     if (pregnantMotherValue != formattedDate) {
-                    //       pregnantMotherValue = formattedDate;
-                    //     }
-                    //     return customGenderRadio(
-                    //       genderIcon: '',
-                    //       fillImage:
-                    //           selectedCategory == 3
-                    //               ? AppImage.fillCircle
-                    //               : AppImage.circle,
-                    //       buttonImage:
-                    //           selectedCategory == 3
-                    //               ? AppImage.colorCircle
-                    //               : AppImage.circle,
-                    //       onTap: () {
-                    //         datePickerCubit.init();
-
-                    //         categoryRadioCubit.selectCategory(3);
-                    //       },
-                    //       title: 'Pregnant Mother',
-                    //       child:
-                    //           selectedCategory != 3
-                    //               ? SizedBox()
-                    //               : Padding(
-                    //                 padding: const EdgeInsets.symmetric(
-                    //                   vertical: 10,
-                    //                 ),
-                    //                 child: Row(
-                    //                   children: <Widget>[
-                    //                     Expanded(
-                    //                       child: Column(
-                    //                         crossAxisAlignment:
-                    //                             CrossAxisAlignment.start,
-                    //                         children: <Widget>[
-                    //                           CustomText(
-                    //                             text: 'LMP',
-                    //                             fontSize: 12,
-                    //                           ),
-                    //                           CustomText(
-                    //                             text: '(last menstrual period)',
-                    //                             fontSize: 10,
-                    //                             color: AppColor.subTitleColor,
-                    //                           ),
-                    //                         ],
-                    //                       ),
-                    //                     ),
-                    //                     Container(
-                    //                       decoration: BoxDecoration(
-                    //                         color: AppColor.datePickerBk,
-                    //                         borderRadius: BorderRadius.circular(
-                    //                           5,
-                    //                         ),
-                    //                       ),
-                    //                       child: InkWell(
-                    //                         onTap:
-                    //                             selectedCategory != 3
-                    //                                 ? () {}
-                    //                                 : () async {
-                    //                                   customDatePicker(
-                    //                                     context,
-                    //                                     value: [pregnantMother],
-                    //                                     onValueChanged: (
-                    //                                       value,
-                    //                                     ) {
-                    //                                       log('value ::$value');
-                    //                                       datePicker2Cubit
-                    //                                           .selectDate(
-                    //                                             context,
-                    //                                             value.first,
-                    //                                           );
-                    //                                     },
-                    //                                   );
-                    //                                 },
-                    //                         child: Padding(
-                    //                           padding:
-                    //                               const EdgeInsets.symmetric(
-                    //                                 vertical: 14,
-                    //                                 horizontal: 10,
-                    //                               ),
-                    //                           child: Row(
-                    //                             children: [
-                    //                               CustomText(
-                    //                                 text:
-                    //                                     pregnantMotherValue ==
-                    //                                             ''
-                    //                                         ? 'dd/mm/yyyy'
-                    //                                         : pregnantMotherValue,
-                    //                                 fontSize: 10,
-                    //                               ),
-                    //                               Gap(10),
-                    //                               SvgPicture.asset(
-                    //                                 AppImage.calendar,
-                    //                               ),
-                    //                             ],
-                    //                           ),
-                    //                         ),
-                    //                       ),
-                    //                     ),
-                    //                   ],
-                    //                 ),
-                    //               ),
-                    //     );
-                    //   },
-                    // ),
-                    // Gap(10),
-                    // customGenderRadio(
-                    //   genderIcon: '',
-                    //   title: 'Miscarriage',
-
-                    //   fillImage:
-                    //       selectedCategory == 4
-                    //           ? AppImage.fillCircle
-                    //           : AppImage.circle,
-                    //   buttonImage:
-                    //       selectedCategory == 4
-                    //           ? AppImage.colorCircle
-                    //           : AppImage.circle,
-                    //   onTap: () {
-                    //     categoryRadioCubit.selectCategory(4);
-                    //   },
-                    // ),
                     Gap(20),
 
-                    CustomButton(text: 'Done', onTap: onTap),
+                    CustomButton(text: 'Done', onTap: widget.onTap),
 
                     Align(
                       child: CustomTextButton(
                         text: 'Back',
-                        onPressed: backOnTap,
+                        onPressed: widget.backOnTap,
                       ),
                     ),
                   ],

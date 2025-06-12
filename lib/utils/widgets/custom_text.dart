@@ -91,11 +91,13 @@ class CustomEmpty extends StatelessWidget {
   const CustomEmpty({super.key});
   @override
   Widget build(BuildContext context) {
-    return CustomText(
-      text: 'Not Found!!!',
-      fontSize: 12,
-      fontWeight: FontWeight.w500,
-      color: AppColor.subTitleColor,
+    return Center(
+      child: CustomText(
+        text: 'Not Found!!!',
+        fontSize: 12,
+        fontWeight: FontWeight.w500,
+        color: AppColor.subTitleColor,
+      ),
     );
   }
 }

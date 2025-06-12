@@ -98,6 +98,7 @@ void customDatePicker(
                 centerAlignModePicker: true,
 
                 disableModePicker: true,
+
                 dayTextStyle: const TextStyle(
                   color: Colors.black87,
                   fontSize: 14,

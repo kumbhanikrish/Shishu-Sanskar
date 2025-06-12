@@ -15,8 +15,6 @@ class PricingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PricingCubit pricingCubit = BlocProvider.of<PricingCubit>(context);
-    pricingCubit.getPlans(context, categoryId: '1');
     List<PricingModel> pricingList = [];
 
     return Expanded(
@@ -41,51 +39,57 @@ class PricingScreen extends StatelessWidget {
                     builder: (context, state) {
                       if (state is GetPricingState) {
                         pricingList = state.pricingList;
-                        return Expanded(
-                          child: ListView.separated(
-                            itemCount: pricingList.length,
-                            separatorBuilder: (
-                              BuildContext context,
-                              int index,
-                            ) {
-                              return Gap(20);
-                            },
-                            itemBuilder: (BuildContext context, int index) {
-                              PricingModel pricingModel = pricingList[index];
-                              return customPricingCard(
-                                image:
-                                    pricingModel.title == 'Online'
-                                        ? AppImage.online
-                                        : AppImage.offline,
-                                name: pricingModel.title,
-                                price: '₹${pricingModel.price}',
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                    context,
-                                    AppPage.payDetailScreen,
-                                  );
-                                },
-                                backgroundColor: AppColor.themePrimaryColor,
-                                child: ListView.builder(
-                                  shrinkWrap: true,
-                                  physics: NeverScrollableScrollPhysics(),
-                                  itemCount: pricingModel.services.length,
+                      }
+                      return Expanded(
+                        child:
+                            pricingList.isEmpty
+                                ? CustomEmpty()
+                                : ListView.separated(
+                                  itemCount: pricingList.length,
+                                  separatorBuilder: (
+                                    BuildContext context,
+                                    int index,
+                                  ) {
+                                    return Gap(20);
+                                  },
                                   itemBuilder: (
                                     BuildContext context,
                                     int index,
                                   ) {
-                                    return customDoneIconAndText(
-                                      text: pricingModel.services[index],
+                                    PricingModel pricingModel =
+                                        pricingList[index];
+                                    return customPricingCard(
+                                      image:
+                                          pricingModel.title == 'Online'
+                                              ? AppImage.online
+                                              : AppImage.offline,
+                                      name: pricingModel.title,
+                                      price: '₹${pricingModel.price}',
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                          context,
+                                          AppPage.payDetailScreen,
+                                        );
+                                      },
+                                      backgroundColor:
+                                          AppColor.themePrimaryColor,
+                                      child: ListView.builder(
+                                        shrinkWrap: true,
+                                        physics: NeverScrollableScrollPhysics(),
+                                        itemCount: pricingModel.services.length,
+                                        itemBuilder: (
+                                          BuildContext context,
+                                          int index,
+                                        ) {
+                                          return customDoneIconAndText(
+                                            text: pricingModel.services[index],
+                                          );
+                                        },
+                                      ),
                                     );
                                   },
                                 ),
-                              );
-                            },
-                          ),
-                        );
-                      } else {
-                        return SizedBox();
-                      }
+                      );
                     },
                   ),
                 ],

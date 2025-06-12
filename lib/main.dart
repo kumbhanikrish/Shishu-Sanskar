@@ -9,9 +9,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shishu_sanskar/local_data/local_data_sever.dart';
 import 'package:shishu_sanskar/module/auth/cubit/auth_cubit.dart';
 import 'package:shishu_sanskar/module/blog/cubit/blog_cubit.dart';
+import 'package:shishu_sanskar/module/graph/cubit/graph_cubit.dart';
 import 'package:shishu_sanskar/module/home/cubit/home_cubit.dart';
 import 'package:shishu_sanskar/module/pricing/cubit/pricing_cubit.dart';
 import 'package:shishu_sanskar/module/profile/cubit/profile_cubit.dart';
+import 'package:shishu_sanskar/module/tools/cubit/chinese_gender_predictor/chinese_gender_predictor_cubit.dart';
+import 'package:shishu_sanskar/module/tools/cubit/due_date_calculator/due_date_cubit.dart';
 import 'package:shishu_sanskar/module/tools/cubit/ovulation_calculator/cubit/ovulation_calculator_cubit.dart';
 import 'package:shishu_sanskar/services/api_services.dart';
 import 'package:shishu_sanskar/utils/routes/app_routes.dart';
@@ -114,4 +117,7 @@ dynamic providers = [
   BlocProvider(create: (context) => OvulationCalculatorCubit()),
   BlocProvider(create: (context) => SelectCalenderCubit()),
   BlocProvider(create: (context) => SelectCycleCubit()),
+  BlocProvider(create: (context) => DueDateCubit()),
+  BlocProvider(create: (context) => ChineseGenderPredictorCubit()),
+  BlocProvider(create: (context) => GraphTabCubit()),
 ];

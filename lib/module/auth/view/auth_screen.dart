@@ -170,6 +170,9 @@ class _AuthScreenState extends State<AuthScreen> {
 
                                         return;
                                       }
+
+                                      log('numberCodenumberCode ::$numberCode');
+
                                       if (!verifiedNumber) {
                                         customErrorToast(
                                           context,
@@ -178,10 +181,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
                                         return;
                                       }
-
-                                      log('numberCodenumberCode ::$numberCode');
-
-                                      if (numberCode == '+91') {
+                                      if (wpNumberCode == '+91') {
                                         if (wpNumber.isEmpty) {
                                           customErrorToast(
                                             context,
@@ -250,63 +250,54 @@ class _AuthScreenState extends State<AuthScreen> {
             builder: (context, selectedType) {
               return BlocBuilder<CategoryRadioCubit, int>(
                 builder: (context, selectedCategory) {
-                  return BlocBuilder<DatePicker2Cubit, DateTime?>(
-                    builder: (context, pregnantMother) {
-                      return BlocBuilder<DatePickerCubit, DateTime?>(
-                        builder: (context, planningCouple) {
-                          return SelectCategoriesScreen(
-                            onTap: () {
-                              if (selectedCategory == 0) {
-                                customErrorToast(
-                                  context,
-                                  text: 'Please select categories',
-                                );
+                  return BlocBuilder<DatePickerCubit, DateTime?>(
+                    builder: (context, selectDate) {
+                      return SelectCategoriesScreen(
+                        onTap: () {
+                          if (selectedCategory == 0) {
+                            customErrorToast(
+                              context,
+                              text: 'Please select categories',
+                            );
 
-                                return;
-                              }
-                              if ((selectedCategory == 2 &&
-                                      planningCouple == null) ||
-                                  (selectedCategory == 3 &&
-                                      pregnantMother == null)) {
-                                customErrorToast(
-                                  context,
-                                  text: 'Please select LMP date',
-                                );
+                            return;
+                          }
+                          if ((selectedCategory == 2 ||
+                                  selectedCategory == 3) &&
+                              selectDate == null) {
+                            customErrorToast(
+                              context,
+                              text: 'Please select LMP date',
+                            );
 
-                                return;
-                              }
-                              authCubit.register(
-                                context,
-                                firstName: firstNameController.text.trim(),
-                                middleName: middleNameController.text.trim(),
-                                lastName: lastNameController.text.trim(),
-                                contactNumber: numberController.text.trim(),
-                                whatsappNumber: wpNumberController.text.trim(),
-                                categoryId: selectedCategory,
-                                email: emailController.text.trim(),
-                                password: passwordController.text.trim(),
-                                passwordConfirmation:
-                                    cPasswordController.text.trim(),
-                                gender:
-                                    selectedType == UserType.male
-                                        ? 'male'
-                                        : 'female',
-                                lmp:
-                                    selectedCategory == 2
-                                        ? DateFormat('dd/MM/yyyy').format(
-                                          planningCouple ?? DateTime.now(),
-                                        )
-                                        : selectedCategory == 3
-                                        ? DateFormat('dd/MM/yyyy').format(
-                                          pregnantMother ?? DateTime.now(),
-                                        )
-                                        : '',
-                              );
-                            },
-                            backOnTap: () {
-                              stepperCubit.nextStep(step: 1);
-                            },
+                            return;
+                          }
+                          authCubit.register(
+                            context,
+                            firstName: firstNameController.text.trim(),
+                            middleName: middleNameController.text.trim(),
+                            lastName: lastNameController.text.trim(),
+                            contactNumber: numberController.text.trim(),
+                            whatsappNumber: wpNumberController.text.trim(),
+                            categoryId: selectedCategory,
+                            email: emailController.text.trim(),
+                            password: passwordController.text.trim(),
+                            passwordConfirmation:
+                                cPasswordController.text.trim(),
+                            gender:
+                                selectedType == UserType.male
+                                    ? 'male'
+                                    : 'female',
+                            lmp:
+                                selectedCategory == 2 || selectedCategory == 3
+                                    ? DateFormat(
+                                      'yyyy-MM-dd',
+                                    ).format(selectDate ?? DateTime.now())
+                                    : '',
                           );
+                        },
+                        backOnTap: () {
+                          stepperCubit.nextStep(step: 1);
                         },
                       );
                     },

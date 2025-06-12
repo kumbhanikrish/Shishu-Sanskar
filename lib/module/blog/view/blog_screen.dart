@@ -26,7 +26,7 @@ class BlogScreen extends StatelessWidget {
 
     List<BlogsModel> blogList = [];
 
-    blogCubit.getBlogs(context, search: '', isRefresh: true);
+    
     scrollController.addListener(() {
       if (scrollController.position.pixels >=
           scrollController.position.maxScrollExtent) {
@@ -121,7 +121,7 @@ class BlogScreen extends StatelessWidget {
                                           SizedBox(
                                             height: 30,
                                             child: CustomHTMLText(
-                                              text: blogsModel.description,
+                                              text: blogsModel.content,
                                               color: AppColor.seeAllTitleColor,
                                               fontSize: 10,
                                               maxLines: 2,

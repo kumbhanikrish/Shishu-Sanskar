@@ -1,8 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
+import 'package:shishu_sanskar/module/auth/cubit/auth_cubit.dart';
+import 'package:shishu_sanskar/module/blog/cubit/blog_cubit.dart';
 import 'package:shishu_sanskar/module/home/cubit/home_cubit.dart';
+import 'package:shishu_sanskar/module/pricing/cubit/pricing_cubit.dart';
 import 'package:shishu_sanskar/utils/constant/app_image.dart';
 import 'package:shishu_sanskar/utils/theme/colors.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_button.dart';
@@ -52,29 +57,41 @@ Widget bottomBarTab(
   Color selectedColor = AppColor.themeSecondaryColor;
   Color unselectedColor = AppColor.unselectedColor;
   BottomBarCubit bottomBarCubit = BlocProvider.of<BottomBarCubit>(context);
+  BlogCubit blogCubit = BlocProvider.of<BlogCubit>(context);
+  PricingCubit pricingCubit = BlocProvider.of<PricingCubit>(context);
 
-  return InkWell(
-    onTap: () {
-      bottomBarCubit.changeTab(index);
+  return BlocBuilder<CategoryRadioCubit, int>(
+    builder: (context, state) {
+      return InkWell(
+        onTap: () async {
+          log('indexindex ::$index');
+          if (index == 1) {
+            blogCubit.getBlogs(context, search: '', isRefresh: true);
+          } else if (index == 3) {
+            pricingCubit.getPlans(context, categoryId: state.toString());
+          }
+          bottomBarCubit.changeTab(index);
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SvgPicture.asset(
+                icon,
+                color: isSelected ? selectedColor : unselectedColor,
+              ),
+              Gap(5),
+              CustomText(
+                text: label,
+                fontSize: 10,
+                color: isSelected ? selectedColor : unselectedColor,
+              ),
+            ],
+          ),
+        ),
+      );
     },
-    child: Padding(
-      padding: const EdgeInsets.all(10),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SvgPicture.asset(
-            icon,
-            color: isSelected ? selectedColor : unselectedColor,
-          ),
-          Gap(5),
-          CustomText(
-            text: label,
-            fontSize: 10,
-            color: isSelected ? selectedColor : unselectedColor,
-          ),
-        ],
-      ),
-    ),
   );
 }
 

@@ -7,6 +7,7 @@ import 'package:shishu_sanskar/module/auth/model/country_model.dart';
 import 'package:shishu_sanskar/utils/constant/app_image.dart';
 import 'package:shishu_sanskar/utils/theme/colors.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_button.dart';
+import 'package:shishu_sanskar/utils/widgets/custom_dialog.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_text.dart';
 
 customCountryBottomSheet(BuildContext context, {required bool whatsapp}) {
@@ -243,4 +244,75 @@ Widget buildStep(int index, int currentStep, int totalSteps) {
         ),
     ],
   );
+}
+
+class CustomLmpCard extends StatelessWidget {
+  final DateTime? selectDate;
+  final String selectDateValue;
+  const CustomLmpCard({
+    super.key,
+    required this.selectDate,
+    required this.selectDateValue,
+  });
+  @override
+  Widget build(BuildContext context) {
+    DatePickerCubit datePickerCubit = BlocProvider.of<DatePickerCubit>(context);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                CustomText(text: 'LMP', fontSize: 12),
+                CustomText(
+                  text: '(last menstrual period)',
+                  fontSize: 10,
+                  color: AppColor.subTitleColor,
+                ),
+              ],
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              color: AppColor.datePickerBk,
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: InkWell(
+              onTap: () async {
+                customDatePicker(
+                  context,
+                  value: [selectDate],
+                  onValueChanged: (value) {
+                    datePickerCubit.selectDate(context, value.first);
+                  },
+                );
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 14,
+                  horizontal: 10,
+                ),
+                child: Row(
+                  children: [
+                    CustomText(
+                      text:
+                          selectDateValue == ''
+                              ? 'dd/mm/yyyy'
+                              : selectDateValue,
+                      fontSize: 10,
+                    ),
+                    Gap(10),
+                    SvgPicture.asset(AppImage.calendar),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
