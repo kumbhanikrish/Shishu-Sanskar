@@ -56,7 +56,7 @@ class ApiServices {
         return response;
       }
     } on DioException catch (e) {
-      _handleDioError(context, e);
+      _handleDioError(context, e, showSuccessMessage: showSuccessMessage);
     } catch (e) {
       await EasyLoading.dismiss();
       log("Unhandled Error: $e");
@@ -90,10 +90,18 @@ class ApiServices {
       if (response.data['success'] == true && response.data != null) {
         if (showSuccessMessage) {
           // Show success message
-          customSuccessToast(
-            context,
-            text: response.data['message'] ?? 'Success',
-          );
+
+          if (response.statusCode == 206) {
+            customInfoToast(
+              context,
+              text: response.data['message'] ?? 'Success',
+            );
+          } else {
+            customSuccessToast(
+              context,
+              text: response.data['message'] ?? 'Success',
+            );
+          }
         }
         await EasyLoading.dismiss();
         return response;
@@ -102,7 +110,12 @@ class ApiServices {
         return response;
       }
     } on DioException catch (e) {
-      _handleDioError(context, e, loginEndPoint: AppApi.login);
+      _handleDioError(
+        context,
+        e,
+        loginEndPoint: AppApi.login,
+        showSuccessMessage: showSuccessMessage,
+      );
     } catch (e) {
       await EasyLoading.dismiss();
 
@@ -181,6 +194,7 @@ class ApiServices {
     BuildContext context,
     DioException e, {
     String loginEndPoint = '',
+    bool showSuccessMessage = true,
   }) async {
     await EasyLoading.dismiss();
     final statusCode = e.response?.statusCode;
@@ -224,6 +238,8 @@ class ApiServices {
     }
 
     // Show Toast or SnackBar
-    customErrorToast(context, text: errorMessage);
+    if (showSuccessMessage) {
+      customErrorToast(context, text: errorMessage);
+    }
   }
 }

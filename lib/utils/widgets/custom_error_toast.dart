@@ -31,3 +31,11 @@ customErrorToast(BuildContext context, {required String text}) {
     animatedSnackBarType: AnimatedSnackBarType.error,
   );
 }
+
+customInfoToast(BuildContext context, {required String text}) {
+  return customToast(
+    context,
+    text: text,
+    animatedSnackBarType: AnimatedSnackBarType.info,
+  );
+}

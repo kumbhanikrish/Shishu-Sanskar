@@ -80,6 +80,7 @@ class DueDateScreen extends StatelessWidget {
                                   dueDateCubit.selectDate(
                                     value.first ?? DateTime.now(),
                                   );
+                                  Navigator.pop(context);
                                 },
                               );
                             },

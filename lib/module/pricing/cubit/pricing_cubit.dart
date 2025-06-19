@@ -23,16 +23,24 @@ class PricingCubit extends Cubit<PricingState> {
     );
 
     if (response.data['success'] == true && response.data != null) {
-      log('successv');
+      log('success');
 
       pricingList =
           (response.data['data'] as List)
               .map((e) => PricingModel.fromJson(e))
               .toList();
-    } else {
-      log('response.data is null or success == false');
+      emit(GetPricingState(pricingList: pricingList));
     }
-    emit(GetPricingState(pricingList: pricingList));
+    return response;
+  }
+
+  Future<Response> payment(
+    BuildContext context, {
+    required Map<String, dynamic> params,
+  }) async {
+    Response response = await pricingRepo.payment(context, params: params);
+
+    if (response.data['success'] == true && response.data != null) {}
     return response;
   }
 }

@@ -18,7 +18,6 @@ import 'package:shishu_sanskar/utils/constant/app_image.dart';
 import 'package:shishu_sanskar/utils/constant/app_page.dart';
 import 'package:shishu_sanskar/utils/theme/colors.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_bg.dart';
-import 'package:shishu_sanskar/utils/widgets/custom_list_tile.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_text.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_textfield.dart';
 import 'package:sizer/sizer.dart';
@@ -38,13 +37,12 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
   Widget build(BuildContext context) {
     BottomBarCubit bottomBarCubit = BlocProvider.of<BottomBarCubit>(context);
     PricingCubit pricingCubit = BlocProvider.of<PricingCubit>(context);
-    AuthCubit authCubit = BlocProvider.of<AuthCubit>(context);
     CategoryRadioCubit categoryRadioCubit = BlocProvider.of<CategoryRadioCubit>(
       context,
     );
     log('bottomBarCubit.statebottomBarCubit.state ::${bottomBarCubit.state}');
 
-    authCubit.authCategory(context);
+    
     // bottomBarCubit.init();
 
     return Scaffold(

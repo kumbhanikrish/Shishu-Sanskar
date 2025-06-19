@@ -211,7 +211,9 @@ class _OvulationCalculatorScreenState extends State<OvulationCalculatorScreen> {
                                             color: Color(0xFFFEF9C2),
                                           );
                                         }
-
+                                        log(
+                                          'estimatedDueDateestimatedDueDate :${isSameDay(normalizedDay, estimatedDueDate)}',
+                                        );
                                         if (estimatedDueDate != null &&
                                             isSameDay(
                                               normalizedDay,

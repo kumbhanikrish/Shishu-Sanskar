@@ -1,3 +1,5 @@
+import 'package:dotted_line/dotted_line.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -24,7 +26,7 @@ class SettingScreen extends StatefulWidget {
 
 class _SettingScreenState extends State<SettingScreen> {
   final ValueNotifier<LoginModel?> loginModelNotifier = ValueNotifier(null);
-
+  bool _notificationsEnabled = false;
   Future<void> loadLoginData() async {
     final model = await localDataSaver.getLoginModel();
     loginModelNotifier.value = model;
@@ -146,6 +148,52 @@ class _SettingScreenState extends State<SettingScreen> {
                         );
                       },
                     ),
+                    Gap(15),
+
+                    Container(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          _InfoTile(
+                            icon: Icons.pregnant_woman,
+                            iconColor: AppColor.themePrimaryColor,
+                            title: 'Pregnancy Status',
+                            value: 'Pregnant',
+                          ),
+
+                          SizedBox(
+                            height: 50,
+                            child: DottedLine(
+                              direction: Axis.vertical,
+                              alignment: WrapAlignment.center,
+                              lineLength: double.infinity,
+                              lineThickness: 1.0,
+                              dashLength: 4.0,
+                              dashColor: AppColor.dottedColor,
+
+                              dashRadius: 0.0,
+                              dashGapLength: 4.0,
+                            ),
+                          ),
+
+                          _InfoTile(
+                            icon: Icons.emoji_events,
+                            iconColor: AppColor.amberColor,
+                            title: 'Current Plan',
+                            value: 'Platinum',
+                          ),
+                        ],
+                      ),
+                    ),
+                    Gap(20),
+
                     CustomListTile(
                       contentPadding: EdgeInsets.symmetric(vertical: 10),
 
@@ -157,6 +205,31 @@ class _SettingScreenState extends State<SettingScreen> {
                       },
                       trailingColor: AppColor.blackColor,
                     ),
+                    customDividerWithOutTopBottomSpace(
+                      color: AppColor.themePrimaryColor2,
+                    ),
+                    CustomListTile(
+                      contentPadding: EdgeInsets.symmetric(vertical: 10),
+
+                      text: 'Notification',
+                      leadingImage: '',
+                      fontSize: 14,
+
+                      trailingColor: AppColor.blackColor,
+                      trailing: Transform.scale(
+                        scale:
+                            0.8, // Adjust this value to change the size (e.g., 0.8 = 80%)
+                        child: CupertinoSwitch(
+                          value: _notificationsEnabled,
+                          onChanged: (bool value) {
+                            setState(() {
+                              _notificationsEnabled = value;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+
                     customDividerWithOutTopBottomSpace(
                       color: AppColor.themePrimaryColor2,
                     ),
@@ -220,6 +293,44 @@ class _SettingScreenState extends State<SettingScreen> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _InfoTile extends StatelessWidget {
+  final IconData icon;
+  final Color iconColor;
+  final String title;
+  final String value;
+
+  const _InfoTile({
+    required this.icon,
+    required this.iconColor,
+    required this.title,
+    required this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        CircleAvatar(
+          backgroundColor: iconColor.withOpacity(0.1),
+          child: Icon(icon, color: iconColor),
+        ),
+        const SizedBox(width: 10),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(title, style: TextStyle(color: Colors.grey, fontSize: 12)),
+            const SizedBox(height: 2),
+            Text(
+              value,
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

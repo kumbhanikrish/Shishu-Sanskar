@@ -149,7 +149,7 @@ class GraphScreen extends StatelessWidget {
                 ),
                 Gap(10),
                 LinearPercentIndicator(
-                  animation: true,
+                  animation: true, 
                   padding: EdgeInsets.zero,
                   barRadius: Radius.circular(12),
                   width: 89.5.w,

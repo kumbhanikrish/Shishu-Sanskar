@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -10,13 +11,19 @@ import 'package:shishu_sanskar/utils/theme/colors.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_text.dart';
 import 'package:sizer/sizer.dart';
 
-class PricingScreen extends StatelessWidget {
+class PricingScreen extends StatefulWidget {
   const PricingScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    List<PricingModel> pricingList = [];
+  State<PricingScreen> createState() => _PricingScreenState();
+}
 
+class _PricingScreenState extends State<PricingScreen> {
+  List<PricingModel> pricingList = [];
+  PricingModel? selectedPricingModel;
+
+  @override
+  Widget build(BuildContext context) {
     return Expanded(
       child: Stack(
         children: [
@@ -34,7 +41,6 @@ class PricingScreen extends StatelessWidget {
                     fontSize: 22,
                   ),
                   Gap(30),
-
                   BlocBuilder<PricingCubit, PricingState>(
                     builder: (context, state) {
                       if (state is GetPricingState) {
@@ -46,29 +52,24 @@ class PricingScreen extends StatelessWidget {
                                 ? CustomEmpty()
                                 : ListView.separated(
                                   itemCount: pricingList.length,
-                                  separatorBuilder: (
-                                    BuildContext context,
-                                    int index,
-                                  ) {
-                                    return Gap(20);
-                                  },
-                                  itemBuilder: (
-                                    BuildContext context,
-                                    int index,
-                                  ) {
-                                    PricingModel pricingModel =
-                                        pricingList[index];
+                                  separatorBuilder: (_, __) => Gap(20),
+                                  itemBuilder: (_, index) {
+                                    PricingModel model = pricingList[index];
                                     return customPricingCard(
                                       image:
-                                          pricingModel.title == 'Online'
+                                          model.title == 'Online'
                                               ? AppImage.online
                                               : AppImage.offline,
-                                      name: pricingModel.title,
-                                      price: '₹${pricingModel.price}',
+                                      name: model.title,
+                                      price: '₹${model.price}',
                                       onTap: () {
+                                        // selectedPricingModel = model;
+                                        // openCheckout(model);
                                         Navigator.pushNamed(
                                           context,
                                           AppPage.payDetailScreen,
+
+                                          arguments: {'pricingModel': model},
                                         );
                                       },
                                       backgroundColor:
@@ -76,13 +77,10 @@ class PricingScreen extends StatelessWidget {
                                       child: ListView.builder(
                                         shrinkWrap: true,
                                         physics: NeverScrollableScrollPhysics(),
-                                        itemCount: pricingModel.services.length,
-                                        itemBuilder: (
-                                          BuildContext context,
-                                          int index,
-                                        ) {
+                                        itemCount: model.services.length,
+                                        itemBuilder: (_, i) {
                                           return customDoneIconAndText(
-                                            text: pricingModel.services[index],
+                                            text: model.services[i],
                                           );
                                         },
                                       ),
@@ -96,10 +94,8 @@ class PricingScreen extends StatelessWidget {
               ),
             ),
           ),
-
           Positioned(
             bottom: 0,
-
             left: 0,
             right: 0,
             child: SizedBox(

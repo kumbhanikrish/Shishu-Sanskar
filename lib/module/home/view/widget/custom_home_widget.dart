@@ -66,7 +66,7 @@ Widget bottomBarTab(
         onTap: () async {
           log('indexindex ::$index');
           if (index == 1) {
-            blogCubit.getBlogs(context, search: '', isRefresh: true);
+            blogCubit.getBlogs(context, search: '', isRefresh: false);
           } else if (index == 3) {
             pricingCubit.getPlans(context, categoryId: state.toString());
           }
@@ -128,11 +128,13 @@ customCardView({
 customEventCardView({
   required void Function() onTap,
   required String title,
+  required String imageUrl,
   required String subTitle,
   required String date,
   required String time,
   double? mainWidth,
   double? mainHeight,
+  required void Function() joinNowOnTap,
   bool showButton = true,
 }) {
   return InkWell(
@@ -161,8 +163,7 @@ customEventCardView({
                       width: 40.w,
                       height: 100.h,
 
-                      imageUrl:
-                          'https://bookyogatraining.com/wp-content/uploads/2022/09/Yoga-for-Women-1.jpg',
+                      imageUrl: imageUrl,
                     ),
                     ClipRRect(
                       borderRadius: BorderRadius.only(
@@ -205,6 +206,7 @@ customEventCardView({
                     bottom: 14,
                   ),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       CustomText(
                         text: title,
@@ -223,8 +225,8 @@ customEventCardView({
                       if (showButton == true) ...[
                         Spacer(),
                         CustomButton(
-                          text: 'Register',
-                          onTap: () {},
+                          text: 'Join Now',
+                          onTap: joinNowOnTap,
                           padding: EdgeInsets.symmetric(vertical: 8),
                         ),
                       ],

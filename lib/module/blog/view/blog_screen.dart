@@ -26,7 +26,6 @@ class BlogScreen extends StatelessWidget {
 
     List<BlogsModel> blogList = [];
 
-    
     scrollController.addListener(() {
       if (scrollController.position.pixels >=
           scrollController.position.maxScrollExtent) {

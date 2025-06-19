@@ -68,7 +68,8 @@ class ProfileCubit extends Cubit<ProfileState> {
         loginModel.user.marital = response.data['data']['marital'];
         loginModel.user.noOfKid = int.parse(response.data['data']['no_of_kid']);
 
-        loginModel.user.profileImage = response.data['data']['profile_image'];
+        loginModel.user.profileImage =
+            response.data['data']['profile_image'] ?? ' ';
 
         localDataSaver.setLoginData(loginModel);
       });

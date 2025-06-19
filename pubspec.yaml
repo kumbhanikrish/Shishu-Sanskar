@@ -58,6 +58,8 @@ dependencies:
   table_calendar: ^3.2.0
   syncfusion_flutter_charts: ^29.2.10
   percent_indicator: ^4.2.5
+  url_launcher: ^6.3.1
+  razorpay_flutter: ^1.4.0
   
 
 dev_dependencies:

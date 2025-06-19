@@ -15,4 +15,18 @@ class PricingRepo {
 
     return response;
   }
+
+  Future<Response> payment(
+    BuildContext context, {
+    required Map<String, dynamic> params,
+  }) async {
+    Response response = await apiServices.postDynamicData(
+      context,
+      AppApi.payment,
+      params,
+      showSuccessMessage: true,
+    );
+
+    return response;
+  }
 }

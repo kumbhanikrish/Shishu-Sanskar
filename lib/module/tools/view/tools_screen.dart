@@ -27,12 +27,12 @@ class ToolsScreen extends StatelessWidget {
           "A Chinese gender predictor chart guesses baby's sex by taking the mother's birth date and the estimated date of conception.",
       image: AppImage.chineseGenderPredictor,
     ),
-    ToolsModel(
-      title: 'Mood Tracker',
-      subtitle:
-          'focus on providing a supportive and informative experience, emphasizing the normalization of mood swings.',
-      image: AppImage.dueDateCalculator,
-    ),
+    // ToolsModel(
+    //   title: 'Mood Tracker',
+    //   subtitle:
+    //       'focus on providing a supportive and informative experience, emphasizing the normalization of mood swings.',
+    //   image: AppImage.dueDateCalculator,
+    // ),
   ];
   @override
   Widget build(BuildContext context) {

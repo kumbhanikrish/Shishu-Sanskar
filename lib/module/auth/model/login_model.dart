@@ -32,6 +32,8 @@ class User {
   final dynamic emailVerifiedAt;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final bool planActive;
+  final CurrentSubscription currentSubscription;
 
   User({
     required this.id,
@@ -55,6 +57,8 @@ class User {
     required this.emailVerifiedAt,
     required this.createdAt,
     required this.updatedAt,
+    required this.planActive,
+    required this.currentSubscription,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
@@ -77,8 +81,21 @@ class User {
     isActive: json["is_active"] ?? 0,
     markedForDeletionAt: json["marked_for_deletion_at"],
     emailVerifiedAt: json["email_verified_at"],
+    planActive: json["plan_active"],
     createdAt: DateTime.parse(json["created_at"]),
     updatedAt: DateTime.parse(json["updated_at"]),
+    currentSubscription:
+        json["current_subscription"] != null
+            ? CurrentSubscription.fromJson(json["current_subscription"])
+            : CurrentSubscription(
+              id: 0,
+              userId: 0,
+              planId: 0,
+              razorpayPaymentId: '',
+              startDate: DateTime.now(),
+              endDate: DateTime.now(),
+              status: '',
+            ),
   );
 
   Map<String, dynamic> toJson() => {
@@ -90,6 +107,7 @@ class User {
     "email": email,
     "gender": gender,
     "marital": marital,
+    "plan_active": planActive,
     "no_of_kid": noOfKid,
     "contact_number": contactNumber,
     "whatsapp_number": whatsappNumber,
@@ -104,5 +122,46 @@ class User {
     "email_verified_at": emailVerifiedAt,
     "created_at": createdAt.toIso8601String(),
     "updated_at": updatedAt.toIso8601String(),
+  };
+}
+
+class CurrentSubscription {
+  final int id;
+  final int userId;
+  final int planId;
+  final String razorpayPaymentId;
+  final DateTime startDate;
+  final DateTime endDate;
+  final String status;
+
+  CurrentSubscription({
+    required this.id,
+    required this.userId,
+    required this.planId,
+    required this.razorpayPaymentId,
+    required this.startDate,
+    required this.endDate,
+    required this.status,
+  });
+
+  factory CurrentSubscription.fromJson(Map<String, dynamic> json) =>
+      CurrentSubscription(
+        id: json["id"],
+        userId: json["user_id"],
+        planId: json["plan_id"],
+        razorpayPaymentId: json["razorpay_payment_id"],
+        startDate: DateTime.parse(json["start_date"]),
+        endDate: DateTime.parse(json["end_date"]),
+        status: json["status"],
+      );
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "user_id": userId,
+    "plan_id": planId,
+    "razorpay_payment_id": razorpayPaymentId,
+    "start_date": startDate.toIso8601String(),
+    "end_date": endDate.toIso8601String(),
+    "status": status,
   };
 }

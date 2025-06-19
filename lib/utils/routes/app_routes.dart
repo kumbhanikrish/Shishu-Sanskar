@@ -49,7 +49,9 @@ final Map<String, WidgetBuilder> appRoutes = {
       (context) => BlogDetailScreen(
         argument: ModalRoute.of(context)?.settings.arguments,
       ),
-  AppPage.payDetailScreen: (context) => PayDetailScreen(),
+  AppPage.payDetailScreen:
+      (context) =>
+          PayDetailScreen(argument: ModalRoute.of(context)?.settings.arguments),
   AppPage.chineseGenderPredictorScreen:
       (context) => ChineseGenderPredictorScreen(),
   AppPage.dueDateScreen: (context) => DueDateScreen(),

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
+import 'package:shishu_sanskar/module/home/cubit/event/event_cubit.dart';
+import 'package:shishu_sanskar/module/home/model/event_model.dart';
 import 'package:shishu_sanskar/module/home/view/widget/custom_home_widget.dart';
 import 'package:shishu_sanskar/utils/constant/app_image.dart';
 import 'package:shishu_sanskar/utils/theme/colors.dart';
@@ -30,10 +33,14 @@ class EventDetailScreen extends StatelessWidget {
                 child: SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.all(20),
-                    child: Column(
+                    child: Column(   
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         customEventCardView(
+                          imageUrl: '',
+                          joinNowOnTap: () {
+                            
+                          },
                           onTap: () {},
                           mainHeight: 22.h,
                           title:
