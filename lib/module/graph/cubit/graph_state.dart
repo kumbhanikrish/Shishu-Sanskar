@@ -12,7 +12,6 @@ final class GraphTabInitial extends GraphTabState {}
 
 final class GraphTabLoaded extends GraphTabState {
   final int tabIndex;
-  final List<ChartData> data;
 
-  GraphTabLoaded({required this.tabIndex, required this.data});
+  GraphTabLoaded({required this.tabIndex});
 }

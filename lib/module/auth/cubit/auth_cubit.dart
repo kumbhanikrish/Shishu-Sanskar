@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/widgets.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shishu_sanskar/main.dart';
 import 'package:shishu_sanskar/module/auth/model/auth_category_model.dart';
 import 'package:shishu_sanskar/module/auth/model/login_model.dart';
@@ -21,6 +22,8 @@ class AuthCubit extends Cubit<AuthState> {
     BuildContext context, {
     required String email,
     required String password,
+    bool googleLogin = false,
+    String? googleToken,
   }) async {
     await messaging.requestPermission();
     String? token = await messaging.getToken();
@@ -28,6 +31,7 @@ class AuthCubit extends Cubit<AuthState> {
       "email": email,
       "password": password,
       "fcm_token": token,
+      if (googleLogin) 'google_token': googleToken,
     };
 
     final Response response = await authRepo.login(
@@ -264,9 +268,25 @@ class AuthCubit extends Cubit<AuthState> {
           (response.data['data'] as List)
               .map((e) => AuthCategoryModel.fromJson(e))
               .toList();
+
+              
     }
 
     emit(AuthCategoryState(authCategoryList: authCategoryList));
+  }
+
+  Future googleLogin() async {
+    final GoogleSignIn googleSignIn = GoogleSignIn(
+      scopes: ['email', 'profile'],
+    );
+    final googleUser = await googleSignIn.signIn();
+    if (googleUser == null) return;
+    final googleAuth = await googleUser.authentication;
+    final idToken = googleAuth.idToken;
+    final accessToken = googleAuth.accessToken;
+
+    log('accessToken ::$accessToken');
+    log('idToken ::$idToken');
   }
 }
 

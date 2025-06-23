@@ -9,6 +9,7 @@ import 'package:shishu_sanskar/utils/theme/colors.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_app_bar.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_bg.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_button.dart';
+import 'package:shishu_sanskar/utils/widgets/custom_calender.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_text.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_textfield.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -131,11 +132,9 @@ class _OvulationCalculatorScreenState extends State<OvulationCalculatorScreen> {
                                       ),
                                     );
                                   }
-                                  return TableCalendar(
-                                    firstDay: DateTime(2020),
-                                    lastDay: DateTime(2030),
+                                  return CustomCalender(
                                     focusedDay: focusedDay,
-                                    currentDay: selectedDay,
+                                    selectedDay: selectedDay,
                                     selectedDayPredicate: (day) {
                                       return isSameDay(day, selectedDay);
                                     },
@@ -152,154 +151,76 @@ class _OvulationCalculatorScreenState extends State<OvulationCalculatorScreen> {
                                                     focused,
                                                   );
                                             },
-                                    calendarBuilders: CalendarBuilders(
-                                      defaultBuilder: (
-                                        context,
-                                        day,
-                                        focusedDay,
-                                      ) {
-                                        normalizedDay = DateTime(
-                                          day.year,
-                                          day.month,
-                                          day.day,
+                                    defaultBuilder: (context, day, focusedDay) {
+                                      normalizedDay = DateTime(
+                                        day.year,
+                                        day.month,
+                                        day.day,
+                                      );
+
+                                      log('normalizedDay ::$normalizedDay');
+
+                                      // Prioritize more specific markers first:
+                                      if (ovulationDay != null &&
+                                          isSameDay(
+                                            normalizedDay,
+                                            ovulationDay,
+                                          )) {
+                                        return DayMarker(
+                                          day: day,
+                                          color:
+                                              (state is OvulationCalculatorResult)
+                                                  ? Color(0xFFDBFCE7)
+                                                  : AppColor.transparentColor,
                                         );
+                                      }
 
-                                        log('normalizedDay ::$normalizedDay');
-
-                                        // Prioritize more specific markers first:
-                                        if (ovulationDay != null &&
-                                            isSameDay(
-                                              normalizedDay,
-                                              ovulationDay,
-                                            )) {
-                                          return DayMarker(
-                                            day: day,
-                                            color:
-                                                (state is OvulationCalculatorResult)
-                                                    ? Color(0xFFDBFCE7)
-                                                    : AppColor.transparentColor,
-                                          );
-                                        }
-
-                                        if (fertileWindow.contains(
-                                          normalizedDay,
-                                        )) {
-                                          return DayMarker(
-                                            day: day,
-                                            color: Color(0xFFDBEAFE),
-                                          );
-                                        }
-
-                                        if (nextPeriod != null &&
-                                            isSameDay(
-                                              normalizedDay,
-                                              nextPeriod,
-                                            )) {
-                                          return DayMarker(
-                                            day: day,
-                                            color: Color(0xFFFFE2E2),
-                                          );
-                                        }
-
-                                        if (pregnancyTestDay != null &&
-                                            isSameDay(
-                                              normalizedDay,
-                                              pregnancyTestDay,
-                                            )) {
-                                          return DayMarker(
-                                            day: day,
-                                            color: Color(0xFFFEF9C2),
-                                          );
-                                        }
-                                        log(
-                                          'estimatedDueDateestimatedDueDate :${isSameDay(normalizedDay, estimatedDueDate)}',
+                                      if (fertileWindow.contains(
+                                        normalizedDay,
+                                      )) {
+                                        return DayMarker(
+                                          day: day,
+                                          color: Color(0xFFDBEAFE),
                                         );
-                                        if (estimatedDueDate != null &&
-                                            isSameDay(
-                                              normalizedDay,
-                                              estimatedDueDate,
-                                            )) {
-                                          return DayMarker(
-                                            day: day,
-                                            color: Color(0xFFF3E8FF),
-                                          );
-                                        }
+                                      }
 
-                                        return null;
-                                      },
-                                    ),
+                                      if (nextPeriod != null &&
+                                          isSameDay(
+                                            normalizedDay,
+                                            nextPeriod,
+                                          )) {
+                                        return DayMarker(
+                                          day: day,
+                                          color: Color(0xFFFFE2E2),
+                                        );
+                                      }
 
-                                    headerStyle: HeaderStyle(
-                                      headerMargin: EdgeInsets.only(bottom: 10),
-                                      titleCentered: true,
-                                      formatButtonVisible: false,
-                                      headerPadding: EdgeInsets.all(0),
-                                      titleTextStyle: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w500,
-                                        color: AppColor.dateColor,
-                                        fontFamily: 'Caros Soft',
-                                      ),
-                                      leftChevronIcon: Icon(
-                                        Icons.chevron_left,
-                                        color: AppColor.subTitleColor,
-                                      ),
-                                      rightChevronIcon: Icon(
-                                        Icons.chevron_right,
-                                        color: AppColor.subTitleColor,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: AppColor.calenderHeaderBgColor,
-                                        borderRadius: BorderRadius.vertical(
-                                          top: Radius.circular(10),
-                                        ),
-                                      ),
-                                    ),
-                                    calendarStyle: CalendarStyle(
-                                      todayDecoration: BoxDecoration(
-                                        color: AppColor.themePrimaryColor,
-                                        shape: BoxShape.circle,
-                                      ),
-                                      selectedDecoration: BoxDecoration(
-                                        color: AppColor.themePrimaryColor,
-                                        shape: BoxShape.circle,
-                                      ),
-                                      selectedTextStyle: TextStyle(
-                                        color: AppColor.whiteColor,
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 14,
-                                        fontFamily: 'Caros Soft',
-                                      ),
-                                      defaultTextStyle: TextStyle(
-                                        color: AppColor.dateColor,
-                                        fontFamily: 'Caros Soft',
-                                      ),
-                                      weekendTextStyle: TextStyle(
-                                        color: AppColor.dateColor,
-                                        fontFamily: 'Caros Soft',
-                                      ),
-                                      outsideDaysVisible: true,
-                                      outsideTextStyle: TextStyle(
-                                        color: AppColor.outDateColor,
-                                        fontFamily: 'Caros Soft',
-                                      ),
-                                    ),
-                                    daysOfWeekStyle: DaysOfWeekStyle(
-                                      weekdayStyle: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 12,
-                                        fontFamily: 'Caros Soft',
+                                      if (pregnancyTestDay != null &&
+                                          isSameDay(
+                                            normalizedDay,
+                                            pregnancyTestDay,
+                                          )) {
+                                        return DayMarker(
+                                          day: day,
+                                          color: Color(0xFFFEF9C2),
+                                        );
+                                      }
+                                      log(
+                                        'estimatedDueDateestimatedDueDate :${isSameDay(normalizedDay, estimatedDueDate)}',
+                                      );
+                                      if (estimatedDueDate != null &&
+                                          isSameDay(
+                                            normalizedDay,
+                                            estimatedDueDate,
+                                          )) {
+                                        return DayMarker(
+                                          day: day,
+                                          color: Color(0xFFF3E8FF),
+                                        );
+                                      }
 
-                                        color: AppColor.weekColor,
-                                      ),
-                                      weekendStyle: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 12,
-                                        fontFamily: 'Caros Soft',
-
-                                        color: AppColor.weekColor,
-                                      ),
-                                    ),
+                                      return null;
+                                    },
                                   );
                                 },
                               );

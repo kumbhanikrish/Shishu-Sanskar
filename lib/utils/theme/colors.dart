@@ -4,6 +4,8 @@ class AppColor {
   static Color themePrimaryColor2 = const Color(0xFFFFDADD);
   static Color themePrimaryBorderColor = const Color(0xFFFE7986);
   static Color overallStatusBgColor = const Color(0xFFFFF4F5);
+  static Color todayGrafBG = const Color(0xFFEEFFFF);
+  static Color weeklyGrafBG = const Color(0xFFCFF9FA);
 
   static Color themePrimaryColor = const Color(0xFFFF7988);
   static Color lightThemePrimaryColor = const Color(0xFFFFF3F4);

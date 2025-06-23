@@ -141,7 +141,12 @@ class LoginScreen extends StatelessWidget {
                 ),
                 Gap(20),
 
-                customSocialMediaLogin(googleOnTap: () {}, appleOnTap: () {}),
+                customSocialMediaLogin(
+                  googleOnTap: () {
+                    authCubit.googleLogin();
+                  },
+                  appleOnTap: () {},
+                ),
                 Gap(14),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

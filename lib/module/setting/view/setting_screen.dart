@@ -151,7 +151,10 @@ class _SettingScreenState extends State<SettingScreen> {
                     Gap(15),
 
                     Container(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 16,
+                        horizontal: 12,
+                      ),
 
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -159,7 +162,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           _InfoTile(
                             icon: Icons.pregnant_woman,
@@ -318,16 +321,18 @@ class _InfoTile extends StatelessWidget {
           backgroundColor: iconColor.withOpacity(0.1),
           child: Icon(icon, color: iconColor),
         ),
-        const SizedBox(width: 10),
+        Gap(10),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title, style: TextStyle(color: Colors.grey, fontSize: 12)),
-            const SizedBox(height: 2),
-            Text(
-              value,
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+            CustomText(
+              text: title,
+              color: AppColor.subTitleColor,
+              fontSize: 12,
             ),
+
+            Gap(2),
+            CustomText(text: value, fontSize: 14, fontWeight: FontWeight.w600),
           ],
         ),
       ],

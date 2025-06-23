@@ -60,6 +60,8 @@ dependencies:
   percent_indicator: ^4.2.5
   url_launcher: ^6.3.1
   razorpay_flutter: ^1.4.0
+  google_sign_in: ^6.3.0
+  syncfusion_flutter_gauges: ^29.2.11
   
 
 dev_dependencies:
