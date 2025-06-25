@@ -24,8 +24,13 @@ class AppApi {
   /// Pricing Flow
   static String plans = '$baseUrl/plans/category/';
   static String payment = '$baseUrl/payment/callback';
+
   /// Auth Category
   static String authCategory = '$baseUrl/auth/categories';
-/// Event Flow
+
+  /// Event Flow
   static String getEvent = '$baseUrl/events?title=&page=';
+
+  /// Task Flow
+  static String userTasks = '$baseUrl/user-tasks';
 }

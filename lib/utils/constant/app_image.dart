@@ -61,6 +61,7 @@ class AppImage {
       'assets/image/chineseGenderPredictor.png';
   static String boy = 'assets/image/boy.png';
   static String girl = 'assets/image/girl.png';
+  static String crown = 'assets/image/crown.png';
 }
 
 class AppLogo {

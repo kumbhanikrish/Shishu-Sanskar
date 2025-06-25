@@ -136,6 +136,8 @@ class LoginScreen extends StatelessWidget {
                       context,
                       email: email,
                       password: password,
+                      socialToken: '',
+                      socialType: '',
                     );
                   },
                 ),
@@ -143,7 +145,7 @@ class LoginScreen extends StatelessWidget {
 
                 customSocialMediaLogin(
                   googleOnTap: () {
-                    authCubit.googleLogin();
+                    authCubit.handleGoogleSignIn(context);
                   },
                   appleOnTap: () {},
                 ),

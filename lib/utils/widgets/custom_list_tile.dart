@@ -19,11 +19,13 @@ class CustomListTile extends StatelessWidget {
   final double? fontSize;
   final double? height;
   final Widget? leading;
+  final bool? image;
   const CustomListTile({
     super.key,
     required this.text,
     required this.leadingImage,
     this.onTap,
+    this.image,
     this.subtitle,
     this.leading,
     this.contentPadding,
@@ -58,6 +60,12 @@ class CustomListTile extends StatelessWidget {
           leading:
               leadingImage.isEmpty
                   ? leading
+                  : image == true
+                  ? Image.asset(
+                    leadingImage,
+                    color: leadingColor,
+                    height: height ?? 20,
+                  )
                   : SvgPicture.asset(
                     leadingImage,
                     color: leadingColor,
@@ -69,6 +77,7 @@ class CustomListTile extends StatelessWidget {
                 Icons.keyboard_arrow_right_rounded,
                 color: trailingColor ?? AppColor.themePrimaryColor,
               ),
+              
           title: CustomText(
             text: text,
             fontSize: fontSize ?? 10,

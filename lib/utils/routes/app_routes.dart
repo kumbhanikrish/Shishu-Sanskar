@@ -28,8 +28,12 @@ final Map<String, WidgetBuilder> appRoutes = {
   AppPage.authScreen: (context) => const AuthScreen(),
   AppPage.forgotFlowScreen: (context) => ForgotFlowScreen(),
   AppPage.bottomNavigationScreen: (context) => BottomNavigationScreen(),
-  AppPage.taskSeeAllScreen: (context) => TaskSeeAllScreen(),
-  AppPage.taskDetailScreen: (context) => TaskDetailScreen(),
+  AppPage.taskSeeAllScreen:
+      (context) =>
+          TaskSeeAllScreen(data: ModalRoute.of(context)?.settings.arguments),
+  AppPage.taskDetailScreen:
+      (context) =>
+          TaskDetailScreen(data: ModalRoute.of(context)?.settings.arguments),
   AppPage.eventSeeAllScreen: (context) => EventSeeAllScreen(),
   AppPage.eventDetailScreen: (context) => EventDetailScreen(),
   AppPage.settingScreen: (context) => SettingScreen(),

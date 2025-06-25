@@ -15,4 +15,14 @@ class HomeRepo {
 
     return response;
   }
+
+  Future<Response> getTasks(BuildContext context) async {
+    Response response = await apiServices.getDynamicData(
+      context,
+      AppApi.userTasks,
+      
+    );
+
+    return response;
+  }
 }

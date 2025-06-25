@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -14,6 +15,7 @@ import 'package:shishu_sanskar/utils/widgets/custom_button.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_image.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_text.dart';
 import 'package:sizer/sizer.dart';
+import 'package:video_player/video_player.dart';
 
 customTitleAnsSeeAll({
   required String title,
@@ -268,4 +270,207 @@ customIconAndText({required String date, required String time}) {
       ),
     ],
   );
+}
+
+class CustomVideoPlayer extends StatefulWidget {
+  final String videoUrl;
+
+  const CustomVideoPlayer({super.key, required this.videoUrl});
+
+  @override
+  _CustomVideoPlayerState createState() => _CustomVideoPlayerState();
+}
+
+class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
+  late VideoPlayerController _controller;
+
+  @override
+  void initState() {
+    log('videoUrlvideoUrl ::${widget.videoUrl}');
+    super.initState();
+    _controller = VideoPlayerController.networkUrl(
+        Uri.parse(widget.videoUrl), // Play any video link passed to widget
+      )
+      ..initialize().then((_) {
+        setState(() {});
+      });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _controller.value.isInitialized
+        ? Stack(
+          alignment: Alignment.center,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: AspectRatio(
+                aspectRatio: _controller.value.aspectRatio,
+                child: VideoPlayer(_controller),
+              ),
+            ),
+            IconButton(
+              icon: Icon(
+                _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+                color: Colors.white,
+                size: 32,
+              ),
+              onPressed: () {
+                setState(() {
+                  _controller.value.isPlaying
+                      ? _controller.pause()
+                      : _controller.play();
+                });
+              },
+            ),
+          ],
+        )
+        : Center(
+          child: SizedBox(
+            height: 20,
+            width: 20,
+            child: CircularProgressIndicator(
+              strokeWidth: 1,
+              color: AppColor.themePrimaryColor2,
+            ),
+          ),
+        );
+  }
+}
+
+class CustomAudioPlayer extends StatefulWidget {
+  final String audioUrl;
+
+  const CustomAudioPlayer({super.key, required this.audioUrl});
+
+  @override
+  State<CustomAudioPlayer> createState() => _CustomAudioPlayerState();
+}
+
+class _CustomAudioPlayerState extends State<CustomAudioPlayer> {
+  final AudioPlayer _player = AudioPlayer();
+  bool isPlaying = false;
+  Duration _duration = Duration.zero;
+  Duration _position = Duration.zero;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Listen for duration updates
+    _player.onDurationChanged.listen((Duration d) {
+      setState(() => _duration = d);
+    });
+
+    // Listen for position updates
+    _player.onPositionChanged.listen((Duration p) {
+      setState(() => _position = p);
+    });
+
+    // Stop audio when it ends
+    _player.onPlayerComplete.listen((event) {
+      setState(() {
+        isPlaying = false;
+        _position = Duration.zero;
+      });
+    });
+  }
+
+  void _togglePlayPause() async {
+    if (isPlaying) {
+      await _player.pause();
+    } else {
+      await _player.play(UrlSource(widget.audioUrl));
+    }
+    setState(() => isPlaying = !isPlaying);
+  }
+
+  void _stop() async {
+    await _player.stop();
+    setState(() {
+      isPlaying = false;
+      _position = Duration.zero;
+    });
+  }
+
+  void _seekTo(double value) {
+    final position = Duration(seconds: value.toInt());
+    _player.seek(position);
+  }
+
+  @override
+  void dispose() {
+    _player.dispose();
+    super.dispose();
+  }
+
+  String _formatDuration(Duration d) {
+    twoDigits(int n) => n.toString().padLeft(2, '0');
+    final minutes = twoDigits(d.inMinutes.remainder(60));
+    final seconds = twoDigits(d.inSeconds.remainder(60));
+    return "$minutes:$seconds";
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            IconButton(
+              icon: Icon(
+                isPlaying ? Icons.pause_circle : Icons.play_circle,
+                size: 24,
+                color: Colors.black87,
+              ),
+              onPressed: _togglePlayPause,
+            ),
+
+            Expanded(
+              child: CustomText(
+                text: 'Now Playing',
+                fontWeight: FontWeight.w600,
+                fontSize: 12,
+              ),
+            ),
+            CustomText(
+              text: '${_formatDuration(_position)} /',
+              fontSize: 12,
+              color: AppColor.themeSecondaryColor,
+            ),
+            const SizedBox(width: 4),
+            CustomText(
+              text: _formatDuration(_duration),
+              fontSize: 12,
+              color: AppColor.themeSecondaryColor,
+            ),
+          ],
+        ),
+
+        SliderTheme(
+          data: SliderTheme.of(context).copyWith(
+            trackHeight: 2.5,
+            thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
+            overlayShape: const RoundSliderOverlayShape(overlayRadius: 10),
+          ),
+          child: Slider(
+            min: 0,
+            max: _duration.inSeconds > 0 ? _duration.inSeconds.toDouble() : 1,
+            value: _position.inSeconds.clamp(0, _duration.inSeconds).toDouble(),
+            activeColor: AppColor.themePrimaryColor,
+            inactiveColor: AppColor.themePrimaryColor2,
+            onChanged: (value) => _seekTo(value),
+          ),
+        ),
+      ],
+    );
+  }
 }

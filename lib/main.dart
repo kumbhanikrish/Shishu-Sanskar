@@ -12,6 +12,7 @@ import 'package:shishu_sanskar/module/blog/cubit/blog_cubit.dart';
 import 'package:shishu_sanskar/module/graph/cubit/graph_cubit.dart';
 import 'package:shishu_sanskar/module/home/cubit/event/event_cubit.dart';
 import 'package:shishu_sanskar/module/home/cubit/home_cubit.dart';
+import 'package:shishu_sanskar/module/home/cubit/task/task_cubit.dart';
 import 'package:shishu_sanskar/module/pricing/cubit/pricing_cubit.dart';
 import 'package:shishu_sanskar/module/profile/cubit/profile_cubit.dart';
 import 'package:shishu_sanskar/module/tools/cubit/chinese_gender_predictor/chinese_gender_predictor_cubit.dart';
@@ -122,4 +123,5 @@ dynamic providers = [
   BlocProvider(create: (context) => ChineseGenderPredictorCubit()),
   BlocProvider(create: (context) => GraphTabCubit()),
   BlocProvider(create: (context) => EventCubit()),
+  BlocProvider(create: (context) => TaskCubit()),
 ];

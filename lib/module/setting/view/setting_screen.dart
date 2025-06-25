@@ -6,6 +6,7 @@ import 'package:gap/gap.dart';
 import 'package:shishu_sanskar/main.dart';
 import 'package:shishu_sanskar/module/auth/cubit/auth_cubit.dart';
 import 'package:shishu_sanskar/module/auth/model/login_model.dart';
+import 'package:shishu_sanskar/utils/constant/app_image.dart';
 import 'package:shishu_sanskar/utils/constant/app_page.dart';
 import 'package:shishu_sanskar/utils/theme/colors.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_app_bar.dart';
@@ -69,134 +70,122 @@ class _SettingScreenState extends State<SettingScreen> {
                     ValueListenableBuilder<LoginModel?>(
                       valueListenable: loginModelNotifier,
                       builder: (context, loginModelValue, _) {
-                        return Container(
-                          decoration: BoxDecoration(
-                            color: AppColor.whiteColor,
-                            border: Border.all(
-                              color: AppColor.themePrimaryColor2,
-                              width: 1,
-                            ),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: Row(
-                              children: <Widget>[
-                                Container(
-                                  width: 8.h,
-                                  height: 8.h,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: AppColor.themePrimaryColor2,
-                                      width: 2,
-                                    ),
-                                  ),
+                        return Column(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                color: AppColor.whiteColor,
+                                border: Border.all(
+                                  color: AppColor.themePrimaryColor2,
+                                  width: 1,
+                                ),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Row(
+                                  children: <Widget>[
+                                    Container(
+                                      width: 8.h,
+                                      height: 8.h,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: AppColor.themePrimaryColor2,
+                                          width: 2,
+                                        ),
+                                      ),
 
-                                  child: ClipOval(
-                                    child: CustomCachedImage(
-                                      imageUrl:
-                                          loginModelValue?.user.profileImage ??
-                                          '',
+                                      child: ClipOval(
+                                        child: CustomCachedImage(
+                                          imageUrl:
+                                              loginModelValue
+                                                  ?.user
+                                                  .profileImage ??
+                                              '',
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                Gap(10),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      CustomText(
-                                        text:
-                                            '${loginModelValue?.user.firstName} ${loginModelValue?.user.middleName} ${loginModelValue?.user.lastName}',
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
+                                    Gap(10),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          CustomText(
+                                            text:
+                                                '${loginModelValue?.user.firstName} ${loginModelValue?.user.middleName} ${loginModelValue?.user.lastName}',
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                          Gap(5),
+                                          CustomText(
+                                            text:
+                                                '${loginModelValue?.user.email}',
+                                            fontSize: 12,
+                                          ),
+                                        ],
                                       ),
-                                      Gap(5),
-                                      CustomText(
-                                        text: '${loginModelValue?.user.email}',
-                                        fontSize: 12,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                InkWell(
-                                  onTap: () {
-                                    Navigator.pushNamed(
-                                      context,
-                                      AppPage.editProfileScreen,
-                                      arguments: {
-                                        'loginModelValue': loginModelValue,
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                          context,
+                                          AppPage.editProfileScreen,
+                                          arguments: {
+                                            'loginModelValue': loginModelValue,
+                                          },
+                                        );
                                       },
-                                    );
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: AppColor.themePrimaryColor,
-                                      shape: BoxShape.circle,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: AppColor.themePrimaryColor,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Icon(
+                                          Icons.keyboard_arrow_right_sharp,
+                                          color: AppColor.whiteColor,
+                                        ),
+                                      ),
                                     ),
-                                    child: Icon(
-                                      Icons.keyboard_arrow_right_sharp,
-                                      color: AppColor.whiteColor,
-                                    ),
-                                  ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
+                            Gap(15),
+
+                            CustomListTile(
+                              contentPadding: EdgeInsets.symmetric(
+                                vertical: 10,
+                              ),
+
+                              text: 'Current Plan',
+                              leadingImage: AppImage.crown,
+                              image: true,
+                              fontSize: 14,
+
+                              trailing: CustomText(
+                                text:
+                                    loginModelValue
+                                        ?.user
+                                        .currentSubscription
+                                        .plan
+                                        .title ??
+                                    '',
+
+                                color: AppColor.themeSecondaryColor,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              onTap: () {},
+                            ),
+                          ],
                         );
                       },
                     ),
-                    Gap(15),
-
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 16,
-                        horizontal: 12,
-                      ),
-
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: Colors.grey.shade300),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          _InfoTile(
-                            icon: Icons.pregnant_woman,
-                            iconColor: AppColor.themePrimaryColor,
-                            title: 'Pregnancy Status',
-                            value: 'Pregnant',
-                          ),
-
-                          SizedBox(
-                            height: 50,
-                            child: DottedLine(
-                              direction: Axis.vertical,
-                              alignment: WrapAlignment.center,
-                              lineLength: double.infinity,
-                              lineThickness: 1.0,
-                              dashLength: 4.0,
-                              dashColor: AppColor.dottedColor,
-
-                              dashRadius: 0.0,
-                              dashGapLength: 4.0,
-                            ),
-                          ),
-
-                          _InfoTile(
-                            icon: Icons.emoji_events,
-                            iconColor: AppColor.amberColor,
-                            title: 'Current Plan',
-                            value: 'Platinum',
-                          ),
-                        ],
-                      ),
+                    customDividerWithOutTopBottomSpace(
+                      color: AppColor.themePrimaryColor2,
                     ),
-                    Gap(20),
-
                     CustomListTile(
                       contentPadding: EdgeInsets.symmetric(vertical: 10),
 
@@ -296,46 +285,6 @@ class _SettingScreenState extends State<SettingScreen> {
           ),
         ],
       ),
-    );
-  }
-}
-
-class _InfoTile extends StatelessWidget {
-  final IconData icon;
-  final Color iconColor;
-  final String title;
-  final String value;
-
-  const _InfoTile({
-    required this.icon,
-    required this.iconColor,
-    required this.title,
-    required this.value,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        CircleAvatar(
-          backgroundColor: iconColor.withOpacity(0.1),
-          child: Icon(icon, color: iconColor),
-        ),
-        Gap(10),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CustomText(
-              text: title,
-              color: AppColor.subTitleColor,
-              fontSize: 12,
-            ),
-
-            Gap(2),
-            CustomText(text: value, fontSize: 14, fontWeight: FontWeight.w600),
-          ],
-        ),
-      ],
     );
   }
 }

@@ -42,7 +42,6 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
     );
     log('bottomBarCubit.statebottomBarCubit.state ::${bottomBarCubit.state}');
 
-    
     // bottomBarCubit.init();
 
     return Scaffold(
@@ -106,6 +105,8 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
                                                     );
 
                                                 if (bottomBarCubit.state == 3) {
+                                                  pricingCubit.init();
+                                                  
                                                   pricingCubit.getPlans(
                                                     context,
                                                     categoryId:

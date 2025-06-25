@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -20,7 +19,6 @@ class PricingScreen extends StatefulWidget {
 
 class _PricingScreenState extends State<PricingScreen> {
   List<PricingModel> pricingList = [];
-  PricingModel? selectedPricingModel;
 
   @override
   Widget build(BuildContext context) {

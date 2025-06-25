@@ -22,7 +22,7 @@ class PricingCubit extends Cubit<PricingState> {
       categoryId: categoryId,
     );
 
-    if (response.data['success'] == true && response.data != null) {
+    if (response.data['success'] == true) {
       log('success');
 
       pricingList =
@@ -30,6 +30,8 @@ class PricingCubit extends Cubit<PricingState> {
               .map((e) => PricingModel.fromJson(e))
               .toList();
       emit(GetPricingState(pricingList: pricingList));
+    } else {
+      emit(GetPricingState(pricingList: []));
     }
     return response;
   }
@@ -42,5 +44,9 @@ class PricingCubit extends Cubit<PricingState> {
 
     if (response.data['success'] == true && response.data != null) {}
     return response;
+  }
+
+  void init() {
+    emit(GetPricingState(pricingList: []));
   }
 }

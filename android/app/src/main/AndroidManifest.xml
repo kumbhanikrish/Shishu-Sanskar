@@ -1,4 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:label="shishu_sanskar"
         android:name="${applicationName}"
@@ -32,9 +34,7 @@
             android:name="flutterEmbedding"
             android:value="2" />
 
-              <meta-data
-        android:name="com.google.android.gms.client_id"
-        android:value="1046719479573-f9henj7s2cldehkljtcbrk2hmve34ole.apps.googleusercontent.com.apps.googleusercontent.com"/>
+              
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and

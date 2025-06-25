@@ -17,13 +17,17 @@ part 'auth_state.dart';
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial());
   AuthRepo authRepo = AuthRepo();
+  final GoogleSignIn googleSignIn = GoogleSignIn(
+    scopes: ['email', 'https://www.googleapis.com/auth/contacts.readonly'],
+  );
+
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   Future<Response> login(
     BuildContext context, {
     required String email,
     required String password,
-    bool googleLogin = false,
-    String? googleToken,
+    required String socialType,
+    required String socialToken,
   }) async {
     await messaging.requestPermission();
     String? token = await messaging.getToken();
@@ -31,8 +35,15 @@ class AuthCubit extends Cubit<AuthState> {
       "email": email,
       "password": password,
       "fcm_token": token,
-      if (googleLogin) 'google_token': googleToken,
     };
+
+    if (socialType == 'google') {
+      Map<String, dynamic> googleParams = {
+        "social_type": socialType,
+        "social_token": socialToken,
+      };
+      loginParams.addAll(googleParams);
+    }
 
     final Response response = await authRepo.login(
       context,
@@ -268,25 +279,47 @@ class AuthCubit extends Cubit<AuthState> {
           (response.data['data'] as List)
               .map((e) => AuthCategoryModel.fromJson(e))
               .toList();
-
-              
     }
 
     emit(AuthCategoryState(authCategoryList: authCategoryList));
   }
 
-  Future googleLogin() async {
-    final GoogleSignIn googleSignIn = GoogleSignIn(
-      scopes: ['email', 'profile'],
-    );
-    final googleUser = await googleSignIn.signIn();
-    if (googleUser == null) return;
-    final googleAuth = await googleUser.authentication;
-    final idToken = googleAuth.idToken;
-    final accessToken = googleAuth.accessToken;
+  Future<void> handleGoogleSignIn(BuildContext context) async {
+    try {
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
-    log('accessToken ::$accessToken');
-    log('idToken ::$idToken');
+      if (googleUser == null) {
+        log("Google sign-in aborted by user");
+        return;
+      }
+
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      final String? accessToken = googleAuth.accessToken;
+      final String? idToken = googleAuth.idToken;
+      final String email = googleUser.email;
+
+      log("Access Token: $accessToken");
+      log("ID Token: $idToken");
+      log("Email: $email");
+
+      if (accessToken != null) {
+        login(
+          context,
+          email: email,
+          password: '',
+          socialType: 'google',
+          socialToken: accessToken,
+        );
+      }
+    } catch (error) {
+      log('errorerror :: $error');
+    }
+  }
+
+  Future<void> handleGoogleSignOut() async {
+    await googleSignIn.signOut();
   }
 }
 

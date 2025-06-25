@@ -4,7 +4,9 @@ import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:shishu_sanskar/module/auth/cubit/auth_cubit.dart';
 import 'package:shishu_sanskar/module/home/cubit/event/event_cubit.dart';
+import 'package:shishu_sanskar/module/home/cubit/task/task_cubit.dart';
 import 'package:shishu_sanskar/module/home/model/event_model.dart';
+import 'package:shishu_sanskar/module/home/model/task_model.dart';
 
 import 'package:shishu_sanskar/module/home/view/widget/custom_home_widget.dart';
 import 'package:shishu_sanskar/utils/constant/app_page.dart';
@@ -30,96 +32,157 @@ class _HomeScreenState extends State<HomeScreen> {
   callApi() async {
     EventCubit eventCubit = BlocProvider.of<EventCubit>(context);
     AuthCubit authCubit = BlocProvider.of<AuthCubit>(context);
+    TaskCubit taskCubit = BlocProvider.of<TaskCubit>(context);
     await authCubit.authCategory(context);
     await eventCubit.getEvent(context);
+    await taskCubit.getTask(context);
   }
 
   @override
   Widget build(BuildContext context) {
     List<EventModel> eventList = [];
+
+    TaskModel taskList = TaskModel(today: [], weekly: [], daily: []);
     return Expanded(
       child: Padding(
         padding: EdgeInsets.only(bottom: 10.h),
         child: SingleChildScrollView(
           child: Column(
-            children: <Widget>[
-              //// Today task
-              customTitleAnsSeeAll(
-                title: 'Today task',
-                onTap: () {
-                  Navigator.pushNamed(context, AppPage.taskSeeAllScreen);
+            crossAxisAlignment: CrossAxisAlignment.start,
+
+            children: [
+              BlocBuilder<TaskCubit, TaskState>(
+                builder: (context, state) {
+                  if (state is GetTaskState) {
+                    taskList = state.taskModel;
+                  }
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      //// Today task
+                      customTitleAnsSeeAll(
+                        title: 'Today task',
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            AppPage.taskSeeAllScreen,
+                            arguments: {
+                              'taskList': taskList,
+
+                              'title': 'Today task',
+                            },
+                          );
+                        },
+                      ),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 13, left: 20),
+                          child: Row(
+                            children: List.generate(taskList.today.length, (
+                              index,
+                            ) {
+                              Today today = taskList.today[index];
+                              return taskList.today.isEmpty
+                                  ? CustomEmpty()
+                                  : customCardView(
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                        context,
+                                        AppPage.taskDetailScreen,
+                                        arguments: {'taskDetail': today},
+                                      );
+                                    },
+                                    image: today.image ?? '',
+                                    title: today.category,
+                                  );
+                            }),
+                          ),
+                        ),
+                      ),
+
+                      //// Daily task
+                      customTitleAnsSeeAll(
+                        title: 'Daily task',
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            AppPage.taskSeeAllScreen,
+                            arguments: {
+                              'taskList': taskList,
+                              'title': 'Daily task',
+                            },
+                          );
+                        },
+                      ),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 13, left: 20),
+                          child: Row(
+                            children: List.generate(taskList.daily.length, (
+                              index,
+                            ) {
+                              Today daily = taskList.daily[index];
+                              return customCardView(
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    AppPage.taskDetailScreen,
+                                    arguments: {'taskDetail': daily},
+                                  );
+                                },
+                                image: daily.image ?? '',
+                                title: daily.category,
+                              );
+                            }),
+                          ),
+                        ),
+                      ),
+
+                      //// weekly task
+                      customTitleAnsSeeAll(
+                        title: 'Weekly task',
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            AppPage.taskSeeAllScreen,
+                            arguments: {
+                              'taskList': taskList,
+                              'title': 'Weekly task',
+                            },
+                          );
+                        },
+                      ),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 13, left: 20),
+                          child: Row(
+                            children: List.generate(taskList.weekly.length, (
+                              index,
+                            ) {
+                              Today weekly = taskList.weekly[index];
+
+                              return customCardView(
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    AppPage.taskDetailScreen,
+                                    arguments: {'taskDetail': weekly},
+                                  );
+                                },
+                                image: weekly.image ?? '',
+                                title: weekly.category,
+                              );
+                            }),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
                 },
               ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 13, left: 20),
-                  child: Row(
-                    children: List.generate(20, (index) {
-                      return customCardView(
-                        onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            AppPage.taskDetailScreen,
-                          );
-                        },
-                        image:
-                            'https://bookyogatraining.com/wp-content/uploads/2022/09/Yoga-for-Women-1.jpg',
-                        title: 'Affirmations',
-                      );
-                    }),
-                  ),
-                ),
-              ),
-
-              //// Daily task
-              customTitleAnsSeeAll(title: 'Daily task', onTap: () {}),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 13, left: 20),
-                  child: Row(
-                    children: List.generate(20, (index) {
-                      return customCardView(
-                        onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            AppPage.taskDetailScreen,
-                          );
-                        },
-                        image:
-                            'https://bookyogatraining.com/wp-content/uploads/2022/09/Yoga-for-Women-1.jpg',
-                        title: 'Yoga',
-                      );
-                    }),
-                  ),
-                ),
-              ),
-
-              //// weekly task
-              customTitleAnsSeeAll(title: 'weekly task', onTap: () {}),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 13, left: 20),
-                  child: Row(
-                    children: List.generate(20, (index) {
-                      return customCardView(
-                        onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            AppPage.taskDetailScreen,
-                          );
-                        },
-                        image:
-                            'https://bookyogatraining.com/wp-content/uploads/2022/09/Yoga-for-Women-1.jpg',
-                        title: 'Yoga',
-                      );
-                    }),
-                  ),
-                ),
-              ),
-
               //// event
               Gap(10),
 

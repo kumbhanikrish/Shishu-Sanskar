@@ -24,6 +24,7 @@ class AppColor {
   static Color dateColor = const Color(0xFF383838);
 
   static Color whiteColor = Colors.white;
+  static Color blueColor = Colors.blue;
   static Color amberColor = Colors.amber;
   static Color toolsBgColor = Color(0xFFFFFAFA);
   static Color graphBorderColor = Color(0xFFE2E2E2);
