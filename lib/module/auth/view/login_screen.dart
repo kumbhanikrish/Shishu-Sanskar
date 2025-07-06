@@ -155,8 +155,9 @@ class LoginScreen extends StatelessWidget {
                   children: [
                     CustomText(text: 'Already have an account? ', fontSize: 10),
                     InkWell(
-                      onTap: () {
+                      onTap: () async {
                         stepperCubit.init();
+
                         Navigator.pushNamedAndRemoveUntil(
                           context,
                           AppPage.authScreen,

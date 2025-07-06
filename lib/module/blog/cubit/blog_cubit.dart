@@ -10,46 +10,73 @@ class BlogCubit extends Cubit<BlogState> {
   BlogCubit() : super(BlogInitial());
 
   BlogsRepo blogsRepo = BlogsRepo();
+  int currentPage = 1;
+  bool isLastPage = false;
+
   List<BlogsModel> blogList = [];
-  int pageNumber = 1;
-  bool isLoading = false;
-  bool hasMoreData = true;
-  Future<void> getBlogs(
-    BuildContext context, {
-    required String search,
-    bool isRefresh = false,
-  }) async {
-    if (isLoading || !hasMoreData) return;
+  List<BlogsModel> moreBlogList = [];
 
-    if (isRefresh) {
-      pageNumber = 1;
-      hasMoreData = true;
-      blogList.clear();
-      emit(BlogLoading());
-    }
+  getBlogs(BuildContext context, {required String search}) async {
+    currentPage = 1;
+    isLastPage = false;
 
-    isLoading = true;
-    Response response = await blogsRepo.getBlogs(
+    emit(BlogLoading());
+
+    final response = await blogsRepo.getBlogs(
       context,
       search: search,
-      page: pageNumber.toString(),
+      page: currentPage.toString(),
     );
 
     if (response.data['success'] == true) {
-      List<BlogsModel> newBlogList =
-          (response.data['data']['data'] as List)
-              .map((e) => BlogsModel.fromJson(e))
-              .toList();
+      final data = response.data['data'];
+      final List newData = data['data'] ?? [];
 
-      if (newBlogList.isNotEmpty) {
-        blogList.addAll(newBlogList);
-        pageNumber++;
-      } else {
-        hasMoreData = false;
-      }
-      emit(GetBlogListState(blogList: List.from(blogList)));
+      blogList = newData.map((e) => BlogsModel.fromJson(e)).toList();
+
+      // Check if this is the last page
+      isLastPage = data['next_page_url'] == null;
+
+      emit(GetBlogListState(blogList: blogList));
+    } else {
+      emit(BlogFailedState());
     }
+  }
 
-    isLoading = false;
+  loadMoreBlogs(BuildContext context, {required String search}) async {
+    if (isLastPage) return;
+
+    emit(BlogLoading());
+
+    try {
+      currentPage += 1;
+
+      final response = await blogsRepo.getBlogs(
+        context,
+        search: search,
+        page: currentPage.toString(),
+      );
+
+      if (response.data['success'] == true) {
+        final data = response.data['data'];
+        final List newData = data['data'] ?? [];
+
+        moreBlogList = newData.map((e) => BlogsModel.fromJson(e)).toList();
+
+        blogList.addAll(moreBlogList);
+
+        isLastPage = data['next_page_url'] == null;
+
+        emit(MoreGetBlogListState(blogList: blogList));
+      } else {
+        emit(MoreGetBlogListState(blogList: blogList));
+      }
+    } catch (e) {
+      emit(BlogFailedState());
+    }
+  }
+
+  void init() {
+    emit(BlogInitial());
   }
 }

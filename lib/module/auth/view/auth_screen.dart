@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:shishu_sanskar/module/auth/cubit/auth_cubit.dart';
 import 'package:shishu_sanskar/module/auth/view/number_screen.dart';
@@ -17,7 +18,8 @@ import 'package:shishu_sanskar/utils/widgets/custom_login_theme.dart';
 import 'package:sizer/sizer.dart';
 
 class AuthScreen extends StatefulWidget {
-  const AuthScreen({super.key});
+  final dynamic arguments;
+  const AuthScreen({super.key, this.arguments});
 
   @override
   State<AuthScreen> createState() => _AuthScreenState();
@@ -39,7 +41,52 @@ class _AuthScreenState extends State<AuthScreen> {
   String wpNumberCode = '+91';
 
   @override
+  void initState() {
+    super.initState();
+    _checkLocationPermission();
+  }
+
+  Future<void> _checkLocationPermission() async {
+    LocationPermission permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // Open app settings if permission is permanently denied
+      await Geolocator.openAppSettings();
+    }
+
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Open location settings if location is off
+      await Geolocator.openLocationSettings();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    bool isGoogle =
+        widget.arguments != null ? widget.arguments['google'] : false;
+
+    String email = widget.arguments != null ? widget.arguments['email'] : '';
+    String googleToken =
+        widget.arguments != null ? widget.arguments['google_token'] : '';
+    String firstName =
+        widget.arguments != null ? widget.arguments['firstName'] : '';
+    String middleName =
+        widget.arguments != null ? widget.arguments['middleName'] : '';
+    String lastName =
+        widget.arguments != null ? widget.arguments['lastName'] : '';
+
+    if (email.isNotEmpty) {
+      emailController.text = email;
+      firstNameController.text = firstName;
+      middleNameController.text = middleName;
+      lastNameController.text = lastName;
+    }
+
     StepperCubit stepperCubit = BlocProvider.of<StepperCubit>(context);
     PasswordVisibilityCubit passwordVisibilityCubit =
         BlocProvider.of<PasswordVisibilityCubit>(context);
@@ -55,6 +102,9 @@ class _AuthScreenState extends State<AuthScreen> {
     storeNumberCubit.init();
     storeWpNumberCubit.init();
 
+    // if (isGoogle) {
+    //   authCubit.handleGoogleSignOut(context);
+    // }
     stepperCubit.init();
 
     Widget getStepText(int step) {
@@ -67,7 +117,7 @@ class _AuthScreenState extends State<AuthScreen> {
             passwordController: passwordController,
             middleNameController: middleNameController,
             lastNameController: lastNameController,
-
+            isGoogle: isGoogle,
             onTap: () {
               final firstName = firstNameController.text.trim();
               final lastName = lastNameController.text.trim();
@@ -101,12 +151,12 @@ class _AuthScreenState extends State<AuthScreen> {
                 return;
               }
 
-              if (password.isEmpty) {
+              if (password.isEmpty && !isGoogle) {
                 customErrorToast(context, text: 'Please enter your password');
                 return;
               }
 
-              if (password.length < 8) {
+              if (password.length < 8 && !isGoogle) {
                 customErrorToast(
                   context,
                   text: 'Password must be at least 8 characters',
@@ -114,12 +164,12 @@ class _AuthScreenState extends State<AuthScreen> {
                 return;
               }
 
-              if (confirmPassword.isEmpty) {
+              if (confirmPassword.isEmpty && !isGoogle) {
                 customErrorToast(context, text: 'Please confirm your password');
                 return;
               }
 
-              if (password != confirmPassword) {
+              if (password != confirmPassword && !isGoogle) {
                 customErrorToast(context, text: 'Passwords do not match');
                 return;
               }
@@ -282,6 +332,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             categoryId: selectedCategory,
                             email: emailController.text.trim(),
                             password: passwordController.text.trim(),
+
                             passwordConfirmation:
                                 cPasswordController.text.trim(),
                             gender:
@@ -294,6 +345,8 @@ class _AuthScreenState extends State<AuthScreen> {
                                       'yyyy-MM-dd',
                                     ).format(selectDate ?? DateTime.now())
                                     : '',
+                            googleToken: googleToken ?? '',
+                            appleToken: '',
                           );
                         },
                         backOnTap: () {

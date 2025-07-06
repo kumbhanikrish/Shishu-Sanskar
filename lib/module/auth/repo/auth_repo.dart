@@ -7,12 +7,18 @@ class AuthRepo {
   Future<Response> login(
     BuildContext context, {
     required Map<String, dynamic> params,
+    String? firstName,
+    String? middleName,
+    String? lastName,
   }) async {
     Response response = await apiServices.postDynamicData(
       context,
       AppApi.login,
       params,
       showSuccessMessage: true,
+      firstName: firstName,
+      middleName: middleName,
+      lastName: lastName,
     );
 
     return response;
@@ -137,8 +143,7 @@ class AuthRepo {
     return response;
   }
 
-  Future<Response> authCategory(
-    BuildContext context, ) async {
+  Future<Response> authCategory(BuildContext context) async {
     Response response = await apiServices.getDynamicData(
       context,
       AppApi.authCategory,

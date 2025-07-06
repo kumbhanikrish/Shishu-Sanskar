@@ -1,25 +1,27 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shishu_sanskar/main.dart';
 import 'package:shishu_sanskar/module/auth/model/auth_category_model.dart';
 import 'package:shishu_sanskar/module/auth/model/login_model.dart';
 import 'package:shishu_sanskar/module/auth/repo/auth_repo.dart';
 import 'package:shishu_sanskar/utils/constant/app_page.dart';
 import 'package:shishu_sanskar/utils/enum/enums.dart';
+import 'package:shishu_sanskar/utils/formatter/format.dart';
 
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial());
   AuthRepo authRepo = AuthRepo();
-  final GoogleSignIn googleSignIn = GoogleSignIn(
-    scopes: ['email', 'https://www.googleapis.com/auth/contacts.readonly'],
-  );
+  final GoogleSignIn googleSignIn = GoogleSignIn();
 
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   Future<Response> login(
@@ -28,13 +30,22 @@ class AuthCubit extends Cubit<AuthState> {
     required String password,
     required String socialType,
     required String socialToken,
+    String? firstName,
+    String? middleName,
+    String? lastName,
   }) async {
     await messaging.requestPermission();
     String? token = await messaging.getToken();
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    String deviceName = await getDeviceName();
+    String version = packageInfo.version;
     Map<String, dynamic> loginParams = {
       "email": email,
       "password": password,
       "fcm_token": token,
+      "device_name": deviceName,
+      "device_os": Platform.isAndroid ? 'Android' : 'IOS',
+      "app_version": version,
     };
 
     if (socialType == 'google') {
@@ -48,6 +59,9 @@ class AuthCubit extends Cubit<AuthState> {
     final Response response = await authRepo.login(
       context,
       params: loginParams,
+      firstName: firstName,
+      middleName: middleName,
+      lastName: lastName,
     );
 
     if (response.data['success'] == true) {
@@ -76,7 +90,13 @@ class AuthCubit extends Cubit<AuthState> {
     required String passwordConfirmation,
     required String gender,
     required String lmp,
+    required String googleToken,
+    required String appleToken,
   }) async {
+    String? token = await messaging.getToken();
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    String deviceName = await getDeviceName();
+    String version = packageInfo.version;
     Map<String, dynamic> registerParams = {
       "first_name": firstName,
       "middle_name": middleName,
@@ -88,8 +108,14 @@ class AuthCubit extends Cubit<AuthState> {
       "password": password,
       "password_confirmation": passwordConfirmation,
       "gender": gender,
-
       "lmp": lmp,
+      "device_name": deviceName,
+      "device_os": Platform.isAndroid ? 'Android' : 'IOS',
+      "app_version": version,
+      "fcm_token": token,
+      'location': await getCityName(),
+      if (googleToken.isNotEmpty) "google_token": googleToken,
+      if (appleToken.isNotEmpty) "apple_token": appleToken,
     };
 
     Response response = await authRepo.register(
@@ -98,10 +124,12 @@ class AuthCubit extends Cubit<AuthState> {
     );
 
     if (response.data['success'] == true) {
-      // await localDataSaver.setAuthToken(response.data['data']['token'] ?? '');
+      LoginModel loginModel = LoginModel.fromJson(response.data['data']);
+      await localDataSaver.setAuthToken(loginModel.token);
+      await localDataSaver.setLoginData(loginModel);
       Navigator.pushNamedAndRemoveUntil(
         context,
-        AppPage.loginScreen,
+        AppPage.bottomNavigationScreen,
         (route) => false,
       );
     }
@@ -125,6 +153,12 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<Response> logout(BuildContext context) async {
+    LoginModel loginModel = await localDataSaver.getLoginModel();
+
+    if (loginModel.user.googleToken != null &&
+        loginModel.user.googleToken.isNotEmpty) {
+      handleGoogleSignOut(context);
+    }
     Response response = await authRepo.logout(context, params: {});
 
     if (response.data['success'] == true) {
@@ -285,41 +319,92 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> handleGoogleSignIn(BuildContext context) async {
-    try {
-      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+    // Step 1: Start Google Sign-In
+    final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
-      if (googleUser == null) {
-        log("Google sign-in aborted by user");
-        return;
+    if (googleUser == null) {
+      log("Google sign-in aborted by user");
+      return;
+    }
+
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
+
+    final String? accessToken = googleAuth.accessToken;
+    final String? idToken = googleAuth.idToken;
+    final String email = googleUser.email;
+    final String? displayName = googleUser.displayName;
+
+    log("Access Token: $accessToken");
+    log("ID Token: $idToken");
+    log("Email: $email");
+    log("Display Name: $displayName");
+
+    // Step 2: Extract First, Middle, and Last Name
+    String firstName = '';
+    String middleName = '';
+    String lastName = '';
+
+    if (displayName != null && displayName.isNotEmpty) {
+      final nameParts = displayName.trim().split(' ');
+
+      if (nameParts.length == 1) {
+        firstName = nameParts[0];
+      } else if (nameParts.length == 2) {
+        firstName = nameParts[0];
+        lastName = nameParts[1];
+      } else if (nameParts.length >= 3) {
+        firstName = nameParts[0];
+        middleName = nameParts.sublist(1, nameParts.length - 1).join(' ');
+        lastName = nameParts.last;
       }
+    }
 
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+    log("First Name: $firstName");
+    log("Middle Name: $middleName");
+    log("Last Name: $lastName");
 
-      final String? accessToken = googleAuth.accessToken;
-      final String? idToken = googleAuth.idToken;
-      final String email = googleUser.email;
+    // Step 3: Call your custom API
+    if (accessToken != null) {
+      await login(
+        context,
+        email: email,
+        password: '',
+        socialType: 'google',
+        socialToken: accessToken,
+        firstName: firstName,
+        middleName: middleName,
+        lastName: lastName,
+      );
 
-      log("Access Token: $accessToken");
-      log("ID Token: $idToken");
-      log("Email: $email");
+      // Step 4: Firebase sign-in
+      final credential = GoogleAuthProvider.credential(
+        accessToken: accessToken,
+        idToken: idToken,
+      );
 
-      if (accessToken != null) {
-        login(
-          context,
-          email: email,
-          password: '',
-          socialType: 'google',
-          socialToken: accessToken,
-        );
+      final UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithCredential(credential);
+
+      final User? user = userCredential.user;
+
+      if (user != null) {
+        log("Firebase sign-in successful for ${user.email}");
+        // Continue your flow
+      } else {
+        log("Firebase user is null");
       }
-    } catch (error) {
-      log('errorerror :: $error');
     }
   }
 
-  Future<void> handleGoogleSignOut() async {
+  Future<void> handleGoogleSignOut(BuildContext context) async {
     await googleSignIn.signOut();
+    await localDataSaver.setAuthToken('');
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      AppPage.loginScreen,
+      (route) => false,
+    );
   }
 }
 

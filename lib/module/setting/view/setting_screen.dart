@@ -1,8 +1,9 @@
-import 'package:dotted_line/dotted_line.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shishu_sanskar/main.dart';
 import 'package:shishu_sanskar/module/auth/cubit/auth_cubit.dart';
 import 'package:shishu_sanskar/module/auth/model/login_model.dart';
@@ -37,6 +38,14 @@ class _SettingScreenState extends State<SettingScreen> {
   void initState() {
     super.initState();
     loadLoginData();
+    _loadNotificationPreference(); // Load saved switch state
+  }
+
+  Future<void> _loadNotificationPreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _notificationsEnabled = prefs.getBool('notifications_enabled') ?? true;
+    });
   }
 
   @override
@@ -213,10 +222,23 @@ class _SettingScreenState extends State<SettingScreen> {
                             0.8, // Adjust this value to change the size (e.g., 0.8 = 80%)
                         child: CupertinoSwitch(
                           value: _notificationsEnabled,
-                          onChanged: (bool value) {
+                          onChanged: (bool value) async {
+                            await localDataSaver.setNotificationsEnabled(value);
+
                             setState(() {
                               _notificationsEnabled = value;
                             });
+
+                            // Enable/disable notifications (using FCM topic as an example)
+                            if (value) {
+                              FirebaseMessaging.instance.subscribeToTopic(
+                                'general',
+                              );
+                            } else {
+                              FirebaseMessaging.instance.unsubscribeFromTopic(
+                                'general',
+                              );
+                            }
                           },
                         ),
                       ),

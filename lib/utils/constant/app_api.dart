@@ -30,6 +30,7 @@ class AppApi {
 
   /// Event Flow
   static String getEvent = '$baseUrl/events?title=&page=';
+  static String joinEvent = '$baseUrl/events/';
 
   /// Task Flow
   static String userTasks = '$baseUrl/user-tasks';

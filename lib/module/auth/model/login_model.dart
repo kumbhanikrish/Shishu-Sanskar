@@ -1,16 +1,16 @@
 class LoginModel {
-  final User user;
+  final UserData user;
   final String token;
 
   LoginModel({required this.user, required this.token});
 
   factory LoginModel.fromJson(Map<String, dynamic> json) =>
-      LoginModel(user: User.fromJson(json["user"]), token: json["token"]);
+      LoginModel(user: UserData.fromJson(json["user"]), token: json["token"]);
 
   Map<String, dynamic> toJson() => {"user": user.toJson(), "token": token};
 }
 
-class User {
+class UserData {
   int id;
   String firstName;
   String middleName;
@@ -37,7 +37,7 @@ class User {
   Subscription currentSubscription;
   List<Subscription> subscriptions;
 
-  User({
+  UserData({
     required this.id,
     required this.firstName,
     required this.middleName,
@@ -65,7 +65,7 @@ class User {
     required this.subscriptions,
   });
 
-  factory User.fromJson(Map<String, dynamic> json) => User(
+  factory UserData.fromJson(Map<String, dynamic> json) => UserData(
     id: json["id"],
     firstName: json["first_name"] ?? '',
     middleName: json["middle_name"] ?? '',
@@ -87,7 +87,7 @@ class User {
     emailVerifiedAt: json["email_verified_at"],
     createdAt: DateTime.parse(json["created_at"]),
     updatedAt: DateTime.parse(json["updated_at"]),
-    planActive: json["plan_active"],
+    planActive: json["plan_active"] ?? false,
     fullName: json["full_name"],
     currentSubscription:
         json["current_subscription"] == null

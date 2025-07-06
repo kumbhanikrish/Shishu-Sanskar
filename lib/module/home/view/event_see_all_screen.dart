@@ -67,6 +67,7 @@ class EventSeeAllScreen extends StatelessWidget {
                                   Navigator.pushNamed(
                                     context,
                                     AppPage.eventDetailScreen,
+                                    arguments: {'eventModel': eventModel},
                                   );
                                 },
                                 title: eventModel.title,

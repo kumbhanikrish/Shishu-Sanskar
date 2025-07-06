@@ -18,6 +18,7 @@ class SignUpScreen extends StatelessWidget {
   final TextEditingController emailController;
   final TextEditingController passwordController;
   final TextEditingController cPasswordController;
+  final bool isGoogle;
   final Function() onTap;
   const SignUpScreen({
     super.key,
@@ -28,6 +29,7 @@ class SignUpScreen extends StatelessWidget {
     required this.middleNameController,
     required this.lastNameController,
     required this.onTap,
+    required this.isGoogle,
   });
   @override
   Widget build(BuildContext context) {
@@ -87,44 +89,47 @@ class SignUpScreen extends StatelessWidget {
               controller: emailController,
             ),
             Gap(10),
-            BlocBuilder<PasswordVisibilityCubit, bool>(
-              builder: (context, isHidden) {
-                return CustomTextField(
-                  text: 'Password',
-                  obscureText: isHidden,
 
-                  hintText: 'Password',
-                  prefixImage: AppImage.lock,
-                  controller: passwordController,
-                  suffixIcon: customPrefixIcon(
-                    onTap: () {
-                      passwordVisibilityCubit.toggleVisibility();
-                    },
-                    image: isHidden ? AppImage.eyeSlash : AppImage.eye,
-                  ),
-                );
-              },
-            ),
-            Gap(10),
+            if (!isGoogle) ...[
+              BlocBuilder<PasswordVisibilityCubit, bool>(
+                builder: (context, isHidden) {
+                  return CustomTextField(
+                    text: 'Password',
+                    obscureText: isHidden,
 
-            BlocBuilder<CPasswordVisibilityCubit, bool>(
-              builder: (context, isHidden) {
-                return CustomTextField(
-                  text: 'Confirm Password',
-                  obscureText: isHidden,
+                    hintText: 'Password',
+                    prefixImage: AppImage.lock,
+                    controller: passwordController,
+                    suffixIcon: customPrefixIcon(
+                      onTap: () {
+                        passwordVisibilityCubit.toggleVisibility();
+                      },
+                      image: isHidden ? AppImage.eyeSlash : AppImage.eye,
+                    ),
+                  );
+                },
+              ),
+              Gap(10),
 
-                  hintText: 'Confirm Password',
-                  prefixImage: AppImage.lock,
-                  controller: cPasswordController,
-                  suffixIcon: customPrefixIcon(
-                    onTap: () {
-                      cPasswordVisibilityCubit.toggleVisibility();
-                    },
-                    image: isHidden ? AppImage.eyeSlash : AppImage.eye,
-                  ),
-                );
-              },
-            ),
+              BlocBuilder<CPasswordVisibilityCubit, bool>(
+                builder: (context, isHidden) {
+                  return CustomTextField(
+                    text: 'Confirm Password',
+                    obscureText: isHidden,
+
+                    hintText: 'Confirm Password',
+                    prefixImage: AppImage.lock,
+                    controller: cPasswordController,
+                    suffixIcon: customPrefixIcon(
+                      onTap: () {
+                        cPasswordVisibilityCubit.toggleVisibility();
+                      },
+                      image: isHidden ? AppImage.eyeSlash : AppImage.eye,
+                    ),
+                  );
+                },
+              ),
+            ],
 
             Gap(20),
             CustomButton(text: 'Continue', onTap: onTap),

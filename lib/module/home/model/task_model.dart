@@ -1,14 +1,20 @@
 class TaskModel {
-  final List<Today> today;
-  final List<Today> weekly;
-  final List<Today> daily;
+  List<Today> today;
+  List<Today> weekly;
+  List<Today> daily;
 
   TaskModel({required this.today, required this.weekly, required this.daily});
 
   factory TaskModel.fromJson(Map<String, dynamic> json) => TaskModel(
     today: List<Today>.from(json["today"].map((x) => Today.fromJson(x))),
-    weekly: List<Today>.from(json["weekly"].map((x) => Today.fromJson(x))),
-    daily: List<Today>.from(json["daily"].map((x) => Today.fromJson(x))),
+    weekly:
+        json["weekly"] == null
+            ? []
+            : List<Today>.from(json["weekly"].map((x) => Today.fromJson(x))),
+    daily:
+        json["daily"] == null
+            ? []
+            : List<Today>.from(json["daily"].map((x) => Today.fromJson(x))),
   );
 }
 

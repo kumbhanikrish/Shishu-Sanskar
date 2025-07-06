@@ -21,6 +21,16 @@ class LocalDataSaver {
     return sharedPreference.getString('authToken') ?? '';
   }
 
+  Future setNotificationsEnabled(bool value) async {
+    SharedPreferences sharedPreference = await SharedPreferences.getInstance();
+    sharedPreference.setBool('notifications_enabled', value);
+  }
+
+  Future<bool> getNotificationsEnabled() async {
+    SharedPreferences sharedPreference = await SharedPreferences.getInstance();
+    return sharedPreference.getBool('notifications_enabled') ?? false;
+  }
+
   // ✅ Save LoginModel as JSON string
   Future<void> setLoginData(LoginModel loginModel) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:shishu_sanskar/module/home/cubit/task/task_cubit.dart';
 import 'package:shishu_sanskar/module/home/model/task_model.dart';
 import 'package:shishu_sanskar/module/home/view/widget/custom_home_widget.dart';
 import 'package:shishu_sanskar/utils/constant/app_image.dart';
@@ -22,6 +24,7 @@ class TaskDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Today taskDetail = data['taskDetail'];
+    TaskCubit taskCubit = BlocProvider.of<TaskCubit>(context);
 
     return Scaffold(
       body: Stack(
@@ -191,7 +194,26 @@ class TaskDetailScreen extends StatelessWidget {
                           Gap(5),
                           descriptionWidget,
                           Gap(10),
-                          CustomButton(text: 'Completed', onTap: () {}),
+                          CustomButton(
+                            text: 'completed',
+                            backgroundColor:
+                                task.status == 'completed'
+                                    ? AppColor.themePrimaryColor2
+                                    : AppColor.themePrimaryColor,
+                            borderColor:
+                                task.status == 'completed'
+                                    ? AppColor.themePrimaryColor2
+                                    : AppColor.themePrimaryColor,
+                            onTap:
+                                task.status == 'completed'
+                                    ? () {}
+                                    : () {
+                                      taskCubit.completeTask(
+                                        context,
+                                        taskId: task.id,
+                                      );
+                                    },
+                          ),
                         ],
                       );
                     },

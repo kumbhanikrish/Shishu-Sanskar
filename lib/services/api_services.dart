@@ -1,8 +1,10 @@
 import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:shishu_sanskar/local_data/local_data_sever.dart';
+import 'package:shishu_sanskar/module/auth/cubit/auth_cubit.dart';
 import 'package:shishu_sanskar/utils/constant/app_api.dart';
 import 'package:shishu_sanskar/utils/constant/app_page.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_error_toast.dart';
@@ -72,9 +74,13 @@ class ApiServices {
     Map<String, dynamic> params, {
     bool showSuccessMessage = false,
     bool isFormData = false,
+    String? firstName,
+    String? middleName,
+    String? lastName,
   }) async {
     log("params :: $params");
     log("Url :: $url");
+    log("firstName :: $firstName");
 
     try {
       await EasyLoading.show();
@@ -110,6 +116,33 @@ class ApiServices {
         return response;
       }
     } on DioException catch (e) {
+      if (params['social_type'] == 'google' &&
+          e.response?.data['message'] == 'User not found!') {
+        StepperCubit stepperCubit = BlocProvider.of<StepperCubit>(context);
+        stepperCubit.init();
+        await EasyLoading.dismiss();
+
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          AppPage.authScreen,
+          (route) => false,
+          arguments: {
+            'google': true,
+            'email': params['email'],
+            'google_token': params['social_token'],
+            'firstName': firstName,
+            'middleName': middleName,
+            'lastName': lastName,
+          },
+        );
+        _handleDioError(
+          context,
+          e,
+          loginEndPoint: AppApi.login,
+          showSuccessMessage: showSuccessMessage,
+        );
+        return;
+      }
       _handleDioError(
         context,
         e,

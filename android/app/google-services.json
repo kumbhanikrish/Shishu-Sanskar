@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "927629152845",
-    "project_id": "shishu-sanskar",
-    "storage_bucket": "shishu-sanskar.firebasestorage.app"
+    "project_number": "392298455531",
+    "project_id": "shishu-sanskar-app",
+    "storage_bucket": "shishu-sanskar-app.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:927629152845:android:33112dbb84a84944ea0204",
+        "mobilesdk_app_id": "1:392298455531:android:7c7a56e09418bf3e56f9ae",
         "android_client_info": {
           "package_name": "com.example.shishu_sanskar"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCoJjqc25p-ceV-sb3IBpQJuFfFBSiX1Ms"
+          "current_key": "AIzaSyDvqWSNqzgtRfQuEEiAy4Q9eQXTK1CakNc"
         }
       ],
       "services": {

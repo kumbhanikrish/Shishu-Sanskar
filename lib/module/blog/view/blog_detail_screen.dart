@@ -106,29 +106,29 @@ class BlogDetailScreen extends StatelessWidget {
                                 ),
 
                                 Gap(6),
-                                LikeButton(
-                                  size: 20,
-                                  circleColor: CircleColor(
-                                    start: AppColor.disLikeColor,
-                                    end: AppColor.disLikeColor,
-                                  ),
-                                  bubblesColor: BubblesColor(
-                                    dotPrimaryColor: AppColor.disLikeColor,
-                                    dotSecondaryColor: AppColor.disLikeColor,
-                                  ),
-                                  likeBuilder: (isLiked) {
-                                    return SvgPicture.asset(
-                                      isLiked
-                                          ? AppImage.dislikeIconFilled
-                                          : AppImage.dislikeIcon,
-                                    );
-                                  },
-                                ),
+                                // LikeButton(
+                                //   size: 20,
+                                //   circleColor: CircleColor(
+                                //     start: AppColor.disLikeColor,
+                                //     end: AppColor.disLikeColor,
+                                //   ),
+                                //   bubblesColor: BubblesColor(
+                                //     dotPrimaryColor: AppColor.disLikeColor,
+                                //     dotSecondaryColor: AppColor.disLikeColor,
+                                //   ),
+                                //   likeBuilder: (isLiked) {
+                                //     return SvgPicture.asset(
+                                //       isLiked
+                                //           ? AppImage.dislikeIconFilled
+                                //           : AppImage.dislikeIcon,
+                                //     );
+                                //   },
+                                // ),
                               ],
                             );
                           },
                         ),
-                        Gap(20.h),
+                        Gap(10.h),
                       ],
                     ),
                   ),

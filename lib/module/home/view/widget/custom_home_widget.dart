@@ -68,7 +68,7 @@ Widget bottomBarTab(
         onTap: () async {
           log('indexindex ::$index');
           if (index == 1) {
-            blogCubit.getBlogs(context, search: '', isRefresh: false);
+            blogCubit.getBlogs(context, search: '');
           } else if (index == 3) {
             pricingCubit.getPlans(context, categoryId: state.toString());
           }
@@ -215,13 +215,16 @@ customEventCardView({
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                       ),
-                      Gap(6),
-                      CustomText(
-                        text: subTitle,
-                        fontSize: 10,
+                      if (subTitle.isNotEmpty) ...[
+                        Gap(6),
+                        CustomText(
+                          text: subTitle,
+                          fontSize: 10,
+                          maxLines: 6,
+                          color: AppColor.seeAllTitleColor,
+                        ),
+                      ],
 
-                        color: AppColor.seeAllTitleColor,
-                      ),
                       Gap(10),
                       customIconAndText(date: date, time: time),
                       if (showButton == true) ...[

@@ -26,10 +26,10 @@ class _OvulationCalculatorScreenState extends State<OvulationCalculatorScreen> {
   DateTime focusedDay = DateTime.now();
   DateTime? selectedDay;
 
-  List<String> averageCycle = List.generate(
-    36,
-    (index) => (15 + index).toString(),
-  );
+    List<String> averageCycle = List.generate(
+      36,
+      (index) => (15 + index).toString(),
+    );
   List<DateTime> fertileWindow = [];
 
   DateTime? fertileStart;

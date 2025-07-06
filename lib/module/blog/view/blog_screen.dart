@@ -14,24 +14,36 @@ import 'package:shishu_sanskar/utils/widgets/custom_text.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_textfield.dart';
 import 'package:sizer/sizer.dart';
 
-class BlogScreen extends StatelessWidget {
+class BlogScreen extends StatefulWidget {
   const BlogScreen({super.key});
+
   @override
-  Widget build(BuildContext context) {
-    Timer? debounce;
-    ScrollController scrollController = ScrollController();
-    final TextEditingController searchController = TextEditingController();
+  State<BlogScreen> createState() => _BlogScreenState();
+}
 
+class _BlogScreenState extends State<BlogScreen> {
+  Timer? debounce;
+  ScrollController scrollController = ScrollController();
+  final TextEditingController searchController = TextEditingController();
+  @override
+  void initState() {
     BlogCubit blogCubit = BlocProvider.of<BlogCubit>(context);
-
-    List<BlogsModel> blogList = [];
 
     scrollController.addListener(() {
       if (scrollController.position.pixels >=
           scrollController.position.maxScrollExtent) {
-        blogCubit.getBlogs(context, search: searchController.text.trim());
+        blogCubit.loadMoreBlogs(context, search: searchController.text.trim());
       }
     });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    BlogCubit blogCubit = BlocProvider.of<BlogCubit>(context);
+
+    List<BlogsModel> blogList = [];
+
     return Expanded(
       child: Padding(
         padding: EdgeInsets.only(right: 20, left: 20, bottom: 10.h),
@@ -46,9 +58,14 @@ class BlogScreen extends StatelessWidget {
                 controller: searchController,
                 onChanged: (value) {
                   if (debounce?.isActive ?? false) debounce!.cancel();
-                  debounce = Timer(const Duration(milliseconds: 500), () {
-                    blogCubit.getBlogs(context, search: value);
-                  });
+
+                  if (value.length >= 3) {
+                    debounce = Timer(Duration(seconds: 3), () {
+                      blogCubit.getBlogs(context, search: value);
+                    });
+                  } else if (value.isEmpty) {
+                    blogCubit.getBlogs(context, search: '');
+                  }
                 },
               ),
 
@@ -58,120 +75,118 @@ class BlogScreen extends StatelessWidget {
                 builder: (context, state) {
                   if (state is GetBlogListState) {
                     blogList = state.blogList;
-                    return blogList.isEmpty
-                        ? SizedBox(
-                          height: 60.h,
-                          child: Center(child: CustomEmpty()),
-                        )
-                        : ListView.separated(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          padding: EdgeInsets.zero,
-                          itemCount: blogList.length,
+                  } else if (state is MoreGetBlogListState) {
+                    blogList = state.blogList;
+                  }
 
-                          itemBuilder: (context, index) {
-                            BlogsModel blogsModel = blogList[index];
-                            return InkWell(
-                              borderRadius: BorderRadius.circular(18),
-                              onTap: () {
-                                Navigator.pushNamed(
-                                  context,
-                                  AppPage.blogDetailScreen,
-                                  arguments: {'blogsModel': blogsModel},
-                                );
-                              },
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(18),
-                                    child: CustomCachedImage(
-                                      imageUrl: blogsModel.image,
+                  return blogList.isEmpty
+                      ? SizedBox(
+                        height: 60.h,
+                        child: Center(child: CustomEmpty()),
+                      )
+                      : ListView.separated(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        padding: EdgeInsets.zero,
+                        itemCount: blogList.length,
 
-                                      width: 40.w,
-                                      height: 15.h,
-                                    ),
+                        itemBuilder: (context, index) {
+                          BlogsModel blogsModel = blogList[index];
+                          return InkWell(
+                            borderRadius: BorderRadius.circular(18),
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                AppPage.blogDetailScreen,
+                                arguments: {'blogsModel': blogsModel},
+                              );
+                            },
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(18),
+                                  child: CustomCachedImage(
+                                    imageUrl: blogsModel.image,
+
+                                    width: 40.w,
+                                    height: 15.h,
                                   ),
-                                  Gap(7),
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 8,
-                                      ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                ),
+                                Gap(7),
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 8,
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
 
-                                        children: [
-                                          CustomText(
-                                            text: '05 min ago',
+                                      children: [
+                                        CustomText(
+                                          text: '05 min ago',
+                                          color: AppColor.seeAllTitleColor,
+                                          fontSize: 10,
+                                        ),
+                                        Gap(4),
+
+                                        CustomText(
+                                          text: blogsModel.title,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 12,
+                                        ),
+                                        Gap(4),
+
+                                        SizedBox(
+                                          height: 30,
+                                          child: CustomHTMLText(
+                                            text: blogsModel.content,
                                             color: AppColor.seeAllTitleColor,
                                             fontSize: 10,
+                                            maxLines: 2,
+                                            overflow: true,
+                                            textAlign: TextAlign.start,
                                           ),
-                                          Gap(4),
-
-                                          CustomText(
-                                            text: blogsModel.title,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 12,
-                                          ),
-                                          Gap(4),
-
-                                          SizedBox(
-                                            height: 30,
-                                            child: CustomHTMLText(
-                                              text: blogsModel.content,
-                                              color: AppColor.seeAllTitleColor,
-                                              fontSize: 10,
-                                              maxLines: 2,
-                                              overflow: true,
-                                              textAlign: TextAlign.start,
-                                            ),
-                                          ),
-                                          Gap(10),
-                                          InkWell(
-                                            onTap: () {
-                                              // Handle read more tap
-                                            },
-                                            child: Row(
-                                              children: [
-                                                CustomText(
-                                                  text: "Read more",
-                                                  color:
-                                                      AppColor.seeAllTitleColor,
-                                                  fontSize: 11,
-                                                  maxLines: 2,
+                                        ),
+                                        Gap(10),
+                                        InkWell(
+                                          onTap: () {
+                                            // Handle read more tap
+                                          },
+                                          child: Row(
+                                            children: [
+                                              CustomText(
+                                                text: "Read more",
+                                                color:
+                                                    AppColor.seeAllTitleColor,
+                                                fontSize: 11,
+                                                maxLines: 2,
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                  top: 2,
+                                                  left: 5,
                                                 ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                        top: 2,
-                                                        left: 5,
-                                                      ),
-                                                  child: SvgPicture.asset(
-                                                    AppImage.arrowRightIcon,
-                                                  ),
+                                                child: SvgPicture.asset(
+                                                  AppImage.arrowRightIcon,
                                                 ),
-                                              ],
-                                            ),
+                                              ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ],
-                              ),
-                            );
-                          },
-                          separatorBuilder: (BuildContext context, int index) {
-                            return Gap(10);
-                          },
-                        );
-                  } else if (state is! BlogLoading) {
-                    return Container();
-                  } else {
-                    return SizedBox();
-                  }
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                        separatorBuilder: (BuildContext context, int index) {
+                          return Gap(10);
+                        },
+                      );
                 },
               ),
             ],

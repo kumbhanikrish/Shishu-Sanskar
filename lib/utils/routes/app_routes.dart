@@ -25,7 +25,9 @@ import 'package:shishu_sanskar/utils/constant/app_page.dart';
 final Map<String, WidgetBuilder> appRoutes = {
   AppPage.splashScreen: (context) => const SplashScreen(),
   AppPage.loginScreen: (context) => LoginScreen(),
-  AppPage.authScreen: (context) => const AuthScreen(),
+  AppPage.authScreen:
+      (context) =>
+          AuthScreen(arguments: ModalRoute.of(context)?.settings.arguments),
   AppPage.forgotFlowScreen: (context) => ForgotFlowScreen(),
   AppPage.bottomNavigationScreen: (context) => BottomNavigationScreen(),
   AppPage.taskSeeAllScreen:
@@ -35,7 +37,10 @@ final Map<String, WidgetBuilder> appRoutes = {
       (context) =>
           TaskDetailScreen(data: ModalRoute.of(context)?.settings.arguments),
   AppPage.eventSeeAllScreen: (context) => EventSeeAllScreen(),
-  AppPage.eventDetailScreen: (context) => EventDetailScreen(),
+  AppPage.eventDetailScreen:
+      (context) => EventDetailScreen(
+        argument: ModalRoute.of(context)?.settings.arguments,
+      ),
   AppPage.settingScreen: (context) => SettingScreen(),
   AppPage.editProfileScreen:
       (context) => EditProfileScreen(

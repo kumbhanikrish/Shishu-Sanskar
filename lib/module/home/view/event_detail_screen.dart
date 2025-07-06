@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -12,11 +14,17 @@ import 'package:shishu_sanskar/utils/widgets/custom_bg.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_button.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_text.dart';
 import 'package:sizer/sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class EventDetailScreen extends StatelessWidget {
-  const EventDetailScreen({super.key});
+  final dynamic argument;
+  const EventDetailScreen({super.key, this.argument});
   @override
   Widget build(BuildContext context) {
+    EventModel eventModel = argument['eventModel'];
+    EventCubit eventCubit = BlocProvider.of<EventCubit>(context);
+
+    log("Event Detail Screen: ${eventModel.link}");
     return Scaffold(
       body: Stack(
         children: [
@@ -33,22 +41,20 @@ class EventDetailScreen extends StatelessWidget {
                 child: SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.all(20),
-                    child: Column(   
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         customEventCardView(
-                          imageUrl: '',
-                          joinNowOnTap: () {
-                            
-                          },
+                          imageUrl: eventModel.imageName,
+                          joinNowOnTap: () {},
                           onTap: () {},
                           mainHeight: 22.h,
-                          title:
-                              "Lorem Ipsum is simply dummy text of the printing.",
-                          subTitle:
-                              "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
-                          time: '04:30 PM  to 06:30 PM',
-                          date: '02/02/2026',
+                          title: eventModel.title,
+                          subTitle: '',
+                          time: eventModel.time,
+                          date:
+                              "${eventModel.date.year.toString().padLeft(4, '0')}/${eventModel.date.month.toString().padLeft(2, '0')}/${eventModel.date.day.toString().padLeft(2, '0')}",
+
                           showButton: false,
                         ),
                         Gap(7),
@@ -56,9 +62,17 @@ class EventDetailScreen extends StatelessWidget {
                           children: <Widget>[
                             Expanded(
                               child: CustomButton(
-                                text: 'Book Your Seat',
+                                text:
+                                    eventModel.isLoginUserEventsParticipation
+                                        ? 'Deregister'
+                                        : 'Book Your Seat',
                                 padding: EdgeInsets.symmetric(vertical: 8),
-                                onTap: () {},
+                                onTap: () {
+                                  eventCubit.joinEvent(
+                                    context,
+                                    eventId: eventModel.id,
+                                  );
+                                },
                               ),
                             ),
                             Gap(4),
@@ -67,80 +81,37 @@ class EventDetailScreen extends StatelessWidget {
                                 color: AppColor.themePrimaryColor2,
                                 borderRadius: BorderRadius.circular(5),
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8),
-                                child: SvgPicture.asset(AppImage.share),
+                              child: InkWell(
+                                onTap: () {
+                                  if (eventModel.link.isNotEmpty) {
+                                    launchUrl(Uri.parse(eventModel.link));
+                                  } else {
+                                    log("No link available for this event");
+                                  }
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8),
+                                  child: SvgPicture.asset(AppImage.share),
+                                ),
                               ),
                             ),
                           ],
                         ),
                         Gap(20),
                         CustomText(
-                          text: 'Lorem Ipsum is simply dummy text',
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        Gap(5),
-                        CustomText(
-                          text:
-                              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+                          text: eventModel.description,
                           fontSize: 12,
 
                           color: AppColor.seeAllTitleColor,
                         ),
-                        Gap(20),
-                        CustomText(
-                          text: 'main point',
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        Gap(5),
-                        CustomText(
-                          text:
-                              '• Lorem Ipsum is simply dummy text of the printing',
-                          fontSize: 12,
 
-                          color: AppColor.seeAllTitleColor,
-                        ),
-                        Gap(5),
-                        CustomText(
-                          text:
-                              '• Lorem Ipsum is simply dummy text of the printing',
-                          fontSize: 12,
-
-                          color: AppColor.seeAllTitleColor,
-                        ),
-                        Gap(5),
-                        CustomText(
-                          text:
-                              '• Lorem Ipsum is simply dummy text of the printing',
-                          fontSize: 12,
-
-                          color: AppColor.seeAllTitleColor,
-                        ),
-                        Gap(5),
-                        CustomText(
-                          text:
-                              '• Lorem Ipsum is simply dummy text of the printing',
-                          fontSize: 12,
-
-                          color: AppColor.seeAllTitleColor,
-                        ),
-                        Gap(20),
-                        CustomText(
-                          text:
-                              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-                          fontSize: 12,
-
-                          color: AppColor.seeAllTitleColor,
-                        ),
                         Gap(20),
                         CustomText(
                           text: 'Speaker:',
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                         ),
-                        Gap(5),
+                        Gap(10),
 
                         Row(
                           children: [

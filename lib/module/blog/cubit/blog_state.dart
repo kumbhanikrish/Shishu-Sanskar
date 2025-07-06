@@ -11,4 +11,12 @@ final class GetBlogListState extends BlogState {
   GetBlogListState({required this.blogList});
 }
 
+final class MoreGetBlogListState extends BlogState {
+  final List<BlogsModel> blogList;
+
+  MoreGetBlogListState({required this.blogList});
+}
+
 final class BlogLoading extends BlogState {}
+
+final class BlogFailedState extends BlogState {}

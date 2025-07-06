@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 import 'package:shishu_sanskar/module/home/model/event_model.dart';
 import 'package:shishu_sanskar/module/home/repo/home_repo.dart';
 
@@ -72,6 +71,14 @@ class EventCubit extends Cubit<EventState> {
       }
     } catch (error) {
       emit(FailedLoadingEventState());
+    }
+  }
+
+  joinEvent(BuildContext context, {required int eventId}) async {
+    Response response = await homeRepo.joinEvent(context, eventId: eventId);
+    if (response.data['success'] == true) {
+     
+      return response;
     }
   }
 }

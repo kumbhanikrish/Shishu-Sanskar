@@ -134,14 +134,14 @@ customSocialMediaLogin({
               image: AppImage.google,
             ),
           ),
-          Gap(10),
-          Expanded(
-            child: CustomIconTextButton(
-              text: 'Apple',
-              onTap: appleOnTap,
-              image: AppImage.apple,
-            ),
-          ),
+          // Gap(10),
+          // Expanded(
+          //   child: CustomIconTextButton(
+          //     text: 'Apple',
+          //     onTap: appleOnTap,
+          //     image: AppImage.apple,
+          //   ),
+          // ),
         ],
       ),
     ],

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:intl/intl.dart';
 import 'package:shishu_sanskar/module/auth/cubit/auth_cubit.dart';
 import 'package:shishu_sanskar/module/home/cubit/event/event_cubit.dart';
 import 'package:shishu_sanskar/module/home/cubit/task/task_cubit.dart';
@@ -74,32 +73,37 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         },
                       ),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 13, left: 20),
-                          child: Row(
-                            children: List.generate(taskList.today.length, (
-                              index,
-                            ) {
-                              Today today = taskList.today[index];
-                              return taskList.today.isEmpty
-                                  ? CustomEmpty()
-                                  : customCardView(
-                                    onTap: () {
-                                      Navigator.pushNamed(
-                                        context,
-                                        AppPage.taskDetailScreen,
-                                        arguments: {'taskDetail': today},
+                      taskList.today.isEmpty
+                          ? CustomEmpty()
+                          : SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                right: 13,
+                                left: 20,
+                              ),
+                              child: Row(
+                                children: List.generate(taskList.today.length, (
+                                  index,
+                                ) {
+                                  Today today = taskList.today[index];
+                                  return taskList.today.isEmpty
+                                      ? CustomEmpty()
+                                      : customCardView(
+                                        onTap: () {
+                                          Navigator.pushNamed(
+                                            context,
+                                            AppPage.taskDetailScreen,
+                                            arguments: {'taskDetail': today},
+                                          );
+                                        },
+                                        image: today.image ?? '',
+                                        title: today.category,
                                       );
-                                    },
-                                    image: today.image ?? '',
-                                    title: today.category,
-                                  );
-                            }),
+                                }),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
 
                       //// Daily task
                       customTitleAnsSeeAll(
@@ -115,30 +119,35 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         },
                       ),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 13, left: 20),
-                          child: Row(
-                            children: List.generate(taskList.daily.length, (
-                              index,
-                            ) {
-                              Today daily = taskList.daily[index];
-                              return customCardView(
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                    context,
-                                    AppPage.taskDetailScreen,
-                                    arguments: {'taskDetail': daily},
+                      taskList.daily.isEmpty
+                          ? CustomEmpty()
+                          : SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                right: 13,
+                                left: 20,
+                              ),
+                              child: Row(
+                                children: List.generate(taskList.daily.length, (
+                                  index,
+                                ) {
+                                  Today daily = taskList.daily[index];
+                                  return customCardView(
+                                    onTap: () { 
+                                      Navigator.pushNamed(
+                                        context,
+                                        AppPage.taskDetailScreen,
+                                        arguments: {'taskDetail': daily},
+                                      );
+                                    },
+                                    image: daily.image ?? '',
+                                    title: daily.category,
                                   );
-                                },
-                                image: daily.image ?? '',
-                                title: daily.category,
-                              );
-                            }),
+                                }),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
 
                       //// weekly task
                       customTitleAnsSeeAll(
@@ -154,31 +163,37 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         },
                       ),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 13, left: 20),
-                          child: Row(
-                            children: List.generate(taskList.weekly.length, (
-                              index,
-                            ) {
-                              Today weekly = taskList.weekly[index];
+                      taskList.weekly.isEmpty
+                          ? CustomEmpty()
+                          : SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                right: 13,
+                                left: 20,
+                              ),
+                              child: Row(
+                                children: List.generate(
+                                  taskList.weekly.length,
+                                  (index) {
+                                    Today weekly = taskList.weekly[index];
 
-                              return customCardView(
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                    context,
-                                    AppPage.taskDetailScreen,
-                                    arguments: {'taskDetail': weekly},
-                                  );
-                                },
-                                image: weekly.image ?? '',
-                                title: weekly.category,
-                              );
-                            }),
+                                    return customCardView(
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                          context,
+                                          AppPage.taskDetailScreen,
+                                          arguments: {'taskDetail': weekly},
+                                        );
+                                      },
+                                      image: weekly.image ?? '',
+                                      title: weekly.category,
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
                     ],
                   );
                 },
@@ -229,6 +244,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Navigator.pushNamed(
                                     context,
                                     AppPage.eventDetailScreen,
+                                    arguments: {'eventModel': eventModel},
                                   );
                                 },
                                 title: eventModel.title,

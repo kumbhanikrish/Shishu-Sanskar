@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:shishu_sanskar/module/graph/cubit/graph_cubit.dart';
 import 'package:shishu_sanskar/module/graph/model/graph_tab_model.dart';
 import 'package:shishu_sanskar/module/home/view/widget/custom_home_widget.dart';
@@ -11,7 +10,6 @@ import 'package:shishu_sanskar/module/tools/cubit/ovulation_calculator/cubit/ovu
 import 'package:shishu_sanskar/utils/constant/app_page.dart';
 import 'package:shishu_sanskar/utils/theme/colors.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_calender.dart';
-import 'package:shishu_sanskar/utils/widgets/custom_list_tile.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_text.dart';
 import 'package:sizer/sizer.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';

@@ -10,6 +10,7 @@ class EventModel {
   final DateTime updatedAt;
   final String formattedDatetime;
   final String imageName;
+  bool isLoginUserEventsParticipation;
 
   EventModel({
     required this.id,
@@ -23,6 +24,7 @@ class EventModel {
     required this.updatedAt,
     required this.formattedDatetime,
     required this.imageName,
+    required this.isLoginUserEventsParticipation,
   });
 
   factory EventModel.fromJson(Map<String, dynamic> json) => EventModel(
@@ -33,6 +35,7 @@ class EventModel {
     date: DateTime.parse(json["date"]),
     time: json["time"],
     link: json["link"],
+    isLoginUserEventsParticipation: json["is_login_user_events_participation"],
     createdAt: DateTime.parse(json["created_at"]),
     updatedAt: DateTime.parse(json["updated_at"]),
     formattedDatetime: json["formatted_datetime"],
@@ -48,6 +51,7 @@ class EventModel {
         "${date.year.toString().padLeft(4, '0')}/${date.month.toString().padLeft(2, '0')}${date.day.toString().padLeft(2, '0')}",
     "time": time,
     "link": link,
+    "is_login_user_events_participation": isLoginUserEventsParticipation,
     "created_at": createdAt.toIso8601String(),
     "updated_at": updatedAt.toIso8601String(),
     "formatted_datetime": formattedDatetime,
