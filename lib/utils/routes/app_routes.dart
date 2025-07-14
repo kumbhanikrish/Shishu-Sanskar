@@ -14,8 +14,11 @@ import 'package:shishu_sanskar/module/profile/view/edit_profile_screen.dart';
 import 'package:shishu_sanskar/module/setting/view/contact_us_screen.dart';
 import 'package:shishu_sanskar/module/setting/view/delete_account_screen.dart';
 import 'package:shishu_sanskar/module/setting/view/delete_password_screen.dart';
+import 'package:shishu_sanskar/module/setting/view/languages_screen.dart';
+import 'package:shishu_sanskar/module/setting/view/plan_history_screen.dart';
 import 'package:shishu_sanskar/module/setting/view/privacy_police_screen.dart';
 import 'package:shishu_sanskar/module/setting/view/setting_screen.dart';
+import 'package:shishu_sanskar/module/setting/view/user_event_screen.dart';
 import 'package:shishu_sanskar/module/tools/view/chinese_gender_predictor/chinese_gender_predictor_screen.dart';
 import 'package:shishu_sanskar/module/tools/view/due_date/due_date_screen.dart';
 import 'package:shishu_sanskar/module/tools/view/ovulation/ovulation_calculator_screen.dart';
@@ -48,7 +51,7 @@ final Map<String, WidgetBuilder> appRoutes = {
       ),
   AppPage.contactUsScreen: (context) => ContactUsScreen(),
 
-  AppPage.privacyPolicyScreen: (context) => const PrivacyPoliceScreen(),
+  AppPage.privacyPolicyScreen: (context) => const PrivacyPolicyScreen(),
   AppPage.deleteAccountScreen: (context) => DeleteAccountScreen(),
   AppPage.deletePasswordScreen:
       (context) => DeletePasswordScreen(
@@ -65,4 +68,7 @@ final Map<String, WidgetBuilder> appRoutes = {
       (context) => ChineseGenderPredictorScreen(),
   AppPage.dueDateScreen: (context) => DueDateScreen(),
   AppPage.ovulationCalculatorScreen: (context) => OvulationCalculatorScreen(),
+  AppPage.userEventScreen: (context) => UserEventScreen(),
+  AppPage.planHistoryScreen: (context) => PlanHistoryScreen(),
+  AppPage.languagesScreen: (context) => LanguagesScreen(),
 };

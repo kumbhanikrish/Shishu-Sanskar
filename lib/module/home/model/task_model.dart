@@ -52,7 +52,7 @@ class TodayTask {
   final int id;
   final String title;
   final dynamic description;
-  final String status;
+  String status;
   final String type;
 
   TodayTask({

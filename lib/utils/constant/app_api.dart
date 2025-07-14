@@ -13,10 +13,12 @@ class AppApi {
   static String forgotOtpVerify = '$baseUrl/auth/forgot-otp-verify';
   static String logout = '$baseUrl/auth/logout';
   static String deleteAccount = '$baseUrl/auth/delete-account';
+  static String languages = '$baseUrl/auth/languages';
 
   /// Profile Flow
 
   static String editProfile = '$baseUrl/edit-profile';
+  static String editUserLanguage = '$baseUrl/edit-user-language';
 
   /// Blog Flow
   static String blogList = '$baseUrl/blogs?title=';
@@ -34,4 +36,10 @@ class AppApi {
 
   /// Task Flow
   static String userTasks = '$baseUrl/user-tasks';
+
+  /// Graph Flow
+  static String report = '$baseUrl/user-tasks/report/';
+
+  /// User Flow
+  static String user = '$baseUrl/users/';
 }

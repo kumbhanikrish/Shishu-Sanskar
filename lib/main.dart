@@ -189,4 +189,6 @@ dynamic providers = [
   BlocProvider(create: (context) => GraphTabCubit()),
   BlocProvider(create: (context) => EventCubit()),
   BlocProvider(create: (context) => TaskCubit()),
+  BlocProvider(create: (context) => GraphCubit()),
+  BlocProvider(create: (context) => LanguagesRadioCubit()),
 ];

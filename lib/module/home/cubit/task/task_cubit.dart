@@ -1,3 +1,4 @@
+
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -26,39 +27,9 @@ class TaskCubit extends Cubit<TaskState> {
   completeTask(BuildContext context, {required int taskId}) async {
     Response response = await homeRepo.completeTask(context, taskId: taskId);
     if (response.data['success'] == true) {
-      _updateTaskStatus(response.data['data']['task_id']);
+      getTask(context);
+      Navigator.pop(context);
       return response;
     }
-  }
-
-  void _updateTaskStatus(int taskId) {
-    void updateStatus(List<Today> list) {
-      for (int i = 0; i < list.length; i++) {
-        List<TodayTask> updatedTasks =
-            list[i].tasks.map((task) {
-              if (task.id == taskId) {
-                return TodayTask(
-                  id: task.id,
-                  title: task.title,
-                  description: task.description,
-                  status: 'completed', // ✅ Update status
-                  type: task.type,
-                );
-              }
-              return task;
-            }).toList();
-
-        list[i] = Today(
-          id: list[i].id,
-          category: list[i].category,
-          image: list[i].image,
-          tasks: updatedTasks,
-        );
-      }
-    }
-
-    updateStatus(taskModel.today);
-    updateStatus(taskModel.daily);
-    updateStatus(taskModel.weekly);
   }
 }

@@ -11,6 +11,12 @@ final class AuthCategoryState extends AuthState {
   AuthCategoryState({required this.authCategoryList});
 }
 
+final class LanguagesState extends AuthState {
+  final List<LanguagesModel> languagesList;
+
+  LanguagesState({required this.languagesList});
+}
+
 sealed class StoreNumberState {}
 
 final class StoreNumberInitial extends StoreNumberState {}

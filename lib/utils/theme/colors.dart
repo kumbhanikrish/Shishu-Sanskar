@@ -30,6 +30,7 @@ class AppColor {
   static Color graphBorderColor = Color(0xFFE2E2E2);
   static Color blackColor = Colors.black;
   static Color transparentColor = Colors.transparent;
+  static Color greenColor = Colors.green;
   static Color greyColor = Color(0xFFB8C1CE);
   static Color subTitleColor = Color(0xFF8D8D8D);
   static Color dividerColor = Color(0xFFD9D9D9);

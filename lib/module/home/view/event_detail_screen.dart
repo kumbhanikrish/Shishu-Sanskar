@@ -71,6 +71,7 @@ class EventDetailScreen extends StatelessWidget {
                                   eventCubit.joinEvent(
                                     context,
                                     eventId: eventModel.id,
+                                    detail: true,
                                   );
                                 },
                               ),

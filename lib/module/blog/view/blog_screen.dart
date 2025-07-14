@@ -8,6 +8,7 @@ import 'package:shishu_sanskar/module/blog/cubit/blog_cubit.dart';
 import 'package:shishu_sanskar/module/blog/model/blogd_model.dart';
 import 'package:shishu_sanskar/utils/constant/app_image.dart';
 import 'package:shishu_sanskar/utils/constant/app_page.dart';
+import 'package:shishu_sanskar/utils/formatter/format.dart';
 import 'package:shishu_sanskar/utils/theme/colors.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_image.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_text.dart';
@@ -125,7 +126,9 @@ class _BlogScreenState extends State<BlogScreen> {
 
                                       children: [
                                         CustomText(
-                                          text: '05 min ago',
+                                          text: formatTimeAgo(
+                                            blogsModel.createdAt,
+                                          ),
                                           color: AppColor.seeAllTitleColor,
                                           fontSize: 10,
                                         ),

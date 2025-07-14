@@ -151,4 +151,13 @@ class AuthRepo {
 
     return response;
   }
+
+  Future<Response> languages(BuildContext context) async {
+    Response response = await apiServices.getDynamicData(
+      context,
+      AppApi.languages,
+    );
+
+    return response;
+  }
 }

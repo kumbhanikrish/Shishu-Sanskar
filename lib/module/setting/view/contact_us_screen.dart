@@ -20,7 +20,8 @@ class ContactUsScreen extends StatelessWidget {
               customAppBar(
                 title: 'Contact Us',
                 onTap: () {
-                  Navigator.pop(context);
+              
+                Navigator.pop(context);
                 },
               ),
               Padding(

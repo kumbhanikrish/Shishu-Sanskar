@@ -21,7 +21,7 @@ class AppImage {
   static String blog = 'assets/image/blog.svg';
   static String pricing = 'assets/image/pricing.svg';
   static String graph = 'assets/image/graph.svg';
-  static String profile = 'assets/image/profile.svg';
+  static String profile = 'assets/image/empty_user.jpg';
   static String homeBG = 'assets/image/home_BG.png';
   static String notification = 'assets/image/notification.svg';
   static String seeAll = 'assets/image/see_all.svg';
@@ -46,7 +46,7 @@ class AppImage {
   static String tools = 'assets/image/tools.svg';
   static String checkboxChecked = 'assets/image/checkbox_checked.svg';
   static String checkboxUnchecked = 'assets/image/checkbox_unchecked.svg';
-  static String privacyPolicy = 'assets/image/privacy_policy.svg';
+  static String privacyPolicy = 'assets/image/privacy_policy.svg';     
   static String searchIcon = 'assets/image/search.svg';
   static String arrowRightIcon = 'assets/image/arrow-right.svg';
   static String likeIcon = 'assets/image/like.svg';

@@ -10,6 +10,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shishu_sanskar/main.dart';
 import 'package:shishu_sanskar/module/auth/model/auth_category_model.dart';
+import 'package:shishu_sanskar/module/auth/model/languages_model.dart';
 import 'package:shishu_sanskar/module/auth/model/login_model.dart';
 import 'package:shishu_sanskar/module/auth/repo/auth_repo.dart';
 import 'package:shishu_sanskar/utils/constant/app_page.dart';
@@ -18,10 +19,11 @@ import 'package:shishu_sanskar/utils/formatter/format.dart';
 
 part 'auth_state.dart';
 
+final GoogleSignIn googleSignIn = GoogleSignIn();
+
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial());
   AuthRepo authRepo = AuthRepo();
-  final GoogleSignIn googleSignIn = GoogleSignIn();
 
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   Future<Response> login(
@@ -85,6 +87,7 @@ class AuthCubit extends Cubit<AuthState> {
     required String contactNumber,
     required String whatsappNumber,
     required int categoryId,
+    required int languageId,
     required String email,
     required String password,
     required String passwordConfirmation,
@@ -113,6 +116,7 @@ class AuthCubit extends Cubit<AuthState> {
       "device_os": Platform.isAndroid ? 'Android' : 'IOS',
       "app_version": version,
       "fcm_token": token,
+      "language_id": languageId,
       'location': await getCityName(),
       if (googleToken.isNotEmpty) "google_token": googleToken,
       if (appleToken.isNotEmpty) "apple_token": appleToken,
@@ -140,13 +144,16 @@ class AuthCubit extends Cubit<AuthState> {
     BuildContext context, {
     required String mobile,
     required PasswordVisibilityCubit passwordVisibilityCubit,
+    required bool resend,
   }) async {
     Map<String, dynamic> sendOtpParams = {"mobile": mobile};
 
     Response response = await authRepo.sendOtp(context, params: sendOtpParams);
 
     if (response.data['success'] == true) {
-      passwordVisibilityCubit.toggleVisibility();
+      if (!resend) {
+        passwordVisibilityCubit.toggleVisibility();
+      }
     }
 
     return response;
@@ -281,6 +288,7 @@ class AuthCubit extends Cubit<AuthState> {
     required bool wNumber,
 
     required PasswordVisibilityCubit passwordVisibilityCubit,
+    required StepperCubit stepperCubit,
     required VerifiedNumber verifiedNumber,
     required VerifiedWNumber verifiedWNumber,
   }) async {
@@ -292,7 +300,7 @@ class AuthCubit extends Cubit<AuthState> {
     );
 
     if (response.data['success'] == true) {
-      passwordVisibilityCubit.toggleVisibility();
+      stepperCubit.nextStep(step: 2);
 
       if (number == false) {
         verifiedNumber.verifiedNumber(number);
@@ -316,6 +324,20 @@ class AuthCubit extends Cubit<AuthState> {
     }
 
     emit(AuthCategoryState(authCategoryList: authCategoryList));
+  }
+
+  Future languages(BuildContext context) async {
+    List<LanguagesModel> languagesList = [];
+
+    Response response = await authRepo.languages(context);
+    if (response.data['success'] == true) {
+      languagesList =
+          (response.data['data'] as List)
+              .map((e) => LanguagesModel.fromJson(e))
+              .toList();
+    }
+
+    emit(LanguagesState(languagesList: languagesList));
   }
 
   Future<void> handleGoogleSignIn(BuildContext context) async {
@@ -406,6 +428,10 @@ class AuthCubit extends Cubit<AuthState> {
       (route) => false,
     );
   }
+
+  init() {
+    emit(AuthInitial());
+  }
 }
 
 class StepperCubit extends Cubit<int> {
@@ -478,6 +504,19 @@ class CategoryRadioCubit extends Cubit<int> {
   CategoryRadioCubit() : super(0);
 
   void selectCategory(int category) {
+    log('typetype ::$category');
+    emit(category);
+  }
+
+  init() {
+    emit(0);
+  }
+}
+
+class LanguagesRadioCubit extends Cubit<int> {
+  LanguagesRadioCubit() : super(0);
+
+  void selectLanguages(int category) {
     log('typetype ::$category');
     emit(category);
   }

@@ -137,7 +137,7 @@ class EditProfileScreen extends StatelessWidget {
                                                   fit: BoxFit.cover,
                                                 )
                                                 : Image.asset(
-                                                  AppImage.user,
+                                                  AppImage.profile,
                                                   fit: BoxFit.cover,
                                                 ),
                                       ),
@@ -205,7 +205,8 @@ class EditProfileScreen extends StatelessWidget {
                           CustomTextField(
                             text: 'Email',
                             hintText: 'Email',
-
+                            readOnly: true,
+                            fillColor: AppColor.datePickerBk,
                             prefixImage: AppImage.email,
                             controller: emailController,
                           ),
@@ -392,62 +393,69 @@ class EditProfileScreen extends StatelessWidget {
                           ),
 
                           Gap(10),
-                          Row(
-                            children: <Widget>[
-                              Expanded(
-                                child: CustomText(
-                                  text: 'No of kids',
-                                  fontSize: 12,
-                                ),
-                              ),
-                              BlocBuilder<CounterCubit, int>(
-                                builder: (context, count) {
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(10),
-                                      border: Border.all(
-                                        color: AppColor.themePrimaryColor2,
-                                      ),
-                                    ),
-                                    padding: const EdgeInsets.all(13),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        InkWell(
-                                          onTap: () {
-                                            counterCubit.increment();
-                                          },
-                                          child: SvgPicture.asset(
-                                            AppImage.increment,
-                                          ),
-                                        ),
-                                        Gap(17),
-                                        CustomText(
-                                          text: count.toString().padLeft(
-                                            2,
-                                            '0',
-                                          ),
+                          BlocBuilder<MaritalRadioCubit, MaritalType>(
+                            builder: (context, selectedType) {
+                              return selectedType == MaritalType.single
+                                  ? SizedBox()
+                                  : Row(
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: CustomText(
+                                          text: 'No of kids',
                                           fontSize: 12,
-                                          fontWeight: FontWeight.w500,
                                         ),
-                                        Gap(17),
+                                      ),
+                                      BlocBuilder<CounterCubit, int>(
+                                        builder: (context, count) {
+                                          return Container(
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              border: Border.all(
+                                                color:
+                                                    AppColor.themePrimaryColor2,
+                                              ),
+                                            ),
+                                            padding: const EdgeInsets.all(13),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                InkWell(
+                                                  onTap: () {
+                                                    counterCubit.increment();
+                                                  },
+                                                  child: SvgPicture.asset(
+                                                    AppImage.increment,
+                                                  ),
+                                                ),
+                                                Gap(17),
+                                                CustomText(
+                                                  text: count
+                                                      .toString()
+                                                      .padLeft(2, '0'),
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                                Gap(17),
 
-                                        InkWell(
-                                          onTap: () {
-                                            counterCubit.decrement();
-                                          },
-                                          child: SvgPicture.asset(
-                                            AppImage.decrement,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                                InkWell(
+                                                  onTap: () {
+                                                    counterCubit.decrement();
+                                                  },
+                                                  child: SvgPicture.asset(
+                                                    AppImage.decrement,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ],
                                   );
-                                },
-                              ),
-                            ],
+                            },
                           ),
                           Gap(40),
                           CustomButton(

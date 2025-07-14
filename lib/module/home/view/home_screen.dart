@@ -12,7 +12,6 @@ import 'package:shishu_sanskar/utils/constant/app_page.dart';
 import 'package:shishu_sanskar/utils/theme/colors.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_text.dart';
 import 'package:sizer/sizer.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -40,6 +39,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     List<EventModel> eventList = [];
+    EventCubit eventCubit = BlocProvider.of<EventCubit>(context);
+
 
     TaskModel taskList = TaskModel(today: [], weekly: [], daily: []);
     return Expanded(
@@ -134,7 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ) {
                                   Today daily = taskList.daily[index];
                                   return customCardView(
-                                    onTap: () { 
+                                    onTap: () {
                                       Navigator.pushNamed(
                                         context,
                                         AppPage.taskDetailScreen,
@@ -229,13 +230,22 @@ class _HomeScreenState extends State<HomeScreen> {
                               EventModel eventModel = eventList[index];
 
                               return customEventCardView(
+                                buttonName:
+                                    eventModel.isLoginUserEventsParticipation
+                                        ? 'Deregister'
+                                        : 'Join Now',
                                 joinNowOnTap: () async {
-                                  final url = Uri.parse(eventModel.link);
-
-                                  await launchUrl(
-                                    url,
-                                    mode: LaunchMode.externalApplication,
+                                  eventCubit.joinEvent(
+                                    context,
+                                    detail: false,
+                                    eventId: eventModel.id,
                                   );
+                                  // final url = Uri.parse(eventModel.link);
+
+                                  // await launchUrl(
+                                  //   url,
+                                  //   mode: LaunchMode.externalApplication,
+                                  // );
                                 },
                                 imageUrl: eventModel.imageName,
 

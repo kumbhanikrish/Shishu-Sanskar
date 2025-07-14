@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:shishu_sanskar/utils/theme/colors.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -9,11 +10,13 @@ class CustomCalender extends StatelessWidget {
   final Widget? Function(BuildContext, DateTime, DateTime)? defaultBuilder;
   final bool Function(DateTime)? selectedDayPredicate;
   final Color? headerColor;
+  final void Function(DateTime)? onPageChanged;
   const CustomCalender({
     super.key,
     required this.focusedDay,
     required this.selectedDay,
     this.onDaySelected,
+    this.onPageChanged,
     this.defaultBuilder,
     this.selectedDayPredicate,
     this.headerColor,
@@ -30,7 +33,7 @@ class CustomCalender extends StatelessWidget {
       },
       onDaySelected: onDaySelected,
       calendarBuilders: CalendarBuilders(defaultBuilder: defaultBuilder),
-
+      onPageChanged: onPageChanged,
       headerStyle: HeaderStyle(
         headerMargin: EdgeInsets.only(bottom: 10),
         titleCentered: true,

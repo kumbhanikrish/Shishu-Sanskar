@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
-import 'package:like_button/like_button.dart';
-import 'package:shishu_sanskar/module/auth/cubit/auth_cubit.dart';
 import 'package:shishu_sanskar/module/blog/model/blogd_model.dart';
-import 'package:shishu_sanskar/utils/constant/app_image.dart';
+import 'package:shishu_sanskar/utils/formatter/format.dart';
 import 'package:shishu_sanskar/utils/theme/colors.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_app_bar.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_bg.dart';
@@ -52,7 +48,7 @@ class BlogDetailScreen extends StatelessWidget {
                         Gap(10),
 
                         CustomText(
-                          text: '05 min ago',
+                          text: formatTimeAgo(blogsModel.createdAt),
                           fontSize: 10,
                           color: AppColor.seeAllTitleColor,
                         ),
@@ -74,61 +70,61 @@ class BlogDetailScreen extends StatelessWidget {
 
                         Gap(10.h),
 
-                        BlocBuilder<PasswordVisibilityCubit, bool>(
-                          builder: (context, state) {
-                            return Row(
-                              children: [
-                                CustomText(
-                                  text: 'Vote us',
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                Gap(6),
+                        // BlocBuilder<PasswordVisibilityCubit, bool>(
+                        //   builder: (context, state) {
+                        //     return Row(
+                        //       children: [
+                        //         CustomText(
+                        //           text: 'Vote us',
+                        //           fontSize: 14,
+                        //           fontWeight: FontWeight.w500,
+                        //         ),
+                        //         Gap(6),
 
-                                LikeButton(
-                                  size: 20,
-                                  circleColor: CircleColor(
-                                    start: AppColor.themePrimaryColor,
-                                    end: AppColor.themePrimaryColor,
-                                  ),
-                                  bubblesColor: BubblesColor(
-                                    dotPrimaryColor: AppColor.themePrimaryColor,
-                                    dotSecondaryColor:
-                                        AppColor.themePrimaryColor,
-                                  ),
-                                  likeBuilder: (isLiked) {
-                                    return SvgPicture.asset(
-                                      isLiked
-                                          ? AppImage.likeIconFilled
-                                          : AppImage.likeIcon,
-                                    );
-                                  },
-                                ),
+                        //         LikeButton(
+                        //           size: 20,
+                        //           circleColor: CircleColor(
+                        //             start: AppColor.themePrimaryColor,
+                        //             end: AppColor.themePrimaryColor,
+                        //           ),
+                        //           bubblesColor: BubblesColor(
+                        //             dotPrimaryColor: AppColor.themePrimaryColor,
+                        //             dotSecondaryColor:
+                        //                 AppColor.themePrimaryColor,
+                        //           ),
+                        //           likeBuilder: (isLiked) {
+                        //             return SvgPicture.asset(
+                        //               isLiked
+                        //                   ? AppImage.likeIconFilled
+                        //                   : AppImage.likeIcon,
+                        //             );
+                        //           },
+                        //         ),
 
-                                Gap(6),
-                                // LikeButton(
-                                //   size: 20,
-                                //   circleColor: CircleColor(
-                                //     start: AppColor.disLikeColor,
-                                //     end: AppColor.disLikeColor,
-                                //   ),
-                                //   bubblesColor: BubblesColor(
-                                //     dotPrimaryColor: AppColor.disLikeColor,
-                                //     dotSecondaryColor: AppColor.disLikeColor,
-                                //   ),
-                                //   likeBuilder: (isLiked) {
-                                //     return SvgPicture.asset(
-                                //       isLiked
-                                //           ? AppImage.dislikeIconFilled
-                                //           : AppImage.dislikeIcon,
-                                //     );
-                                //   },
-                                // ),
-                              ],
-                            );
-                          },
-                        ),
-                        Gap(10.h),
+                        //         Gap(6),
+                        //         // LikeButton(
+                        //         //   size: 20,
+                        //         //   circleColor: CircleColor(
+                        //         //     start: AppColor.disLikeColor,
+                        //         //     end: AppColor.disLikeColor,
+                        //         //   ),
+                        //         //   bubblesColor: BubblesColor(
+                        //         //     dotPrimaryColor: AppColor.disLikeColor,
+                        //         //     dotSecondaryColor: AppColor.disLikeColor,
+                        //         //   ),
+                        //         //   likeBuilder: (isLiked) {
+                        //         //     return SvgPicture.asset(
+                        //         //       isLiked
+                        //         //           ? AppImage.dislikeIconFilled
+                        //         //           : AppImage.dislikeIcon,
+                        //         //     );
+                        //         //   },
+                        //         // ),
+                        //       ],
+                        //     );
+                        //   },
+                        // ),
+                        // Gap(10.h),
                       ],
                     ),
                   ),

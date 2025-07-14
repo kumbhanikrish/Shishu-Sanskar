@@ -17,13 +17,18 @@ import 'package:shishu_sanskar/utils/widgets/custom_widget.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class TaskDetailScreen extends StatelessWidget {
+class TaskDetailScreen extends StatefulWidget {
   final dynamic data;
   const TaskDetailScreen({super.key, this.data});
 
   @override
+  State<TaskDetailScreen> createState() => _TaskDetailScreenState();
+}
+
+class _TaskDetailScreenState extends State<TaskDetailScreen> {
+  @override
   Widget build(BuildContext context) {
-    Today taskDetail = data['taskDetail'];
+    Today taskDetail = widget.data['taskDetail'];
     TaskCubit taskCubit = BlocProvider.of<TaskCubit>(context);
 
     return Scaffold(
@@ -195,7 +200,8 @@ class TaskDetailScreen extends StatelessWidget {
                           descriptionWidget,
                           Gap(10),
                           CustomButton(
-                            text: 'completed',
+                            text:
+                                '${task.status[0].toUpperCase()}${task.status.substring(1)}',
                             backgroundColor:
                                 task.status == 'completed'
                                     ? AppColor.themePrimaryColor2
@@ -208,6 +214,7 @@ class TaskDetailScreen extends StatelessWidget {
                                 task.status == 'completed'
                                     ? () {}
                                     : () {
+                                      setState(() {});
                                       taskCubit.completeTask(
                                         context,
                                         taskId: task.id,

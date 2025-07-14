@@ -6,10 +6,58 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shishu_sanskar/main.dart';
+import 'package:shishu_sanskar/module/profile/model/user_model.dart';
 import 'package:shishu_sanskar/module/setting/repo/profile_repo.dart';
 import 'package:shishu_sanskar/utils/constant/app_page.dart';
 
 part 'profile_state.dart';
+
+UserDataModel userDataModel = UserDataModel(
+  id: 0,
+  firstName: '',
+  middleName: '',
+  lastName: '',
+  profileImage: '',
+  email: '',
+  gender: '',
+  marital: '',
+  noOfKid: 0,
+  contactNumber: '',
+  whatsappNumber: '',
+  categoryId: 0,
+  lmp: '',
+  googleToken: '',
+  appleToken: '',
+  fcmToken: '',
+  isActive: 0,
+  markedForDeletionAt: DateTime.now(),
+  emailVerifiedAt: DateTime.now(),
+  createdAt: DateTime.now(),
+  updatedAt: DateTime.now(),
+  planActive: false,
+  userEvents: [],
+  fullName: '',
+  category: Category(id: 0, name: '', photo: '', description: '', isMain: 0),
+  subscriptions: [],
+  currentSubscription: Subscription(
+    id: 0,
+    userId: 0,
+    planId: 0,
+    razorpayPaymentId: '',
+    startDate: DateTime.now(),
+    endDate: DateTime.now(),
+    status: '',
+    createdAt: DateTime.now(),
+    updatedAt: DateTime.now(),
+  ),
+  devices: Devices(
+    id: 0,
+    userId: 0,
+    deviceName: '',
+    deviceOs: '',
+    appVersion: '',
+  ),
+);
 
 class ProfileCubit extends Cubit<ProfileState> {
   ProfileCubit() : super(ProfileInitial());
@@ -66,7 +114,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         loginModel.user.email = response.data['data']['email'];
         loginModel.user.gender = response.data['data']['gender'];
         loginModel.user.marital = response.data['data']['marital'];
-        loginModel.user.noOfKid = int.parse(response.data['data']['no_of_kid']);
+        loginModel.user.noOfKid = response.data['data']['no_of_kid'];
 
         loginModel.user.profileImage =
             response.data['data']['profile_image'] ?? ' ';
@@ -81,6 +129,28 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
 
     return response;
+  }
+
+  getUser(BuildContext context) async {
+    Response response = await profileRepo.getUser(context);
+    if (response.data['success'] == true) {
+      final data = response.data['data'];
+
+      userDataModel = UserDataModel.fromJson(data);
+    }
+
+    emit(GetUserDataState(userDataModel: userDataModel));
+  }
+
+  editUserLanguage(BuildContext context, {required int languageId}) async {
+    Map<String, dynamic> params = {"language_id": languageId};
+    Response response = await profileRepo.editUserLanguage(
+      context,
+      params: params,
+    );
+    if (response.data['success'] == true) {
+      return response;
+    }
   }
 }
 

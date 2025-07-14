@@ -134,7 +134,7 @@ class SignUpScreen extends StatelessWidget {
             Gap(20),
             CustomButton(text: 'Continue', onTap: onTap),
             Gap(20),
-            customSocialMediaLogin(googleOnTap: () {}, appleOnTap: () {}),
+            customSocialMediaLogin(context),
 
             Gap(14),
             Row(

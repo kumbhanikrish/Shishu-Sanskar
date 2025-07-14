@@ -132,6 +132,7 @@ customEventCardView({
   required String title,
   required String imageUrl,
   required String subTitle,
+  String? buttonName,
   required String date,
   required String time,
   double? mainWidth,
@@ -230,7 +231,7 @@ customEventCardView({
                       if (showButton == true) ...[
                         Spacer(),
                         CustomButton(
-                          text: 'Join Now',
+                          text: buttonName ?? 'Join Now',
                           onTap: joinNowOnTap,
                           padding: EdgeInsets.symmetric(vertical: 8),
                         ),

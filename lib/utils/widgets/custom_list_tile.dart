@@ -77,7 +77,7 @@ class CustomListTile extends StatelessWidget {
                 Icons.keyboard_arrow_right_rounded,
                 color: trailingColor ?? AppColor.themePrimaryColor,
               ),
-              
+
           title: CustomText(
             text: text,
             fontSize: fontSize ?? 10,

@@ -116,30 +116,30 @@ class NumberScreen extends StatelessWidget {
                   },
                 ),
                 Gap(10),
-                BlocBuilder<VerifiedNumber, bool>(
-                  builder: (context, verifiedNumber) {
-                    return customNumberAndVerifiedText(
-                      text: 'Contact number',
-                      verifiedText: verifiedNumber ? 'Verified' : 'Verify',
-                      color:
-                          verifiedNumber
-                              ? AppColor.themeSecondaryColor
-                              : AppColor.themePrimaryColor,
-                      onTap:
-                          verifiedNumber
-                              ? () {}
-                              : () {
-                                authCubit.sendOtp(
-                                  context,
-                                  mobile: numberController.text.trim(),
-                                  passwordVisibilityCubit:
-                                      passwordVisibilityCubit,
-                                );
-                              },
-                    );
-                  },
-                ),
-                Gap(10),
+                // BlocBuilder<VerifiedNumber, bool>(
+                //   builder: (context, verifiedNumber) {
+                //     return customNumberAndVerifiedText(
+                //       text: 'Contact number',
+                //       verifiedText: verifiedNumber ? 'Verified' : 'Verify',
+                //       color:
+                //           verifiedNumber
+                //               ? AppColor.themeSecondaryColor
+                //               : AppColor.themePrimaryColor,
+                //       onTap:
+                //           verifiedNumber
+                //               ? () {}
+                //               : () {
+                //                 authCubit.sendOtp(
+                //                   context,
+                //                   mobile: numberController.text.trim(),
+                //                   passwordVisibilityCubit:
+                //                       passwordVisibilityCubit,
+                //                 );
+                //               },
+                //     );
+                //   },
+                // ),
+                // Gap(10),
                 CustomCountyTextfield(
                   image: numberFlag,
                   controller: numberController,
@@ -148,31 +148,31 @@ class NumberScreen extends StatelessWidget {
                 ),
 
                 Gap(10),
-                BlocBuilder<VerifiedWNumber, bool>(
-                  builder: (context, wNumberState) {
-                    return customNumberAndVerifiedText(
-                      text: 'WhatsApp number',
-                      verifiedText:
-                          wpNumberCode == '+91'
-                              ? wNumberState
-                                  ? 'Verified'
-                                  : 'Verify'
-                              : '',
-                      color:
-                          wNumberState
-                              ? AppColor.themeSecondaryColor
-                              : AppColor.themePrimaryColor,
-                      onTap: () {
-                        authCubit.sendOtp(
-                          context,
-                          mobile: wpNumberController.text.trim(),
-                          passwordVisibilityCubit: passwordVisibilityCubit,
-                        );
-                      },
-                    );
-                  },
-                ),
-                Gap(10),
+
+                // BlocBuilder<VerifiedWNumber, bool>(
+                //   builder: (context, wNumberState) {
+                //     return customNumberAndVerifiedText(
+                //       text: 'WhatsApp number',
+                //       verifiedText:
+                //           wpNumberCode == '+91'
+                //               ? wNumberState
+                //                   ? 'Verified'
+                //                   : 'Verify'
+                //               : '',
+                //       color:
+                //           wNumberState
+                //               ? AppColor.themeSecondaryColor
+                //               : AppColor.themePrimaryColor,
+                //       onTap: () {
+                        // authCubit.sendOtp(
+                        //   context,
+                        //   mobile: wpNumberController.text.trim(),
+                        //   passwordVisibilityCubit: passwordVisibilityCubit,
+                        // );
+                //       },
+                //     );
+                //   },
+                // ),
                 CustomCountyTextfield(
                   code: wpNumberCode,
                   image: wpNumberFlag,

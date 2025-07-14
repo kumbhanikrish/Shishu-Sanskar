@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:intl/intl.dart';
 import 'package:shishu_sanskar/module/auth/cubit/auth_cubit.dart';
-import 'package:shishu_sanskar/module/auth/model/auth_category_model.dart';
+import 'package:shishu_sanskar/module/auth/model/languages_model.dart';
 import 'package:shishu_sanskar/module/auth/view/widget/custom_login_widget.dart';
 import 'package:shishu_sanskar/utils/constant/app_image.dart';
 import 'package:shishu_sanskar/utils/theme/colors.dart';
@@ -11,118 +10,92 @@ import 'package:shishu_sanskar/utils/widgets/custom_button.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_text.dart';
 import 'package:sizer/sizer.dart';
 
-class SelectCategoriesScreen extends StatefulWidget {
+class SelectLanguagesScreen extends StatefulWidget {
   final void Function() onTap;
   final void Function() backOnTap;
 
-  const SelectCategoriesScreen({
+  const SelectLanguagesScreen({
     super.key,
     required this.onTap,
     required this.backOnTap,
   });
 
   @override
-  State<SelectCategoriesScreen> createState() => _SelectCategoriesScreenState();
+  State<SelectLanguagesScreen> createState() => SelectLanguagesScreenState();
 }
 
-class _SelectCategoriesScreenState extends State<SelectCategoriesScreen> {
+class SelectLanguagesScreenState extends State<SelectLanguagesScreen> {
   @override
   void initState() {
     AuthCubit authCubit = BlocProvider.of<AuthCubit>(context);
+    LanguagesRadioCubit languagesRadioCubit =
+        BlocProvider.of<LanguagesRadioCubit>(context);
     authCubit.init();
-    authCubit.authCategory(context);
+
+    languagesRadioCubit.init();
+    authCubit.languages(context);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    String selectDateValue = '';
+    LanguagesRadioCubit languagesRadioCubit =
+        BlocProvider.of<LanguagesRadioCubit>(context);
 
-    CategoryRadioCubit categoryRadioCubit = BlocProvider.of<CategoryRadioCubit>(
-      context,
-    );
-    DatePickerCubit datePickerCubit = BlocProvider.of<DatePickerCubit>(context);
-
-    List<AuthCategoryModel> authCategoryList = [];
+    List<LanguagesModel> languagesList = [];
 
     return Expanded(
       child: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             CustomText(
-              text: 'Select categories',
+              text: 'Select Languages',
               fontSize: 18,
               fontWeight: FontWeight.w500,
             ),
             Gap(5),
             CustomText(
-              text: 'choose category',
+              text: 'choose languages',
               fontSize: 12,
               color: AppColor.subTitleColor,
             ),
             Gap(3.6.h),
 
-            BlocBuilder<CategoryRadioCubit, int>(
-              builder: (context, selectedCategory) {
+            BlocBuilder<LanguagesRadioCubit, int>(
+              builder: (context, selectedLanguages) {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     BlocBuilder<AuthCubit, AuthState>(
                       builder: (context, state) {
-                        if (state is AuthCategoryState) {
-                          authCategoryList = state.authCategoryList;
+                        if (state is LanguagesState) {
+                          languagesList = state.languagesList;
                         }
                         return ListView.separated(
                           shrinkWrap: true,
                           padding: EdgeInsets.zero,
                           physics: NeverScrollableScrollPhysics(),
-                          itemCount: authCategoryList.length,
+                          itemCount: languagesList.length,
 
                           itemBuilder: (context, index) {
-                            AuthCategoryModel authCategoryModel =
-                                authCategoryList[index];
+                            LanguagesModel languagesModel =
+                                languagesList[index];
                             return customGenderRadio(
                               fillImage:
-                                  selectedCategory == authCategoryModel.id
+                                  selectedLanguages == languagesModel.id
                                       ? AppImage.fillCircle
                                       : AppImage.circle,
                               buttonImage:
-                                  selectedCategory == authCategoryModel.id
+                                  selectedLanguages == languagesModel.id
                                       ? AppImage.colorCircle
                                       : AppImage.circle,
                               genderIcon: '',
-                              title: authCategoryModel.name,
+                              title: languagesModel.name,
                               onTap: () {
-                                datePickerCubit.init();
-                                categoryRadioCubit.selectCategory(
-                                  authCategoryModel.id,
+                                languagesRadioCubit.selectLanguages(
+                                  languagesModel.id,
                                 );
                               },
-                              child:
-                                  (selectedCategory == 2 &&
-                                              authCategoryModel.id == 2) ||
-                                          (selectedCategory == 3 &&
-                                              authCategoryModel.id == 3)
-                                      ? BlocBuilder<DatePickerCubit, DateTime?>(
-                                        builder: (context, selectDate) {
-                                          String formattedDate = '';
-
-                                          if (selectDate != null) {
-                                            formattedDate = DateFormat(
-                                              'dd/MM/yyyy',
-                                            ).format(selectDate);
-                                          }
-                                          if (selectDateValue !=
-                                              formattedDate) {
-                                            selectDateValue = formattedDate;
-                                          }
-                                          return CustomLmpCard(
-                                            selectDate: selectDate,
-                                            selectDateValue: selectDateValue,
-                                          );
-                                        },
-                                      )
-                                      : SizedBox(),
                             );
                           },
                           separatorBuilder: (context, index) {

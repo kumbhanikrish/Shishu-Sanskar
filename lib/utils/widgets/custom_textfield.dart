@@ -20,6 +20,7 @@ class CustomTextField extends StatelessWidget {
   final Widget? suffixIcon;
   final bool readOnly;
   final FocusNode? focusNode;
+  final Color? fillColor;
   final int? line;
   final int? maxLength;
 
@@ -41,6 +42,7 @@ class CustomTextField extends StatelessWidget {
     this.prefixImage = '',
     this.suffixImage = '',
     this.focusNode,
+    this.fillColor,
 
     this.keyboardType = TextInputType.text,
     this.line = 1,
@@ -74,7 +76,7 @@ class CustomTextField extends StatelessWidget {
 
           decoration: InputDecoration(
             filled: true,
-            fillColor: AppColor.whiteColor,
+            fillColor: fillColor ?? AppColor.whiteColor,
             hintText: hintText,
             prefixIcon:
                 prefixImage == ''

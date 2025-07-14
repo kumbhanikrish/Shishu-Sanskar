@@ -48,7 +48,7 @@ class _PayDetailScreenState extends State<PayDetailScreen> {
 
     Map<String, dynamic> params = {
       "razorpay_payment_id": response.paymentId,
-      "razorpay_order_id": 'Test_fgdf',
+      "razorpay_order_id": response.paymentId,
       "plan_id": pricingModel.id, // or selectedPricingModel!.planId
     };
 

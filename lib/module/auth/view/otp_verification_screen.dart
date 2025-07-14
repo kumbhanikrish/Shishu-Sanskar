@@ -84,6 +84,8 @@ class OtpVerificationScreen extends StatelessWidget {
                 } else {
                   authCubit.sendOtp(
                     context,
+                    resend: true
+                    ,
                     mobile: wNumber.isEmpty ? number : wNumber,
                     passwordVisibilityCubit: passwordVisibilityCubit,
                   );
@@ -112,6 +114,7 @@ class OtpVerificationScreen extends StatelessWidget {
                               : () {
                                 authCubit.verifyOtp(
                                   context,
+                                  stepperCubit: stepperCubit,
                                   opt: pinController.text.trim(),
                                   mobile: wNumber.isEmpty ? number : wNumber,
                                   passwordVisibilityCubit:

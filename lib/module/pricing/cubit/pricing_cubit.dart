@@ -36,14 +36,13 @@ class PricingCubit extends Cubit<PricingState> {
     return response;
   }
 
-  Future<Response> payment(
-    BuildContext context, {
-    required Map<String, dynamic> params,
-  }) async {
+  payment(BuildContext context, {required Map<String, dynamic> params}) async {
     Response response = await pricingRepo.payment(context, params: params);
 
-    if (response.data['success'] == true && response.data != null) {}
-    return response;
+    if (response.data['success'] == true && response.data != null) {
+      Navigator.pop(context);
+      return response;
+    }
   }
 
   void init() {

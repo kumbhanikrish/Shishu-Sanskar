@@ -33,13 +33,13 @@ class LoginScreen extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 CustomText(
-                  text: 'Sign up',
+                  text: 'Sign in',
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
                 ),
                 Gap(5),
                 CustomText(
-                  text: 'Sign up to Create your account',
+                  text: 'Sign in to access your account',
                   fontSize: 12,
                   color: AppColor.subTitleColor,
                 ),
@@ -143,12 +143,7 @@ class LoginScreen extends StatelessWidget {
                 ),
                 Gap(20),
 
-                customSocialMediaLogin(
-                  googleOnTap: () {
-                    authCubit.handleGoogleSignIn(context);
-                  },
-                  appleOnTap: () {},
-                ),
+                customSocialMediaLogin(context),
                 Gap(14),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

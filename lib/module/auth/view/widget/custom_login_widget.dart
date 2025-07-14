@@ -116,10 +116,9 @@ Widget buildOrDivider() {
   );
 }
 
-customSocialMediaLogin({
-  required void Function() googleOnTap,
-  required void Function() appleOnTap,
-}) {
+customSocialMediaLogin(BuildContext context) {
+  AuthCubit authCubit = BlocProvider.of<AuthCubit>(context);
+
   return Column(
     children: <Widget>[
       buildOrDivider(),
@@ -130,7 +129,10 @@ customSocialMediaLogin({
           Expanded(
             child: CustomIconTextButton(
               text: 'Google',
-              onTap: googleOnTap,
+              onTap: () async {
+                await googleSignIn.signOut();
+                authCubit.handleGoogleSignIn(context);
+              },
               image: AppImage.google,
             ),
           ),
@@ -156,6 +158,7 @@ customGenderRadio({
   required String title,
   required void Function() onTap,
   Widget? child,
+  bool trailing = false,
 }) {
   return Container(
     decoration: BoxDecoration(
@@ -170,25 +173,45 @@ customGenderRadio({
         child: Column(
           children: [
             Row(
+              mainAxisAlignment:
+                  trailing == false
+                      ? MainAxisAlignment.start
+                      : MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    SvgPicture.asset(buttonImage),
+                if (trailing == false) ...[
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      SvgPicture.asset(buttonImage),
 
-                    if (fillImage != '') ...[SvgPicture.asset(fillImage)],
-                  ],
-                ),
+                      if (fillImage != '') ...[SvgPicture.asset(fillImage)],
+                    ],
+                  ),
+                ],
                 if (genderIcon != '') ...[
                   Gap(13),
                   SvgPicture.asset(genderIcon),
                 ],
                 Gap(10),
-                CustomText(
-                  text: title,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
+                Expanded(
+                  child: CustomText(
+                    text: title,
+                    fontSize: 12,
+
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
+
+                if (trailing) ...[
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      SvgPicture.asset(buttonImage),
+
+                      if (fillImage != '') ...[SvgPicture.asset(fillImage)],
+                    ],
+                  ),
+                ],
               ],
             ),
             child ?? Container(),
@@ -235,7 +258,7 @@ Widget buildStep(int index, int currentStep, int totalSteps) {
         ),
       ),
 
-      if (index < 2)
+      if (index < 3)
         Container(
           width: 60,
           height: 1,

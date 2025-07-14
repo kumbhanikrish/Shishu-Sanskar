@@ -74,10 +74,18 @@ class EventCubit extends Cubit<EventState> {
     }
   }
 
-  joinEvent(BuildContext context, {required int eventId}) async {
+  joinEvent(
+    BuildContext context, {
+    required int eventId,
+    required bool detail,
+  }) async {
     Response response = await homeRepo.joinEvent(context, eventId: eventId);
     if (response.data['success'] == true) {
-     
+      getEvent(context);
+      if (detail) {
+        Navigator.pop(context);
+      }
+
       return response;
     }
   }

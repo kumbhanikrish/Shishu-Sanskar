@@ -15,7 +15,7 @@ class UserData {
   String firstName;
   String middleName;
   String lastName;
-  dynamic profileImage;
+  String profileImage;
   String email;
   String gender;
   String marital;
@@ -23,6 +23,7 @@ class UserData {
   String contactNumber;
   dynamic whatsappNumber;
   int categoryId;
+  int languageId;
   dynamic lmp;
   dynamic googleToken;
   dynamic appleToken;
@@ -42,6 +43,7 @@ class UserData {
     required this.firstName,
     required this.middleName,
     required this.lastName,
+    required this.languageId,
     required this.profileImage,
     required this.email,
     required this.gender,
@@ -75,6 +77,7 @@ class UserData {
     gender: json["gender"] ?? '',
     marital: json["marital"] ?? '',
     noOfKid: json["no_of_kid"] ?? 0,
+    languageId: json["language_id"] ?? 0,
     contactNumber: json["contact_number"] ?? '',
     whatsappNumber: json["whatsapp_number"] ?? '',
     categoryId: json["category_id"] ?? 0,
@@ -134,6 +137,7 @@ class UserData {
     "whatsapp_number": whatsappNumber,
     "category_id": categoryId,
     "lmp": lmp,
+    "language_id": languageId,
     "google_token": googleToken,
     "apple_token": appleToken,
     "fcm_token": fcmToken,

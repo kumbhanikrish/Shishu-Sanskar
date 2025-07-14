@@ -37,6 +37,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
   Widget build(BuildContext context) {
     BottomBarCubit bottomBarCubit = BlocProvider.of<BottomBarCubit>(context);
     PricingCubit pricingCubit = BlocProvider.of<PricingCubit>(context);
+
     CategoryRadioCubit categoryRadioCubit = BlocProvider.of<CategoryRadioCubit>(
       context,
     );
@@ -106,7 +107,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
 
                                                 if (bottomBarCubit.state == 3) {
                                                   pricingCubit.init();
-                                                  
+
                                                   pricingCubit.getPlans(
                                                     context,
                                                     categoryId:
@@ -122,35 +123,35 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
                                     ],
                                   ),
                                 ),
-                                // if (state == 2) ...[
-                                InkWell(
-                                  onTap: () {
-                                    Navigator.pushNamed(
-                                      context,
-                                      AppPage.settingScreen,
-                                    );
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8),
-                                    child: SvgPicture.asset(AppImage.setting),
+                                if (state == 2) ...[
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                        context,
+                                        AppPage.settingScreen,
+                                      );
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8),
+                                      child: SvgPicture.asset(AppImage.setting),
+                                    ),
                                   ),
-                                ),
 
-                                InkWell(
-                                  onTap: () {},
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                      top: 8,
-                                      left: 8,
-                                      bottom: 8,
-                                    ),
-                                    child: SvgPicture.asset(
-                                      AppImage.notification,
+                                  InkWell(
+                                    onTap: () {},
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                        top: 8,
+                                        left: 8,
+                                        bottom: 8,
+                                      ),
+                                      child: SvgPicture.asset(
+                                        AppImage.notification,
+                                      ),
                                     ),
                                   ),
-                                ),
+                                ],
                               ],
-                              // ],
                             )
                             : state == 1
                             ? CustomText(
