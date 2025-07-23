@@ -1,10 +1,13 @@
 // graph_screen.dart
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:shishu_sanskar/main.dart';
 import 'package:shishu_sanskar/module/graph/cubit/graph_cubit.dart';
 import 'package:shishu_sanskar/module/graph/model/daily_report_model.dart';
 import 'package:shishu_sanskar/module/graph/model/graph_tab_model.dart';
@@ -38,9 +41,9 @@ class GraphScreen extends StatelessWidget {
   ];
   @override
   Widget build(BuildContext context) {
-    GraphTabCubit graphTabCubit = BlocProvider.of<GraphTabCubit>(context);
     GraphCubit graphCubit = BlocProvider.of<GraphCubit>(context);
 
+    GraphTabCubit graphTabCubit = BlocProvider.of<GraphTabCubit>(context);
     graphTabCubit.init();
 
     return Expanded(
@@ -48,7 +51,6 @@ class GraphScreen extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         child: BlocBuilder<GraphTabCubit, GraphTabState>(
           builder: (context, state) {
-            
             if (state is GraphTabLoaded) {
               tabIndex = state.tabIndex;
             }
@@ -135,11 +137,20 @@ class GraphScreen extends StatelessWidget {
 
 Widget dailyGraph(BuildContext context, {required GraphCubit graphCubit}) {
   DailyReportModel dailyReportModel = DailyReportModel(
-    data: DailyData(tasks: 0, completedTasks: 0, pendingTasks: 0),
+    data: DailyData(
+      tasks: 0,
+      completedTasks: 0,
+      pendingTasks: 0,
+      currentSubscriptionDay: 0,
+    ),
     completedTasksList: [],
   );
-  String dailyDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
-  graphCubit.getDailyReport(context, date: dailyDate);
+  SelectedDateCubit selectedDateCubit = BlocProvider.of<SelectedDateCubit>(
+    context,
+  );
+  selectedDateCubit.init();
+
+  graphCubit.getDailyReport(context, date: selectedDateCubit.state);
   return BlocBuilder<GraphCubit, GraphState>(
     builder: (context, state) {
       if (state is GraphReportState) {
@@ -150,9 +161,76 @@ Widget dailyGraph(BuildContext context, {required GraphCubit graphCubit}) {
           dailyReportModel.data.completedTasks /
           dailyReportModel.data.tasks *
           100;
+
+      final List<DailyDateModel> days = generatePastDaysModel(
+        dailyReportModel.data.currentSubscriptionDay,
+      );
+
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: List.generate(days.length, (index) {
+                DailyDateModel dailyDateModel = days[index];
+                return BlocBuilder<SelectedDateCubit, String>(
+                  builder: (context, dateSelect) {
+                    return InkWell(
+                      onTap: () {
+                        selectedDateCubit.updateDate(dailyDateModel.date);
+                        graphCubit.getDailyReport(
+                          context,
+                          date: dailyDateModel.date,
+                        );
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color:
+                              dateSelect == dailyDateModel.date
+                                  ? AppColor.themeSecondaryColor
+                                  : AppColor.transparentColor,
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: <Widget>[
+                              Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColor.dailyFilterBg,
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8),
+                                  child: CustomText(
+                                    text: dailyDateModel.index.toString(),
+                                  ),
+                                ),
+                              ),
+                              CustomText(
+                                text: dailyDateModel.dayName.toUpperCase(),
+                                fontSize: 12,
+                                color:
+                                    dateSelect == dailyDateModel.date
+                                        ? AppColor.whiteColor
+                                        : AppColor.blackColor,
+                                fontWeight:
+                                    dateSelect == dailyDateModel.date
+                                        ? FontWeight.w500
+                                        : FontWeight.w400,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              }),
+            ),
+          ),
+          Gap(10),
           SizedBox(
             height: 250,
             child: SfRadialGauge(

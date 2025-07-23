@@ -11,7 +11,7 @@
 
 
     <application
-        android:label="shishu_sanskar"
+        android:label="Shishu Sanskar"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

@@ -6,6 +6,7 @@ import 'package:shishu_sanskar/module/auth/cubit/auth_cubit.dart';
 import 'package:shishu_sanskar/module/auth/model/auth_category_model.dart';
 import 'package:shishu_sanskar/module/auth/view/widget/custom_login_widget.dart';
 import 'package:shishu_sanskar/utils/constant/app_image.dart';
+import 'package:shishu_sanskar/utils/enum/enums.dart';
 import 'package:shishu_sanskar/utils/theme/colors.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_button.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_text.dart';
@@ -103,23 +104,34 @@ class _SelectCategoriesScreenState extends State<SelectCategoriesScreen> {
                                               authCategoryModel.id == 2) ||
                                           (selectedCategory == 3 &&
                                               authCategoryModel.id == 3)
-                                      ? BlocBuilder<DatePickerCubit, DateTime?>(
-                                        builder: (context, selectDate) {
-                                          String formattedDate = '';
+                                      ? BlocBuilder<RadioCubit, UserType>(
+                                        builder: (context, selectedType) {
+                                          return selectedType == UserType.male
+                                              ? SizedBox()
+                                              : BlocBuilder<
+                                                DatePickerCubit,
+                                                DateTime?
+                                              >(
+                                                builder: (context, selectDate) {
+                                                  String formattedDate = '';
 
-                                          if (selectDate != null) {
-                                            formattedDate = DateFormat(
-                                              'dd/MM/yyyy',
-                                            ).format(selectDate);
-                                          }
-                                          if (selectDateValue !=
-                                              formattedDate) {
-                                            selectDateValue = formattedDate;
-                                          }
-                                          return CustomLmpCard(
-                                            selectDate: selectDate,
-                                            selectDateValue: selectDateValue,
-                                          );
+                                                  if (selectDate != null) {
+                                                    formattedDate = DateFormat(
+                                                      'dd/MM/yyyy',
+                                                    ).format(selectDate);
+                                                  }
+                                                  if (selectDateValue !=
+                                                      formattedDate) {
+                                                    selectDateValue =
+                                                        formattedDate;
+                                                  }
+                                                  return CustomLmpCard(
+                                                    selectDate: selectDate,
+                                                    selectDateValue:
+                                                        selectDateValue,
+                                                  );
+                                                },
+                                              );
                                         },
                                       )
                                       : SizedBox(),

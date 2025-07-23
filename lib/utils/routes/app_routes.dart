@@ -8,6 +8,7 @@ import 'package:shishu_sanskar/module/home/view/bottom_navigation_screen.dart';
 import 'package:shishu_sanskar/module/home/view/event_detail_screen.dart';
 import 'package:shishu_sanskar/module/home/view/event_see_all_screen.dart';
 import 'package:shishu_sanskar/module/home/view/task_detail_Screen.dart';
+import 'package:shishu_sanskar/module/home/view/task_detail_image_preview_screen.dart';
 import 'package:shishu_sanskar/module/home/view/task_see_all_screen.dart';
 import 'package:shishu_sanskar/module/pricing/view/pay_detail_Screen.dart';
 import 'package:shishu_sanskar/module/profile/view/edit_profile_screen.dart';
@@ -71,4 +72,8 @@ final Map<String, WidgetBuilder> appRoutes = {
   AppPage.userEventScreen: (context) => UserEventScreen(),
   AppPage.planHistoryScreen: (context) => PlanHistoryScreen(),
   AppPage.languagesScreen: (context) => LanguagesScreen(),
+  AppPage.taskDetailImagePreviewScreen:
+      (context) => TaskDetailImagePreviewScreen(
+        argument: ModalRoute.of(context)?.settings.arguments,
+      ),
 };

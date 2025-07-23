@@ -21,6 +21,56 @@ class LocalDataSaver {
     return sharedPreference.getString('authToken') ?? '';
   }
 
+  Future setCategoryId(int categoryId) async {
+    SharedPreferences sharedPreference = await SharedPreferences.getInstance();
+    sharedPreference.setInt('categoryId', categoryId);
+  }
+
+  Future<int> getCategoryId() async {
+    SharedPreferences sharedPreference = await SharedPreferences.getInstance();
+    return sharedPreference.getInt('categoryId') ?? 0;
+  }
+
+  Future setPlanId(int planId) async {
+    SharedPreferences sharedPreference = await SharedPreferences.getInstance();
+    sharedPreference.setInt('planId', planId);
+  }
+
+  Future<int> getPlanId() async {
+    SharedPreferences sharedPreference = await SharedPreferences.getInstance();
+    return sharedPreference.getInt('planId') ?? 0;
+  }
+
+  Future setUserUniqueId(String userUniqueId) async {
+    SharedPreferences sharedPreference = await SharedPreferences.getInstance();
+    sharedPreference.setString('userUniqueId', userUniqueId);
+  }
+
+  Future<String> getUserUniqueId() async {
+    SharedPreferences sharedPreference = await SharedPreferences.getInstance();
+    return sharedPreference.getString('userUniqueId') ?? '';
+  }
+
+  Future setLmpDate(String lmpDate) async {
+    SharedPreferences sharedPreference = await SharedPreferences.getInstance();
+    sharedPreference.setString('lmpDate', lmpDate);
+  }
+
+  Future<String> getLmpDate() async {
+    SharedPreferences sharedPreference = await SharedPreferences.getInstance();
+    return sharedPreference.getString('lmpDate') ?? '';
+  }
+
+  Future setCategoryName(String categoryName) async {
+    SharedPreferences sharedPreference = await SharedPreferences.getInstance();
+    sharedPreference.setString('categoryName', categoryName);
+  }
+
+  Future<String> getCategoryName() async {
+    SharedPreferences sharedPreference = await SharedPreferences.getInstance();
+    return sharedPreference.getString('categoryName') ?? '';
+  }
+
   Future setNotificationsEnabled(bool value) async {
     SharedPreferences sharedPreference = await SharedPreferences.getInstance();
     sharedPreference.setBool('notifications_enabled', value);

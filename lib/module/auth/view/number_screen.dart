@@ -42,10 +42,7 @@ class NumberScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     RadioCubit radioCubit = BlocProvider.of<RadioCubit>(context);
-    PasswordVisibilityCubit passwordVisibilityCubit =
-        BlocProvider.of<PasswordVisibilityCubit>(context);
-    AuthCubit authCubit = BlocProvider.of<AuthCubit>(context);
-
+    
     return Expanded(
       child: SingleChildScrollView(
         child: Column(
@@ -141,6 +138,8 @@ class NumberScreen extends StatelessWidget {
                 // ),
                 // Gap(10),
                 CustomCountyTextfield(
+                  hintText: 'Contact number',
+
                   image: numberFlag,
                   controller: numberController,
                   prefixOnTap: numberPrefixOnTap,
@@ -175,6 +174,7 @@ class NumberScreen extends StatelessWidget {
                 // ),
                 CustomCountyTextfield(
                   code: wpNumberCode,
+                  hintText: 'Whatsapp number',
                   image: wpNumberFlag,
                   controller: wpNumberController,
                   prefixOnTap: wpNumberPrefixOnTap,

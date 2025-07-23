@@ -17,8 +17,8 @@ import 'package:shishu_sanskar/utils/theme/colors.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_app_bar.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_bg.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_button.dart';
+import 'package:shishu_sanskar/utils/widgets/custom_error_toast.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_text.dart';
-import 'package:shishu_sanskar/utils/widgets/custom_textfield.dart';
 import 'package:sizer/sizer.dart';
 
 class PayDetailScreen extends StatefulWidget {
@@ -49,7 +49,7 @@ class _PayDetailScreenState extends State<PayDetailScreen> {
     Map<String, dynamic> params = {
       "razorpay_payment_id": response.paymentId,
       "razorpay_order_id": response.paymentId,
-      "plan_id": pricingModel.id, // or selectedPricingModel!.planId
+      "plan_id": pricingModel.id,
     };
 
     pricingCubit.payment(context, params: params);
@@ -114,6 +114,7 @@ class _PayDetailScreenState extends State<PayDetailScreen> {
                     child: Column(
                       children: [
                         Container(
+                          width: 100.w,
                           decoration: BoxDecoration(
                             border: Border.all(
                               color: AppColor.themeSecondaryColor,
@@ -122,56 +123,50 @@ class _PayDetailScreenState extends State<PayDetailScreen> {
                             borderRadius: BorderRadius.circular(20),
                           ),
                           padding: const EdgeInsets.all(20),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SvgPicture.asset(
-                                    pricingModel.title == 'Online'
-                                        ? AppImage.online
-                                        : AppImage.offline,
-                                  ),
-                                  Gap(5),
-                                  CustomText(
-                                    text: pricingModel.title,
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 18,
-                                  ),
-                                ],
+                              SvgPicture.asset(
+                                pricingModel.title == 'Online'
+                                    ? AppImage.online
+                                    : AppImage.offline,
                               ),
-                              Expanded(
-                                child: CustomText(
-                                  text:
-                                      '₹${double.parse(pricingModel.price).toStringAsFixed(0)}',
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 40,
-                                  textAlign: TextAlign.right,
-                                ),
+                              Gap(5),
+                              CustomText(
+                                text: pricingModel.title,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 18,
+                              ),
+                              Gap(5),
+                              CustomText(
+                                text:
+                                    '₹${double.parse(pricingModel.price).toStringAsFixed(0)}',
+                                fontWeight: FontWeight.w600,
+                                fontSize: 40,
+                                textAlign: TextAlign.right,
                               ),
                             ],
                           ),
                         ),
-                        Gap(30),
-                        CustomTextField(
-                          hintText: 'Enter Promo Code',
-                          text: 'Apply Promo Code',
-                          prefixImage: AppImage.promoCodeIcon,
-                          suffixIcon: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 15,
-                              horizontal: 10,
-                            ),
-                            child: CustomText(
-                              text: 'APPLY',
-                              color: AppColor.themePrimaryColor,
 
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
+                        // Gap(30),
+                        // CustomTextField(
+                        //   hintText: 'Enter Promo Code',
+                        //   text: 'Apply Promo Code',
+                        //   prefixImage: AppImage.promoCodeIcon,
+                        //   suffixIcon: Padding(
+                        //     padding: const EdgeInsets.symmetric(
+                        //       vertical: 15,
+                        //       horizontal: 10,
+                        //     ),
+                        //     child: CustomText(
+                        //       text: 'APPLY',
+                        //       color: AppColor.themePrimaryColor,
 
+                        //       fontSize: 14,
+                        //     ),
+                        //   ),
+                        // ),
                         Gap(40),
 
                         pricingTextWithAmount(
@@ -220,7 +215,11 @@ class _PayDetailScreenState extends State<PayDetailScreen> {
                         CustomButton(
                           text:
                               'Pay ₹${double.parse(pricingModel.price).toStringAsFixed(0)}',
-                          onTap: () {
+                          onTap: () async {
+                            int planId = await localDataSaver.getPlanId();
+
+                            log('planIdplanId ::$planId');
+
                             openCheckout(pricingModel);
                           },
                         ),

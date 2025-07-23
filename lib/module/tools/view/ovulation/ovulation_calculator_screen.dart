@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:shishu_sanskar/main.dart';
 import 'package:shishu_sanskar/module/tools/cubit/ovulation_calculator/cubit/ovulation_calculator_cubit.dart';
 import 'package:shishu_sanskar/module/tools/view/ovulation/widget/custom_ovulation_widget.dart';
 import 'package:shishu_sanskar/utils/theme/colors.dart';
@@ -26,10 +27,10 @@ class _OvulationCalculatorScreenState extends State<OvulationCalculatorScreen> {
   DateTime focusedDay = DateTime.now();
   DateTime? selectedDay;
 
-    List<String> averageCycle = List.generate(
-      36,
-      (index) => (15 + index).toString(),
-    );
+  List<String> averageCycle = List.generate(
+    36,
+    (index) => (15 + index).toString(),
+  );
   List<DateTime> fertileWindow = [];
 
   DateTime? fertileStart;
@@ -38,6 +39,7 @@ class _OvulationCalculatorScreenState extends State<OvulationCalculatorScreen> {
   DateTime? nextPeriod;
   DateTime? pregnancyTestDay;
   DateTime? estimatedDueDate;
+
   @override
   Widget build(BuildContext context) {
     OvulationCalculatorCubit ovulationCalculatorCubit =
@@ -93,139 +95,206 @@ class _OvulationCalculatorScreenState extends State<OvulationCalculatorScreen> {
                         ),
 
                         Gap(10),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: AppColor.toolsBgColor,
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: BlocBuilder<
-                            SelectCalenderCubit,
-                            SelectCalenderState
-                          >(
-                            builder: (context, state) {
-                              if (state is SelectCalenderValueState) {
-                                focusedDay = state.focusedDay;
-                                selectedDay = state.selectedDay;
+                        FutureBuilder(
+                          future: lmpDate(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                    ConnectionState.done &&
+                                snapshot.data != '') {
+                              final lmp =
+                                  snapshot.data ?? DateTime.now().toString();
+
+                              final DateTime lmpDate = DateTime.parse(lmp);
+
+                              // ✅ Update selected date via Cubit if not already selected
+                              if (selectedDay == null ||
+                                  !isSameDay(selectedDay, lmpDate)) {
+                                WidgetsBinding.instance.addPostFrameCallback((
+                                  _,
+                                ) {
+                                  selectCalenderCubit.updateSelectedDay(
+                                    lmpDate,
+                                    lmpDate,
+                                  );
+                                });
                               }
-                              return BlocBuilder<
-                                OvulationCalculatorCubit,
-                                OvulationCalculatorState
+                            }
+                            return Container(
+                              decoration: BoxDecoration(
+                                color: AppColor.toolsBgColor,
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: BlocBuilder<
+                                SelectCalenderCubit,
+                                SelectCalenderState
                               >(
                                 builder: (context, state) {
-                                  if (state is OvulationCalculatorResult) {
-                                    fertileStart = state.fertileStart;
-                                    fertileEnd = state.fertileEnd;
-                                    ovulationDay = state.ovulationDay;
-                                    nextPeriod = state.nextPeriod;
-                                    pregnancyTestDay = state.pregnancyTestDay;
-                                    estimatedDueDate = state.estimatedDueDate;
-
-                                    fertileWindow = List.generate(
-                                      state.fertileEnd
-                                              .difference(state.fertileStart)
-                                              .inDays +
-                                          1,
-                                      (index) => DateTime(
-                                        state.fertileStart.year,
-                                        state.fertileStart.month,
-                                        state.fertileStart.day + index,
-                                      ),
-                                    );
+                                  if (state is SelectCalenderValueState) {
+                                    focusedDay = state.focusedDay;
+                                    selectedDay = state.selectedDay;
                                   }
-                                  return CustomCalender(
-                                    focusedDay: focusedDay,
-                                    selectedDay: selectedDay,
-                                    selectedDayPredicate: (day) {
-                                      return isSameDay(day, selectedDay);
-                                    },
-                                    onDaySelected:
-                                        (state is OvulationCalculatorResult)
-                                            ? null
-                                            : (selected, focused) {
-                                              log(
-                                                'selectedselected ::$selected',
-                                              );
-                                              selectCalenderCubit
-                                                  .updateSelectedDay(
-                                                    selected,
-                                                    focused,
+                                  return BlocBuilder<
+                                    OvulationCalculatorCubit,
+                                    OvulationCalculatorState
+                                  >(
+                                    builder: (context, state) {
+                                      if (state is OvulationCalculatorResult) {
+                                        fertileStart = state.fertileStart;
+                                        fertileEnd = state.fertileEnd;
+                                        ovulationDay = state.ovulationDay;
+                                        nextPeriod = state.nextPeriod;
+                                        pregnancyTestDay =
+                                            state.pregnancyTestDay;
+                                        estimatedDueDate =
+                                            state.estimatedDueDate;
+
+                                        fertileWindow = List.generate(
+                                          state.fertileEnd
+                                                  .difference(
+                                                    state.fertileStart,
+                                                  )
+                                                  .inDays +
+                                              1,
+                                          (index) => DateTime(
+                                            state.fertileStart.year,
+                                            state.fertileStart.month,
+                                            state.fertileStart.day + index,
+                                          ),
+                                        );
+                                      }
+                                      return CustomCalender(
+                                        focusedDay: focusedDay,
+                                        selectedDay: selectedDay,
+                                        selectedDayPredicate:
+                                            (day) =>
+                                                isSameDay(day, selectedDay),
+                                        onDaySelected:
+                                            (state is OvulationCalculatorResult)
+                                                ? null
+                                                : (selected, focused) {
+                                                  log(
+                                                    'selectedselected ::$selected',
                                                   );
-                                            },
-                                    defaultBuilder: (context, day, focusedDay) {
-                                      normalizedDay = DateTime(
-                                        day.year,
-                                        day.month,
-                                        day.day,
+                                                  selectCalenderCubit
+                                                      .updateSelectedDay(
+                                                        selected,
+                                                        focused,
+                                                      );
+                                                },
+                                        defaultBuilder: (
+                                          context,
+                                          day,
+                                          focusedDay,
+                                        ) {
+                                          DateTime normalizedDay = DateTime(
+                                            day.year,
+                                            day.month,
+                                            day.day,
+                                          );
+
+                                          // Generate list of the same day ± 3 months
+                                          List<DateTime> getSameDayInRange(
+                                            DateTime baseDay,
+                                          ) {
+                                            return List.generate(6, (index) {
+                                              final offset =
+                                                  index - 3; // -3 to +3
+                                              final newMonth =
+                                                  baseDay.month + offset;
+                                              int year =
+                                                  baseDay.year +
+                                                  ((newMonth - 1) ~/ 12);
+                                              int month =
+                                                  ((newMonth - 1) % 12) + 1;
+
+                                              // Clamp the day to the last valid day in the new month
+                                              int day = baseDay.day;
+                                              int lastDay =
+                                                  DateTime(
+                                                    year,
+                                                    month + 1,
+                                                    0,
+                                                  ).day;
+                                              if (day > lastDay) day = lastDay;
+
+                                              return DateTime(year, month, day);
+                                            });
+                                          }
+
+                                          // Check if normalizedDay is in the range of ±3 months from given baseDay
+                                          bool isInExtendedRange(
+                                            DateTime baseDay,
+                                          ) {
+                                            return getSameDayInRange(
+                                              baseDay,
+                                            ).any(
+                                              (date) => isSameDay(
+                                                normalizedDay,
+                                                date,
+                                              ),
+                                            );
+                                          }
+
+                                          // Ovulation
+                                          if (isInExtendedRange(
+                                            ovulationDay ?? DateTime.now(),
+                                          )) {
+                                            return DayMarker(
+                                              day: day,
+                                              color: Color(0xFFDBFCE7),
+                                            );
+                                          }
+
+                                          // Fertile Window (which is a list of dates)
+                                          for (DateTime fertileDay
+                                              in fertileWindow) {
+                                            if (isInExtendedRange(fertileDay)) {
+                                              return DayMarker(
+                                                day: day,
+                                                color: Color(0xFFDBEAFE),
+                                              );
+                                            }
+                                          }
+
+                                          // Next Period
+                                          if (isInExtendedRange(
+                                            nextPeriod ?? DateTime.now(),
+                                          )) {
+                                            return DayMarker(
+                                              day: day,
+                                              color: Color(0xFFFFE2E2),
+                                            );
+                                          }
+
+                                          // Pregnancy Test Day
+                                          if (isInExtendedRange(
+                                            pregnancyTestDay ?? DateTime.now(),
+                                          )) {
+                                            return DayMarker(
+                                              day: day,
+                                              color: Color(0xFFFEF9C2),
+                                            );
+                                          }
+
+                                          // Estimated Due Date
+                                          if (isInExtendedRange(
+                                            estimatedDueDate ?? DateTime.now(),
+                                          )) {
+                                            return DayMarker(
+                                              day: day,
+                                              color: Color(0xFFF3E8FF),
+                                            );
+                                          }
+
+                                          return null;
+                                        },
                                       );
-
-                                      log('normalizedDay ::$normalizedDay');
-
-                                      // Prioritize more specific markers first:
-                                      if (ovulationDay != null &&
-                                          isSameDay(
-                                            normalizedDay,
-                                            ovulationDay,
-                                          )) {
-                                        return DayMarker(
-                                          day: day,
-                                          color:
-                                              (state is OvulationCalculatorResult)
-                                                  ? Color(0xFFDBFCE7)
-                                                  : AppColor.transparentColor,
-                                        );
-                                      }
-
-                                      if (fertileWindow.contains(
-                                        normalizedDay,
-                                      )) {
-                                        return DayMarker(
-                                          day: day,
-                                          color: Color(0xFFDBEAFE),
-                                        );
-                                      }
-
-                                      if (nextPeriod != null &&
-                                          isSameDay(
-                                            normalizedDay,
-                                            nextPeriod,
-                                          )) {
-                                        return DayMarker(
-                                          day: day,
-                                          color: Color(0xFFFFE2E2),
-                                        );
-                                      }
-
-                                      if (pregnancyTestDay != null &&
-                                          isSameDay(
-                                            normalizedDay,
-                                            pregnancyTestDay,
-                                          )) {
-                                        return DayMarker(
-                                          day: day,
-                                          color: Color(0xFFFEF9C2),
-                                        );
-                                      }
-                                      log(
-                                        'estimatedDueDateestimatedDueDate :${isSameDay(normalizedDay, estimatedDueDate)}',
-                                      );
-                                      if (estimatedDueDate != null &&
-                                          isSameDay(
-                                            normalizedDay,
-                                            estimatedDueDate,
-                                          )) {
-                                        return DayMarker(
-                                          day: day,
-                                          color: Color(0xFFF3E8FF),
-                                        );
-                                      }
-
-                                      return null;
                                     },
                                   );
                                 },
-                              );
-                            },
-                          ),
+                              ),
+                            );
+                          },
                         ),
                         Gap(10),
                         RichText(

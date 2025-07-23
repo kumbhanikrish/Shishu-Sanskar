@@ -69,22 +69,38 @@ class DailyData {
   final int tasks;
   final int completedTasks;
   final int pendingTasks;
+  final int currentSubscriptionDay;
 
   DailyData({
     required this.tasks,
     required this.completedTasks,
     required this.pendingTasks,
+    required this.currentSubscriptionDay,
   });
 
   factory DailyData.fromJson(Map<String, dynamic> json) => DailyData(
     tasks: json["tasks"],
     completedTasks: json["completed_tasks"],
     pendingTasks: json["pending_tasks"],
+    currentSubscriptionDay: json["current_subscription_day"],
   );
 
   Map<String, dynamic> toJson() => {
     "tasks": tasks,
     "completed_tasks": completedTasks,
     "pending_tasks": pendingTasks,
+    "current_subscription_day": currentSubscriptionDay,
   };
+}
+
+class DailyDateModel {
+  final int index;
+  final String date; // format: dd-MM-yyyy
+  final String dayName; // format: EEE (Mon, Tue...)
+
+  DailyDateModel({
+    required this.index,
+    required this.date,
+    required this.dayName,
+  });
 }

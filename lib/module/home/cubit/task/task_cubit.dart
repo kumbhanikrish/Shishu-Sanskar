@@ -1,4 +1,3 @@
-
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -14,15 +13,21 @@ class TaskCubit extends Cubit<TaskState> {
   TaskModel taskModel = TaskModel(today: [], weekly: [], daily: []);
 
   getTask(BuildContext context) async {
-    Response response = await homeRepo.getTasks(context);
-    if (response.data['success'] == true) {
-      final data = response.data['data'];
+  Response response = await homeRepo.getTasks(context);
 
+  if (response.data['success'] == true) {
+    final dynamic data = response.data['data'];
+
+    if (data is Map<String, dynamic>) {
       taskModel = TaskModel.fromJson(data);
+    } else {
+      // Handle empty state
+      taskModel = TaskModel(today: [], weekly: [], daily: []);
     }
 
     emit(GetTaskState(taskModel: taskModel));
   }
+}
 
   completeTask(BuildContext context, {required int taskId}) async {
     Response response = await homeRepo.completeTask(context, taskId: taskId);
@@ -31,5 +36,9 @@ class TaskCubit extends Cubit<TaskState> {
       Navigator.pop(context);
       return response;
     }
+  }
+
+  void init() {
+    emit(TaskInitial());
   }
 }

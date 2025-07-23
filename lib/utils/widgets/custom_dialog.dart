@@ -11,6 +11,7 @@ customDialog(
   required String subtitle,
   required String cancelText,
   required String submitText,
+  bool showButton = true,
   required void Function() submitOnTap,
 }) {
   return showDialog(
@@ -41,30 +42,33 @@ customDialog(
                 fontWeight: FontWeight.w500,
                 color: AppColor.subTitleColor,
               ),
-              Gap(20),
-              Row(
-                children: <Widget>[
-                  Expanded(
-                    child: CustomTextButton(
-                      text: cancelText,
-                      color: AppColor.themePrimaryColor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
+
+              if (showButton == true) ...[
+                Gap(20),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: CustomTextButton(
+                        text: cancelText,
+                        color: AppColor.themePrimaryColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
                     ),
-                  ),
-                  Gap(10),
-                  Expanded(
-                    child: CustomButton(
-                      borderColor: AppColor.borderColor,
-                      text: submitText,
-                      onTap: submitOnTap,
+                    Gap(10),
+                    Expanded(
+                      child: CustomButton(
+                        borderColor: AppColor.borderColor,
+                        text: submitText,
+                        onTap: submitOnTap,
+                      ),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
+              ],
             ],
           ),
         ),
@@ -96,8 +100,11 @@ void customDatePicker(
                 calendarType: CalendarDatePicker2Type.single,
                 selectedDayHighlightColor: AppColor.themePrimaryColor,
                 centerAlignModePicker: true,
+                lastMonthIcon: SizedBox.shrink(),
+                nextMonthIcon: SizedBox.shrink(),
+                disableModePicker: false,
 
-                disableModePicker: true,
+                controlsHeight: 50, // 🔽 reduce header height
 
                 dayTextStyle: const TextStyle(
                   color: Colors.black87,
@@ -111,16 +118,8 @@ void customDatePicker(
                 ),
                 controlsTextStyle: TextStyle(
                   color: AppColor.calendarControlColor,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w400,
-                ),
-                lastMonthIcon: Icon(
-                  Icons.chevron_left,
-                  color: AppColor.calendarControlColor,
-                ),
-                nextMonthIcon: Icon(
-                  Icons.chevron_right,
-                  color: AppColor.calendarControlColor,
+                  fontSize: 12, // 🔽 smaller font = less height
+                  fontWeight: FontWeight.w600,
                 ),
                 selectedDayTextStyle: const TextStyle(
                   color: Colors.white,

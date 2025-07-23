@@ -62,7 +62,7 @@ class UserDataModel {
   factory UserDataModel.fromJson(Map<String, dynamic> json) => UserDataModel(
     id: json["id"],
     firstName: json["first_name"],
-    middleName: json["middle_name"],
+    middleName: json["middle_name"] ?? '',
     lastName: json["last_name"],
     profileImage: json["profile_image"],
     email: json["email"],

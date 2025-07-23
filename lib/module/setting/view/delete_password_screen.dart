@@ -1,13 +1,18 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:shishu_sanskar/main.dart';
 import 'package:shishu_sanskar/module/auth/cubit/auth_cubit.dart';
+import 'package:shishu_sanskar/module/auth/model/login_model.dart';
 import 'package:shishu_sanskar/utils/constant/app_image.dart';
+import 'package:shishu_sanskar/utils/theme/colors.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_app_bar.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_bg.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_button.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_dialog.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_error_toast.dart';
+import 'package:shishu_sanskar/utils/widgets/custom_text.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_textfield.dart';
 import 'package:sizer/sizer.dart';
 
@@ -20,6 +25,10 @@ class DeletePasswordScreen extends StatelessWidget {
     CPasswordVisibilityCubit cPasswordVisibilityCubit =
         BlocProvider.of<CPasswordVisibilityCubit>(context);
     AuthCubit authCubit = BlocProvider.of<AuthCubit>(context);
+    Future<LoginModel> loginData() async {
+      LoginModel loginModel = await localDataSaver.getLoginModel();
+      return loginModel;
+    }
 
     String feedback = arguments['feedback'];
     List<String> reasons = arguments['reasons'];
@@ -65,7 +74,6 @@ class DeletePasswordScreen extends StatelessWidget {
                     CustomButton(
                       text: 'Confirm',
                       onTap: () {
-
                         if (passwordController.text.isEmpty) {
                           customErrorToast(
                             context,
@@ -89,6 +97,21 @@ class DeletePasswordScreen extends StatelessWidget {
                             );
                           },
                         );
+                      },
+                    ),
+                    Gap(20),
+                    FutureBuilder(
+                      future: loginData(),
+                      builder: (context, snapshot) {
+                        return snapshot.data?.user.googleToken != '' &&
+                                snapshot.data?.user.googleToken != null
+                            ? CustomText(
+                              text:
+                                  'If you have no password then contact to Admin',
+                              color: AppColor.themeSecondaryColor,
+                              fontSize: 14,
+                            )
+                            : SizedBox();
                       },
                     ),
                   ],

@@ -25,4 +25,5 @@ class AppPage {
   static String userEventScreen = '/userEventScreen';
   static String planHistoryScreen = '/planHistoryScreen';
   static String languagesScreen = '/languagesScreen';
+  static String taskDetailImagePreviewScreen = '/taskDetailImagePreviewScreen';
 }

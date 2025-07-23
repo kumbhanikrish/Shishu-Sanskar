@@ -92,325 +92,345 @@ class _SettingScreenState extends State<SettingScreen> {
                     vertical: 10,
                   ),
 
-                  child: Column(
-                    children: <Widget>[
-                      ValueListenableBuilder<LoginModel?>(
-                        valueListenable: loginModelNotifier,
-                        builder: (context, loginModelValue, _) {
-                          return Column(
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: AppColor.whiteColor,
-                                  border: Border.all(
-                                    color: AppColor.themePrimaryColor2,
-                                    width: 1,
-                                  ),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Row(
-                                    children: <Widget>[
-                                      Container(
-                                        width: 8.h,
-                                        height: 8.h,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          border: Border.all(
-                                            color: AppColor.themePrimaryColor2,
-                                            width: 2,
-                                          ),
-                                        ),
-
-                                        child: ClipOval(
-                                          child: CustomCachedImage(
-                                            imageUrl:
-                                                loginModelValue
-                                                    ?.user
-                                                    .profileImage ??
-                                                '',
-                                          ),
-                                        ),
-                                      ),
-                                      Gap(10),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            CustomText(
-                                              text:
-                                                  '${loginModelValue?.user.firstName} ${loginModelValue?.user.middleName} ${loginModelValue?.user.lastName}',
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                            Gap(5),
-                                            CustomText(
-                                              text:
-                                                  '${loginModelValue?.user.email}',
-                                              fontSize: 12,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      InkWell(
-                                        onTap: () {
-                                          Navigator.pushNamed(
-                                            context,
-                                            AppPage.editProfileScreen,
-                                            arguments: {
-                                              'loginModelValue':
-                                                  loginModelValue,
-                                            },
-                                          );
-                                        },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: AppColor.themePrimaryColor,
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: Icon(
-                                            Icons.keyboard_arrow_right_sharp,
-                                            color: AppColor.whiteColor,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Gap(15),
-
-                              BlocBuilder<ProfileCubit, ProfileState>(
-                                builder: (context, state) {
-                                  if (state is GetUserDataState) {
-                                    userDataModel = state.userDataModel;
-                                  }
-
-                                  log(
-                                    'sdjhuadhgd ::${userDataModel.currentSubscription.plan?.title}',
-                                  );
-                                  return CustomListTile(
-                                    contentPadding: EdgeInsets.symmetric(
-                                      vertical: 10,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: <Widget>[
+                        ValueListenableBuilder<LoginModel?>(
+                          valueListenable: loginModelNotifier,
+                          builder: (context, loginModelValue, _) {
+                            return Column(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: AppColor.whiteColor,
+                                    border: Border.all(
+                                      color: AppColor.themePrimaryColor2,
+                                      width: 1,
                                     ),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Container(
+                                          width: 8.h,
+                                          height: 8.h,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            border: Border.all(
+                                              color:
+                                                  AppColor.themePrimaryColor2,
+                                              width: 2,
+                                            ),
+                                          ),
 
-                                    text: 'Current Plan',
-                                    leadingImage: AppImage.crown,
-                                    image: true,
-                                    fontSize: 14,
+                                          child: ClipOval(
+                                            child: CustomCachedImage(
+                                              imageUrl:
+                                                  loginModelValue
+                                                      ?.user
+                                                      .profileImage ??
+                                                  '',
+                                            ),
+                                          ),
+                                        ),
+                                        Gap(10),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              CustomText(
+                                                text:
+                                                    '${loginModelValue?.user.firstName} ${loginModelValue?.user.middleName} ${loginModelValue?.user.lastName}',
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                              Gap(5),
+                                              CustomText(
+                                                text:
+                                                    '${loginModelValue?.user.email}',
+                                                fontSize: 12,
+                                              ),
+                                              Gap(5),
+                                              CustomText(
+                                                text:
+                                                    '${loginModelValue?.user.userUniqueId}',
+                                                fontSize: 12,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        InkWell(
+                                          onTap: () {
+                                            Navigator.pushNamed(
+                                              context,
+                                              AppPage.editProfileScreen,
+                                              arguments: {
+                                                'loginModelValue':
+                                                    loginModelValue,
+                                              },
+                                            );
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: AppColor.themePrimaryColor,
+                                              shape: BoxShape.circle,
+                                            ),
+                                            child: Icon(
+                                              Icons.keyboard_arrow_right_sharp,
+                                              color: AppColor.whiteColor,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Gap(15),
 
-                                    trailing:
-                                        (userDataModel
+                                BlocBuilder<ProfileCubit, ProfileState>(
+                                  builder: (context, state) {
+                                    if (state is GetUserDataState) {
+                                      userDataModel = state.userDataModel;
+                                    }
+
+                                    log(
+                                      'sdjhuadhgd ::${userDataModel.currentSubscription.plan?.title}',
+                                    );
+
+                                    return CustomListTile(
+                                      contentPadding: EdgeInsets.symmetric(
+                                        vertical: 10,
+                                      ),
+
+                                      text: 'Current Plan',
+                                      leadingImage: AppImage.crown,
+                                      image: true,
+                                      fontSize: 14,
+
+                                      trailing:
+                                          (userDataModel
+                                                          .currentSubscription
+                                                          .plan
+                                                          ?.title ??
+                                                      '')
+                                                  .isEmpty
+                                              ? InkWell(
+                                                onTap: () {
+                                                  bottomBarCubit.changeTab(3);
+                                                  pricingCubit.init();
+
+                                                  pricingCubit.getPlans(
+                                                    context,
+                                                    categoryId: (1).toString(),
+                                                  );
+                                                  Navigator.pushNamedAndRemoveUntil(
+                                                    context,
+                                                    AppPage
+                                                        .bottomNavigationScreen,
+                                                    (route) => false,
+                                                  );
+                                                },
+                                                child: CustomText(
+                                                  text: 'Choose Plan',
+
+                                                  color:
+                                                      AppColor
+                                                          .themePrimaryColor,
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              )
+                                              : CustomText(
+                                                text:
+                                                    userDataModel
                                                         .currentSubscription
                                                         .plan
                                                         ?.title ??
-                                                    '')
-                                                .isEmpty
-                                            ? InkWell(
-                                              onTap: () {
-                                                bottomBarCubit.changeTab(3);
-                                                pricingCubit.init();
-
-                                                pricingCubit.getPlans(
-                                                  context,
-                                                  categoryId: (1).toString(),
-                                                );
-                                                Navigator.pushNamedAndRemoveUntil(
-                                                  context,
-                                                  AppPage
-                                                      .bottomNavigationScreen,
-                                                  (route) => false,
-                                                );
-                                              },
-                                              child: CustomText(
-                                                text: 'Choose Plan',
+                                                    '',
 
                                                 color:
-                                                    AppColor.themePrimaryColor,
+                                                    AppColor
+                                                        .themeSecondaryColor,
                                                 fontSize: 18,
                                                 fontWeight: FontWeight.w600,
                                               ),
-                                            )
-                                            : CustomText(
-                                              text:
-                                                  userDataModel
-                                                      .currentSubscription
-                                                      .plan
-                                                      ?.title ??
-                                                  '',
+                                      onTap: () {},
+                                    );
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                        customDividerWithOutTopBottomSpace(
+                          color: AppColor.themePrimaryColor2,
+                        ),
+                        CustomListTile(
+                          contentPadding: EdgeInsets.symmetric(vertical: 10),
 
-                                              color:
-                                                  AppColor.themeSecondaryColor,
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                    onTap: () {},
+                          text: 'Contact Us',
+                          leadingImage: '',
+                          fontSize: 14,
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              AppPage.contactUsScreen,
+                            );
+                          },
+                          trailingColor: AppColor.blackColor,
+                        ),
+                        customDividerWithOutTopBottomSpace(
+                          color: AppColor.themePrimaryColor2,
+                        ),
+                        CustomListTile(
+                          contentPadding: EdgeInsets.symmetric(vertical: 10),
+
+                          text: 'User Event',
+                          leadingImage: '',
+                          fontSize: 14,
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              AppPage.userEventScreen,
+                            );
+                          },
+                          trailingColor: AppColor.blackColor,
+                        ),
+                        customDividerWithOutTopBottomSpace(
+                          color: AppColor.themePrimaryColor2,
+                        ),
+                        CustomListTile(
+                          contentPadding: EdgeInsets.symmetric(vertical: 10),
+
+                          text: 'Plan History',
+                          leadingImage: '',
+                          fontSize: 14,
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              AppPage.planHistoryScreen,
+                            );
+                          },
+                          trailingColor: AppColor.blackColor,
+                        ),
+                        customDividerWithOutTopBottomSpace(
+                          color: AppColor.themePrimaryColor2,
+                        ),
+                        CustomListTile(
+                          contentPadding: EdgeInsets.symmetric(vertical: 10),
+
+                          text: 'Notification',
+                          leadingImage: '',
+                          fontSize: 14,
+
+                          trailingColor: AppColor.blackColor,
+                          trailing: Transform.scale(
+                            scale:
+                                0.8, // Adjust this value to change the size (e.g., 0.8 = 80%)
+                            child: CupertinoSwitch(
+                              value: _notificationsEnabled,
+                              onChanged: (bool value) async {
+                                await localDataSaver.setNotificationsEnabled(
+                                  value,
+                                );
+
+                                setState(() {
+                                  _notificationsEnabled = value;
+                                });
+
+                                // Enable/disable notifications (using FCM topic as an example)
+                                if (value) {
+                                  FirebaseMessaging.instance.subscribeToTopic(
+                                    'general',
                                   );
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                      customDividerWithOutTopBottomSpace(
-                        color: AppColor.themePrimaryColor2,
-                      ),
-                      CustomListTile(
-                        contentPadding: EdgeInsets.symmetric(vertical: 10),
-
-                        text: 'Contact Us',
-                        leadingImage: '',
-                        fontSize: 14,
-                        onTap: () {
-                          Navigator.pushNamed(context, AppPage.contactUsScreen);
-                        },
-                        trailingColor: AppColor.blackColor,
-                      ),
-                      customDividerWithOutTopBottomSpace(
-                        color: AppColor.themePrimaryColor2,
-                      ),
-                      CustomListTile(
-                        contentPadding: EdgeInsets.symmetric(vertical: 10),
-
-                        text: 'User Event',
-                        leadingImage: '',
-                        fontSize: 14,
-                        onTap: () {
-                          Navigator.pushNamed(context, AppPage.userEventScreen);
-                        },
-                        trailingColor: AppColor.blackColor,
-                      ),
-                      customDividerWithOutTopBottomSpace(
-                        color: AppColor.themePrimaryColor2,
-                      ),
-                      CustomListTile(
-                        contentPadding: EdgeInsets.symmetric(vertical: 10),
-
-                        text: 'Plan History',
-                        leadingImage: '',
-                        fontSize: 14,
-                        onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            AppPage.planHistoryScreen,
-                          );
-                        },
-                        trailingColor: AppColor.blackColor,
-                      ),
-                      customDividerWithOutTopBottomSpace(
-                        color: AppColor.themePrimaryColor2,
-                      ),
-                      CustomListTile(
-                        contentPadding: EdgeInsets.symmetric(vertical: 10),
-
-                        text: 'Notification',
-                        leadingImage: '',
-                        fontSize: 14,
-
-                        trailingColor: AppColor.blackColor,
-                        trailing: Transform.scale(
-                          scale:
-                              0.8, // Adjust this value to change the size (e.g., 0.8 = 80%)
-                          child: CupertinoSwitch(
-                            value: _notificationsEnabled,
-                            onChanged: (bool value) async {
-                              await localDataSaver.setNotificationsEnabled(
-                                value,
-                              );
-
-                              setState(() {
-                                _notificationsEnabled = value;
-                              });
-
-                              // Enable/disable notifications (using FCM topic as an example)
-                              if (value) {
-                                FirebaseMessaging.instance.subscribeToTopic(
-                                  'general',
-                                );
-                              } else {
-                                FirebaseMessaging.instance.unsubscribeFromTopic(
-                                  'general',
-                                );
-                              }
-                            },
+                                } else {
+                                  FirebaseMessaging.instance
+                                      .unsubscribeFromTopic('general');
+                                }
+                              },
+                            ),
                           ),
                         ),
-                      ),
 
-                      customDividerWithOutTopBottomSpace(
-                        color: AppColor.themePrimaryColor2,
-                      ),
-                      CustomListTile(
-                        contentPadding: EdgeInsets.symmetric(vertical: 10),
-                        onTap: () {
-                          Navigator.pushNamed(context, AppPage.languagesScreen);
-                        },
-                        text: 'Languages',
-                        leadingImage: '',
-                        fontSize: 14,
+                        customDividerWithOutTopBottomSpace(
+                          color: AppColor.themePrimaryColor2,
+                        ),
+                        CustomListTile(
+                          contentPadding: EdgeInsets.symmetric(vertical: 10),
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              AppPage.languagesScreen,
+                            );
+                          },
+                          text: 'Languages',
+                          leadingImage: '',
+                          fontSize: 14,
 
-                        trailingColor: AppColor.blackColor,
-                      ),
+                          trailingColor: AppColor.blackColor,
+                        ),
 
-                      customDividerWithOutTopBottomSpace(
-                        color: AppColor.themePrimaryColor2,
-                      ),
-                      CustomListTile(
-                        contentPadding: EdgeInsets.symmetric(vertical: 10),
+                        customDividerWithOutTopBottomSpace(
+                          color: AppColor.themePrimaryColor2,
+                        ),
+                        CustomListTile(
+                          contentPadding: EdgeInsets.symmetric(vertical: 10),
 
-                        text: 'Delete account',
-                        leadingImage: '',
-                        fontSize: 14,
-                        trailingColor: AppColor.blackColor,
-                        onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            AppPage.deleteAccountScreen,
-                          );
-                        },
-                      ),
-                      customDividerWithOutTopBottomSpace(
-                        color: AppColor.themePrimaryColor2,
-                      ),
-                      CustomListTile(
-                        contentPadding: EdgeInsets.symmetric(vertical: 10),
+                          text: 'Delete account',
+                          leadingImage: '',
+                          fontSize: 14,
+                          trailingColor: AppColor.blackColor,
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              AppPage.deleteAccountScreen,
+                            );
+                          },
+                        ),
+                        customDividerWithOutTopBottomSpace(
+                          color: AppColor.themePrimaryColor2,
+                        ),
+                        CustomListTile(
+                          contentPadding: EdgeInsets.symmetric(vertical: 10),
 
-                        onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            AppPage.privacyPolicyScreen,
-                          );
-                        },
-                        text: 'Privacy Police',
-                        leadingImage: '',
-                        fontSize: 14,
-                        trailingColor: AppColor.blackColor,
-                      ),
-                      customDividerWithOutTopBottomSpace(
-                        color: AppColor.themePrimaryColor2,
-                      ),
-                      CustomListTile(
-                        contentPadding: EdgeInsets.symmetric(vertical: 10),
-                        onTap: () {
-                          customDialog(
-                            context,
-                            title: 'Log out?',
-                            subtitle: "Are you sure you want to logout?",
-                            cancelText: 'No',
-                            submitText: 'Yes',
-                            submitOnTap: () {
-                              authCubit.logout(context);
-                            },
-                          );
-                        },
-                        text: 'Log out',
-                        leadingImage: '',
-                        fontSize: 14,
-                        trailingColor: AppColor.blackColor,
-                      ),
-                    ],
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              AppPage.privacyPolicyScreen,
+                            );
+                          },
+                          text: 'Privacy Police',
+                          leadingImage: '',
+                          fontSize: 14,
+                          trailingColor: AppColor.blackColor,
+                        ),
+                        customDividerWithOutTopBottomSpace(
+                          color: AppColor.themePrimaryColor2,
+                        ),
+                        CustomListTile(
+                          contentPadding: EdgeInsets.symmetric(vertical: 10),
+                          onTap: () {
+                            customDialog(
+                              context,
+                              title: 'Log out?',
+                              subtitle: "Are you sure you want to logout?",
+                              cancelText: 'No',
+                              submitText: 'Yes',
+                              submitOnTap: () {
+                                authCubit.logout(context);
+                              },
+                            );
+                          },
+                          text: 'Log out',
+                          leadingImage: '',
+                          fontSize: 14,
+                          trailingColor: AppColor.blackColor,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],

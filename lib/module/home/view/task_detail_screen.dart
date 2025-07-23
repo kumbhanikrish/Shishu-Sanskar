@@ -5,6 +5,7 @@ import 'package:shishu_sanskar/module/home/cubit/task/task_cubit.dart';
 import 'package:shishu_sanskar/module/home/model/task_model.dart';
 import 'package:shishu_sanskar/module/home/view/widget/custom_home_widget.dart';
 import 'package:shishu_sanskar/utils/constant/app_image.dart';
+import 'package:shishu_sanskar/utils/constant/app_page.dart';
 import 'package:shishu_sanskar/utils/theme/colors.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_app_bar.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_bg.dart';
@@ -82,7 +83,6 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                       Widget descriptionWidget;
 
                       switch (type) {
-                        case 'video_url':
                         case 'audio_url':
                         case 'web_url':
                           final Uri url = Uri.parse(description.toString());
@@ -111,10 +111,16 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                           break;
 
                         case 'text':
-                          descriptionWidget = CustomText(
-                            text: description,
-                            fontSize: 12,
-                            color: AppColor.seeAllTitleColor,
+                          descriptionWidget = InteractiveViewer(
+                            panEnabled: true,
+                            scaleEnabled: true,
+                            minScale: 1.0,
+                            maxScale: 4.0,
+                            child: CustomText(
+                              text: description,
+                              fontSize: 12,
+                              color: AppColor.seeAllTitleColor,
+                            ),
                           );
                           break;
 
@@ -133,22 +139,49 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                           break;
 
                         case 'images':
-                          descriptionWidget = Wrap(
-                            spacing: 8,
-                            runSpacing: 8,
-                            children:
-                                (description as List).map<Widget>((imgUrl) {
-                                  return ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: CustomCachedImage(imageUrl: imgUrl),
-                                  );
-                                }).toList(),
+                          descriptionWidget = SizedBox(
+                            height: 15.h,
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children:
+                                    (description as List).map<Widget>((imgUrl) {
+                                      return Padding(
+                                        padding: const EdgeInsets.only(
+                                          right: 8,
+                                        ), // spacing between items
+                                        child: InkWell(
+                                          onTap: () {
+                                            Navigator.pushNamed(
+                                              context,
+                                              AppPage
+                                                  .taskDetailImagePreviewScreen,
+
+                                              arguments: {
+                                                'initialIndex': index,
+                                                'images': description,
+                                              },
+                                            );
+                                          },
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
+                                            child: CustomCachedImage(
+                                              imageUrl: imgUrl,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    }).toList(),
+                              ),
+                            ),
                           );
                           break;
-
+                        case 'video_url':
                         case 'video':
-                          descriptionWidget = CustomVideoPlayer(
-                            videoUrl: description.toString(),
+                          descriptionWidget = UniversalVideoPlayer(
+                            url: description.toString(),
                           );
                           break;
                         case 'audio':
@@ -195,6 +228,11 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                           CustomText(
                             text: task.title,
                             fontWeight: FontWeight.w600,
+                          ),
+                          CustomText(
+                            text: task.shortDescription,
+                            fontSize: 12,
+                            color: AppColor.subTitleColor,
                           ),
                           Gap(5),
                           descriptionWidget,

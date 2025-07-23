@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:shishu_sanskar/main.dart';
 import 'package:shishu_sanskar/services/api_services.dart';
 import 'package:shishu_sanskar/utils/constant/app_api.dart';
 
@@ -8,9 +9,11 @@ class HomeRepo {
     BuildContext context, {
     required String page,
   }) async {
+    int categoryId = await localDataSaver.getCategoryId();
     Response response = await apiServices.getDynamicData(
       context,
-      '${AppApi.getEvent}$page',
+      '${AppApi.getEvent}$page&category_id=$categoryId',
+      showLoading: false,
     );
 
     return response;
@@ -31,9 +34,11 @@ class HomeRepo {
   }
 
   Future<Response> getTasks(BuildContext context) async {
+    int categoryId = await localDataSaver.getCategoryId();
     Response response = await apiServices.getDynamicData(
       context,
-      AppApi.userTasks,
+      '${AppApi.userTasks}?category_id=$categoryId',
+      showLoading: false,
     );
 
     return response;

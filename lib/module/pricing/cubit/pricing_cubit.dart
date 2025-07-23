@@ -3,8 +3,11 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shishu_sanskar/main.dart';
 import 'package:shishu_sanskar/module/pricing/model/pricing_model.dart';
 import 'package:shishu_sanskar/module/pricing/repo/pricing_repo.dart';
+import 'package:shishu_sanskar/utils/constant/app_page.dart';
 
 part 'pricing_state.dart';
 
@@ -40,7 +43,10 @@ class PricingCubit extends Cubit<PricingState> {
     Response response = await pricingRepo.payment(context, params: params);
 
     if (response.data['success'] == true && response.data != null) {
-      Navigator.pop(context);
+      await localDataSaver.setPlanId(response.data['data']['plan_id']);
+
+      Navigator.pushNamed(context, AppPage.settingScreen);
+
       return response;
     }
   }

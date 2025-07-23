@@ -1,0 +1,47 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shishu_sanskar/module/auth/cubit/auth_cubit.dart';
+import 'package:shishu_sanskar/module/blog/cubit/blog_cubit.dart';
+import 'package:shishu_sanskar/module/graph/cubit/graph_cubit.dart';
+import 'package:shishu_sanskar/module/home/cubit/event/event_cubit.dart';
+import 'package:shishu_sanskar/module/home/cubit/home_cubit.dart';
+import 'package:shishu_sanskar/module/home/cubit/task/task_cubit.dart';
+import 'package:shishu_sanskar/module/pricing/cubit/pricing_cubit.dart';
+import 'package:shishu_sanskar/module/profile/cubit/profile_cubit.dart';
+import 'package:shishu_sanskar/module/tools/cubit/chinese_gender_predictor/chinese_gender_predictor_cubit.dart';
+import 'package:shishu_sanskar/module/tools/cubit/due_date_calculator/due_date_cubit.dart';
+import 'package:shishu_sanskar/module/tools/cubit/ovulation_calculator/cubit/ovulation_calculator_cubit.dart';
+
+allStateInit(BuildContext context) {
+  context.read<AuthCubit>().init();
+  context.read<StepperCubit>().init();
+  context.read<PasswordVisibilityCubit>().init();
+  context.read<CPasswordVisibilityCubit>().init();
+  context.read<StoreNumberCubit>().init();
+  context.read<StoreWpNumberCubit>().init();
+  context.read<CategoryRadioCubit>().init();
+  context.read<BottomBarCubit>().init();
+  context.read<MaritalRadioCubit>().init();
+  context.read<CounterCubit>().init();
+  context.read<ProfileCubit>().init();
+  context.read<LmpCubit>().init();
+  context.read<VerifiedNumber>().init();
+  context.read<VerifiedWNumber>().init();
+  context.read<ReasonCubit>().clearSelection();
+  context.read<ProfileImageCubit>().clearImage();
+  context.read<BlogCubit>().init();
+  context.read<PricingCubit>().init();
+  context.read<DatePickerCubit>().init();
+  context.read<DatePicker2Cubit>().init();
+  context.read<OvulationCalculatorCubit>().init();
+  context.read<SelectCalenderCubit>().init();
+  context.read<SelectCycleCubit>().init();
+  context.read<DueDateCubit>().init();
+  context.read<ChineseGenderPredictorCubit>().init();
+  context.read<GraphTabCubit>().init();
+  context.read<EventCubit>().init();
+  context.read<TaskCubit>().init();
+  context.read<GraphCubit>().init();
+  context.read<LanguagesRadioCubit>().init();
+  context.read<SelectedDateCubit>().init();
+}

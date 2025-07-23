@@ -62,6 +62,7 @@ class AppImage {
   static String boy = 'assets/image/boy.png';
   static String girl = 'assets/image/girl.png';
   static String crown = 'assets/image/crown.png';
+  static String imageError= 'assets/image/image error.jpg';
 }
 
 class AppLogo {

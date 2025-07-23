@@ -13,6 +13,7 @@ customPricingCard({
   required Widget child,
   Color? backgroundColor,
   Color? borderColor,
+  required String buttonText,
   Color? textColor,
 }) {
   return Container(
@@ -31,7 +32,7 @@ customPricingCard({
         CustomText(text: price, fontSize: 40, fontWeight: FontWeight.w600),
         Gap(10),
         CustomButton(
-          text: 'Choose Plan',
+          text: buttonText,
           onTap: onTap,
           backgroundColor: backgroundColor,
           borderColor: borderColor,

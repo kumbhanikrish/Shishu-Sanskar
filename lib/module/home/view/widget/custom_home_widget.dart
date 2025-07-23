@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
+import 'package:shishu_sanskar/main.dart';
 import 'package:shishu_sanskar/module/auth/cubit/auth_cubit.dart';
 import 'package:shishu_sanskar/module/blog/cubit/blog_cubit.dart';
 import 'package:shishu_sanskar/module/home/cubit/home_cubit.dart';
@@ -15,7 +16,12 @@ import 'package:shishu_sanskar/utils/widgets/custom_button.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_image.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_text.dart';
 import 'package:sizer/sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:video_player/video_player.dart';
+import 'package:chewie/chewie.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 customTitleAnsSeeAll({
   required String title,
@@ -66,11 +72,13 @@ Widget bottomBarTab(
     builder: (context, state) {
       return InkWell(
         onTap: () async {
+          int categoryId = await localDataSaver.getCategoryId();
+
           log('indexindex ::$index');
           if (index == 1) {
             blogCubit.getBlogs(context, search: '');
           } else if (index == 3) {
-            pricingCubit.getPlans(context, categoryId: state.toString());
+            pricingCubit.getPlans(context, categoryId: categoryId.toString());
           }
           bottomBarCubit.changeTab(index);
         },
@@ -276,77 +284,187 @@ customIconAndText({required String date, required String time}) {
   );
 }
 
-class CustomVideoPlayer extends StatefulWidget {
-  final String videoUrl;
+class UniversalVideoPlayer extends StatefulWidget {
+  final String url;
 
-  const CustomVideoPlayer({super.key, required this.videoUrl});
+  const UniversalVideoPlayer({super.key, required this.url});
 
   @override
-  _CustomVideoPlayerState createState() => _CustomVideoPlayerState();
+  State<UniversalVideoPlayer> createState() => _UniversalVideoPlayerState();
 }
 
-class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
-  late VideoPlayerController _controller;
+class _UniversalVideoPlayerState extends State<UniversalVideoPlayer> {
+  late final WebViewController _webViewController;
 
   @override
   void initState() {
-    log('videoUrlvideoUrl ::${widget.videoUrl}');
     super.initState();
-    _controller = VideoPlayerController.networkUrl(
-        Uri.parse(widget.videoUrl), // Play any video link passed to widget
-      )
+
+    _webViewController =
+        WebViewController()
+          ..setJavaScriptMode(JavaScriptMode.unrestricted)
+          ..loadRequest(Uri.parse(_getWebUrl(widget.url)));
+  }
+
+  String _getWebUrl(String url) {
+    if (url.contains("drive.google.com") && url.contains("/view")) {
+      return url.replaceAll("/view", "/preview");
+    }
+    return url;
+  }
+
+  bool _isYouTube(String url) =>
+      url.contains("youtube.com") || url.contains("youtu.be");
+
+  bool _isMp4(String url) => url.endsWith(".mp4");
+
+  @override
+  Widget build(BuildContext context) {
+    if (_isYouTube(widget.url)) {
+      final videoId = YoutubePlayer.convertUrlToId(widget.url)!;
+      final controller = YoutubePlayerController(
+        initialVideoId: videoId,
+        flags: const YoutubePlayerFlags(autoPlay: false),
+      );
+      return YoutubePlayer(controller: controller);
+    } else if (_isMp4(widget.url)) {
+      return ChewieVideoPlayer(videoUrl: widget.url);
+    } else {
+      return SizedBox(
+        height: 30.h,
+        child: WebViewWidget(controller: _webViewController),
+      );
+    }
+  }
+}
+
+class ChewieVideoPlayer extends StatefulWidget {
+  final String videoUrl;
+
+  const ChewieVideoPlayer({super.key, required this.videoUrl});
+
+  @override
+  State<ChewieVideoPlayer> createState() => _ChewieVideoPlayerState();
+}
+
+class _ChewieVideoPlayerState extends State<ChewieVideoPlayer> {
+  late VideoPlayerController _videoPlayerController;
+  ChewieController? _chewieController;
+
+  @override
+  void initState() {
+    super.initState();
+    _videoPlayerController = VideoPlayerController.network(widget.videoUrl)
       ..initialize().then((_) {
-        setState(() {});
+        setState(() {
+          _chewieController = ChewieController(
+            videoPlayerController: _videoPlayerController,
+            autoPlay: false,
+            looping: false,
+          );
+        });
       });
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _videoPlayerController.dispose();
+    _chewieController?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return _controller.value.isInitialized
-        ? Stack(
-          alignment: Alignment.center,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: AspectRatio(
-                aspectRatio: _controller.value.aspectRatio,
-                child: VideoPlayer(_controller),
-              ),
-            ),
-            IconButton(
-              icon: Icon(
-                _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
-                color: Colors.white,
-                size: 32,
-              ),
-              onPressed: () {
-                setState(() {
-                  _controller.value.isPlaying
-                      ? _controller.pause()
-                      : _controller.play();
-                });
-              },
-            ),
-          ],
-        )
-        : Center(
-          child: SizedBox(
-            height: 20,
-            width: 20,
-            child: CircularProgressIndicator(
-              strokeWidth: 1,
-              color: AppColor.themePrimaryColor2,
-            ),
-          ),
-        );
+    if (_chewieController == null ||
+        !_videoPlayerController.value.isInitialized) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    return SizedBox(
+      height: 50.h,
+      child: AspectRatio(
+        aspectRatio: _videoPlayerController.value.aspectRatio,
+        child: Chewie(controller: _chewieController!),
+      ),
+    );
   }
 }
+
+// class CustomVideoPlayer extends StatefulWidget {
+//   final String videoUrl;
+
+//   const CustomVideoPlayer({super.key, required this.videoUrl});
+
+//   @override
+//   _CustomVideoPlayerState createState() => _CustomVideoPlayerState();
+// }
+
+// class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
+//   late VideoPlayerController _controller;
+
+//   @override
+//   void initState() {
+//     log('videoUrlvideoUrl ::${widget.videoUrl}');
+//     super.initState();
+//     _controller = VideoPlayerController.networkUrl(
+//         Uri.parse(widget.videoUrl), // Play any video link passed to widget
+//       )
+//       ..initialize().then((_) {
+//         setState(() {});
+//       });
+//   }
+
+//   @override
+//   void dispose() {
+//     _controller.dispose();
+//     super.dispose();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     log('_controller.value.isInitialized ::${_controller.value.isInitialized}');
+//     return _controller.value.isInitialized
+//         ? SizedBox(
+//           height: 30.h,
+//           child: Stack(
+//             alignment: Alignment.center,
+//             children: [
+//               ClipRRect(
+//                 borderRadius: BorderRadius.circular(10),
+//                 child: AspectRatio(
+//                   aspectRatio: _controller.value.aspectRatio,
+//                   child: VideoPlayer(_controller),
+//                 ),
+//               ),
+//               IconButton(
+//                 icon: Icon(
+//                   _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+//                   color: Colors.white,
+//                   size: 32,
+//                 ),
+//                 onPressed: () {
+//                   setState(() {
+//                     _controller.value.isPlaying
+//                         ? _controller.pause()
+//                         : _controller.play();
+//                   });
+//                 },
+//               ),
+//             ],
+//           ),
+//         )
+//         : Center(
+//           child: SizedBox(
+//             height: 20,
+//             width: 20,
+//             child: CircularProgressIndicator(
+//               strokeWidth: 1,
+//               color: AppColor.themePrimaryColor2,
+//             ),
+//           ),
+//         );
+//   }
+// }
 
 class CustomAudioPlayer extends StatefulWidget {
   final String audioUrl;

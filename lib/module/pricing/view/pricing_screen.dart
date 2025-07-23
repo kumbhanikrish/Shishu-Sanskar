@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:shishu_sanskar/main.dart';
 import 'package:shishu_sanskar/module/pricing/cubit/pricing_cubit.dart';
 import 'package:shishu_sanskar/module/pricing/model/pricing_model.dart';
 import 'package:shishu_sanskar/module/pricing/view/widget/custom_pricing_widget.dart';
 import 'package:shishu_sanskar/utils/constant/app_image.dart';
 import 'package:shishu_sanskar/utils/constant/app_page.dart';
 import 'package:shishu_sanskar/utils/theme/colors.dart';
+import 'package:shishu_sanskar/utils/widgets/custom_error_toast.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_text.dart';
 import 'package:sizer/sizer.dart';
 
@@ -19,6 +21,13 @@ class PricingScreen extends StatefulWidget {
 
 class _PricingScreenState extends State<PricingScreen> {
   List<PricingModel> pricingList = [];
+  Future<void> onRefresh() async {
+    int categoryId = await localDataSaver.getCategoryId();
+    await context.read<PricingCubit>().getPlans(
+      context,
+      categoryId: categoryId.toString(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,37 +57,75 @@ class _PricingScreenState extends State<PricingScreen> {
                         child:
                             pricingList.isEmpty
                                 ? CustomEmpty()
-                                : ListView.separated(
-                                  itemCount: pricingList.length,
-                                  separatorBuilder: (_, __) => Gap(20),
-                                  itemBuilder: (_, index) {
-                                    PricingModel model = pricingList[index];
-                                    return customPricingCard(
-                                      image:
-                                          model.title == 'Online'
-                                              ? AppImage.online
-                                              : AppImage.offline,
-                                      name: model.title,
-                                      price: '₹${model.price}',
-                                      onTap: () {
-                                        // selectedPricingModel = model;
-                                        // openCheckout(model);
-                                        Navigator.pushNamed(
-                                          context,
-                                          AppPage.payDetailScreen,
+                                : FutureBuilder(
+                                  future: planId(),
+                                  builder: (context, planId) {
+                                    return RefreshIndicator(
+                                      backgroundColor: AppColor.whiteColor,
+                                      color: AppColor.themePrimaryColor,
+                                      elevation: 0,
+                                      onRefresh: onRefresh,
+                                      child: ListView.separated(
+                                        physics:
+                                            AlwaysScrollableScrollPhysics(),
 
-                                          arguments: {'pricingModel': model},
-                                        );
-                                      },
-                                      backgroundColor:
-                                          AppColor.themePrimaryColor,
-                                      child: ListView.builder(
-                                        shrinkWrap: true,
-                                        physics: NeverScrollableScrollPhysics(),
-                                        itemCount: model.services.length,
-                                        itemBuilder: (_, i) {
-                                          return customDoneIconAndText(
-                                            text: model.services[i],
+                                        itemCount: pricingList.length,
+                                        separatorBuilder: (_, __) => Gap(20),
+                                        itemBuilder: (_, index) {
+                                          PricingModel pricingModel =
+                                              pricingList[index];
+
+                                          final isActivePlan =
+                                              pricingModel.id == planId.data;
+
+                                          return customPricingCard(
+                                            buttonText:
+                                                isActivePlan
+                                                    ? 'Active'
+                                                    : 'Choose Plan',
+                                            image:
+                                                pricingModel.title == 'Online'
+                                                    ? AppImage.online
+                                                    : AppImage.offline,
+                                            name: pricingModel.title,
+                                            price: '₹${pricingModel.price}',
+                                            onTap:
+                                                isActivePlan
+                                                    ? () {
+                                                      customInfoToast(
+                                                        context,
+                                                        text:
+                                                            '${pricingModel.title} this plan is active',
+                                                      );
+                                                    }
+                                                    : () {
+                                                      // selectedPricingModel = model;
+                                                      // openCheckout(model);
+                                                      Navigator.pushNamed(
+                                                        context,
+                                                        AppPage.payDetailScreen,
+
+                                                        arguments: {
+                                                          'pricingModel':
+                                                              pricingModel,
+                                                        },
+                                                      );
+                                                    },
+                                            backgroundColor:
+                                                AppColor.themePrimaryColor,
+                                            child: ListView.builder(
+                                              shrinkWrap: true,
+                                              physics:
+                                                  NeverScrollableScrollPhysics(),
+                                              itemCount:
+                                                  pricingModel.services.length,
+                                              itemBuilder: (_, i) {
+                                                return customDoneIconAndText(
+                                                  text:
+                                                      pricingModel.services[i],
+                                                );
+                                              },
+                                            ),
                                           );
                                         },
                                       ),

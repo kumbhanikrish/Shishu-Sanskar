@@ -89,4 +89,8 @@ class EventCubit extends Cubit<EventState> {
       return response;
     }
   }
+
+  void init() {
+    emit(EventInitial());
+  }
 }

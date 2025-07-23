@@ -70,6 +70,10 @@ dependencies:
   package_info_plus: ^8.3.0
   device_info_plus: ^11.5.0
   flutter_local_notifications: ^19.3.0
+  chewie: ^1.12.1
+  youtube_player_flutter: ^9.1.1
+  webview_flutter: ^4.13.0
+  
   
 
   
@@ -84,6 +88,12 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.14.4
+  
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/image/logo/logo.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

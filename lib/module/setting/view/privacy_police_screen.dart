@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
-import 'package:shishu_sanskar/utils/constant/app_image.dart';
 import 'package:shishu_sanskar/utils/theme/colors.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_app_bar.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_bg.dart';
@@ -23,70 +21,86 @@ class PrivacyPolicyScreen extends StatelessWidget {
                   Navigator.pop(context);
                 },
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 10,
-                ),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: <Widget>[
-                      Column(
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              SvgPicture.asset(AppImage.privacyPolicy),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const CustomText(
-                                      text: 'Privacy Policy',
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                    CustomText(
-                                      text:
-                                          "Last updated on October 11, 2023 | Effective from October 11, 2023 ",
-                                      fontSize: 12,
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 10,
+                  ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Row(
+                        //   crossAxisAlignment: CrossAxisAlignment.start,
+                        //   children: <Widget>[
+                        //     SvgPicture.asset(AppImage.privacyPolicy),
+                        //     const SizedBox(width: 12),
+                        //     Expanded(
+                        //       child: const CustomText(
+                        //         text: 'Privacy Policy',
+                        //         fontSize: 20,
+                        //         fontWeight: FontWeight.w600,
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
+                        // Gap(20),
+                        CustomText(
+                          text: """
+This Privacy Policy is meant to help you understand what information we collect, why we collect it, and how you can update, manage, and delete your information.
+Shishusanskar built the Shishusanskar app and website as a freemium service. This SERVICE is provided by Shishusanskar at no cost for basic features and with optional premium services. It is intended for use as is.
+This page is used to inform visitors and users regarding our policies with the collection, use, and disclosure of Personal Information if anyone decides to use our Service.
+If you choose to use our Service, then you agree to the collection and use of information in relation to this policy. The Personal Information that we collect is used for providing and improving the Service. We will not use or share your information with anyone except as described in this Privacy Policy.
+The terms used in this Privacy Policy have the same meanings as in our Terms and Conditions, unless otherwise defined in this Privacy Policy.""",
+                          fontSize: 12,
+                          color: AppColor.subTitleColor,
+                        ),
+                        Gap(10),
 
-                                      color: AppColor.subTitleColor,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          Gap(20),
+                        CustomText(
+                          text: 'Information Collection and Use',
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        Gap(10),
 
-                          CustomText(
-                            text:
-                                "We at Resala (the “Company”, “we”, or “us”) are committed to safeguarding the privacy of our customers. This Privacy Policy entails the way in which your Personal Information or Usage Information will be collected, used, shared, stored, protected or disclosed by our service (including https://resala.ai). This Privacy Policy applies to the mobile application or website developed by us in relation to services provided to you by the Company from time to time (“Services”). By using our Services, you agree to be bound by the terms of this Privacy Policy. If you do not accept the terms of the Privacy Policy, you are directed to discontinue accessing/using our application in any way. We strongly recommend that you read the policy carefully before proceeding with any transaction on our application.",
+                        CustomText(
+                          text: """
+For a better experience while using our Service, we may require you to provide us with certain personally identifiable information, including but not limited to:
+• Full Name
+• Email Address
+• Mobile Number
+• Gender
+• Pregnancy stage or due date
+• App usage patterns and preferences
+The information that we request is retained by us and used as described in this privacy policy.
+The app does use third-party services that may collect information used to identify you.
+                """,
 
-                            fontSize: 12,
-                            color: AppColor.subTitleColor,
-                          ),
-                          Gap(20),
+                          fontSize: 12,
+                          color: AppColor.subTitleColor,
+                        ),
+                        Gap(10),
 
-                          CustomText(
-                            text: 'Why we collect your information?',
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          Gap(20),
+                        CustomText(
+                          text: 'Third-party service providers may include:',
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        Gap(10),
+                        CustomText(
+                          text: """
+• Google Play Services
+• Firebase Analytics
+• Crashlytics
+                """,
 
-                          CustomText(
-                            text:
-                                "We collect information about you for the following general purposes: For registration and to manage your account, including to facilitate your access to and use of our Services; to communicate with you in general, including to provide information about us; to enable us to publish your reviews, forum posts, and other content; to respond to your questions and comments, to prevent potentially prohibited or illegal activities and to enforce our Terms of Use.",
-
-                            fontSize: 12,
-                            color: AppColor.subTitleColor,
-                          ),
-                        ],
-                      ),
-                    ],
+                          fontSize: 12,
+                          color: AppColor.subTitleColor,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

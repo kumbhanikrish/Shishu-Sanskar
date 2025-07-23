@@ -76,6 +76,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     required String marital,
     required String noOfKid,
     required String profileImage,
+    required String lmp,
   }) async {
     Map<String, dynamic> editProfileParams = {
       "first_name": firstName,
@@ -87,6 +88,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       "gender": gender,
       "marital": marital,
       "no_of_kid": noOfKid,
+      "lmp": lmp,
     };
 
     log('profileImage ::$profileImage');
@@ -104,9 +106,10 @@ class ProfileCubit extends Cubit<ProfileState> {
     );
 
     if (response.data['success'] == true) {
+      await localDataSaver.setLmpDate(lmp);
       await localDataSaver.getLoginModel().then((loginModel) {
         loginModel.user.firstName = response.data['data']['first_name'];
-        loginModel.user.middleName = response.data['data']['middle_name'];
+        loginModel.user.middleName = response.data['data']['middle_name'] ?? '';
         loginModel.user.lastName = response.data['data']['last_name'];
         loginModel.user.contactNumber = response.data['data']['contact_number'];
         loginModel.user.whatsappNumber =
@@ -137,6 +140,8 @@ class ProfileCubit extends Cubit<ProfileState> {
       final data = response.data['data'];
 
       userDataModel = UserDataModel.fromJson(data);
+
+      await localDataSaver.setPlanId(userDataModel.currentSubscription.planId);
     }
 
     emit(GetUserDataState(userDataModel: userDataModel));
@@ -151,6 +156,10 @@ class ProfileCubit extends Cubit<ProfileState> {
     if (response.data['success'] == true) {
       return response;
     }
+  }
+
+  init() {
+    emit(ProfileInitial());
   }
 }
 
@@ -182,6 +191,15 @@ class ProfileImageCubit extends Cubit<File?> {
   }
 
   void clearImage() {
+    emit(null);
+  }
+}
+
+class LmpCubit extends Cubit<DateTime?> {
+  LmpCubit() : super(null);
+
+  void selectDate(DateTime date) => emit(date);
+  init() {
     emit(null);
   }
 }

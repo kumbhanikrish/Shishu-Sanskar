@@ -10,7 +10,6 @@ import 'package:shishu_sanskar/module/profile/cubit/profile_cubit.dart';
 import 'package:shishu_sanskar/utils/constant/app_image.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_app_bar.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_bg.dart';
-import 'package:shishu_sanskar/utils/widgets/custom_button.dart';
 
 class LanguagesScreen extends StatefulWidget {
   const LanguagesScreen({super.key});

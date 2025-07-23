@@ -155,6 +155,7 @@ class CustomCountyTextfield extends StatelessWidget {
   final TextEditingController controller;
   final void Function() prefixOnTap;
   final String image;
+  final String hintText;
   final String code;
   final bool? readOnly;
 
@@ -164,12 +165,13 @@ class CustomCountyTextfield extends StatelessWidget {
     required this.prefixOnTap,
     required this.code,
     required this.image,
+    required this.hintText,
     this.readOnly,
   });
   @override
   Widget build(BuildContext context) {
     return CustomTextField(
-      hintText: 'Contact number',
+      hintText: hintText,
       keyboardType: TextInputType.number,
       controller: controller,
       readOnly: readOnly ?? false,

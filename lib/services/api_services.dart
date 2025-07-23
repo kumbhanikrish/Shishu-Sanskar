@@ -33,10 +33,13 @@ class ApiServices {
     BuildContext context,
     String url, {
     bool showSuccessMessage = false,
+    bool showLoading = false,
   }) async {
     log("GET URL: $url");
     try {
-      await EasyLoading.show();
+      if (showLoading) {
+        await EasyLoading.show();
+      }
 
       final response = await dio.get(
         url,
@@ -135,20 +138,16 @@ class ApiServices {
             'lastName': lastName,
           },
         );
+
+        return;
+      } else {
         _handleDioError(
           context,
           e,
           loginEndPoint: AppApi.login,
           showSuccessMessage: showSuccessMessage,
         );
-        return;
       }
-      _handleDioError(
-        context,
-        e,
-        loginEndPoint: AppApi.login,
-        showSuccessMessage: showSuccessMessage,
-      );
     } catch (e) {
       await EasyLoading.dismiss();
 

@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:shishu_sanskar/module/graph/model/daily_report_model.dart';
 import 'package:shishu_sanskar/module/graph/model/monthly_report_model.dart';
 import 'package:shishu_sanskar/module/graph/model/weekly_report_model.dart';
@@ -14,7 +15,12 @@ class GraphCubit extends Cubit<GraphState> {
   GraphRepo graphRepo = GraphRepo();
 
   DailyReportModel dailyReportModel = DailyReportModel(
-    data: DailyData(tasks: 0, completedTasks: 0, pendingTasks: 0),
+    data: DailyData(
+      tasks: 0,
+      completedTasks: 0,
+      pendingTasks: 0,
+      currentSubscriptionDay: 0,
+    ),
     completedTasksList: [],
   );
   WeeklyReportModel weeklyReportModel = WeeklyReportModel(
@@ -124,6 +130,10 @@ class GraphCubit extends Cubit<GraphState> {
       ),
     );
   }
+
+  void init() {
+    emit(GraphInitial());
+  }
 }
 
 class GraphTabCubit extends Cubit<GraphTabState> {
@@ -135,5 +145,17 @@ class GraphTabCubit extends Cubit<GraphTabState> {
 
   init() {
     emit(GraphTabLoaded(tabIndex: 0));
+  }
+}
+
+class SelectedDateCubit extends Cubit<String> {
+  SelectedDateCubit() : super(DateFormat('yyyy-MM-dd').format(DateTime.now()));
+
+  void updateDate(String date) {
+    emit(date);
+  }
+
+  void init() {
+    emit(DateFormat('yyyy-MM-dd').format(DateTime.now()));
   }
 }

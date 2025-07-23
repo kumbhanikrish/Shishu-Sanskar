@@ -8,6 +8,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:shishu_sanskar/all_state_init.dart';
 import 'package:shishu_sanskar/main.dart';
 import 'package:shishu_sanskar/module/auth/model/auth_category_model.dart';
 import 'package:shishu_sanskar/module/auth/model/languages_model.dart';
@@ -69,6 +70,14 @@ class AuthCubit extends Cubit<AuthState> {
     if (response.data['success'] == true) {
       LoginModel loginModel = LoginModel.fromJson(response.data['data']);
       await localDataSaver.setAuthToken(loginModel.token);
+      await localDataSaver.setCategoryId(loginModel.user.categoryId);
+      await localDataSaver.setPlanId(
+        loginModel.user.currentSubscription.planId,
+      );
+      await localDataSaver.setUserUniqueId(loginModel.user.userUniqueId);
+
+      await localDataSaver.setLmpDate(loginModel.user.lmp ?? '');
+      await localDataSaver.setCategoryName(loginModel.user.categoryName);
       await localDataSaver.setLoginData(loginModel);
       Navigator.pushNamedAndRemoveUntil(
         context,
@@ -130,6 +139,14 @@ class AuthCubit extends Cubit<AuthState> {
     if (response.data['success'] == true) {
       LoginModel loginModel = LoginModel.fromJson(response.data['data']);
       await localDataSaver.setAuthToken(loginModel.token);
+      await localDataSaver.setCategoryId(loginModel.user.categoryId);
+      await localDataSaver.setPlanId(
+        loginModel.user.currentSubscription.planId,
+      );
+      await localDataSaver.setUserUniqueId(loginModel.user.userUniqueId);
+
+      await localDataSaver.setLmpDate(loginModel.user.lmp ?? '');
+      await localDataSaver.setCategoryName(loginModel.user.categoryName);
       await localDataSaver.setLoginData(loginModel);
       Navigator.pushNamedAndRemoveUntil(
         context,
@@ -162,8 +179,7 @@ class AuthCubit extends Cubit<AuthState> {
   Future<Response> logout(BuildContext context) async {
     LoginModel loginModel = await localDataSaver.getLoginModel();
 
-    if (loginModel.user.googleToken != null &&
-        loginModel.user.googleToken.isNotEmpty) {
+    if (loginModel.user.googleToken.isNotEmpty) {
       handleGoogleSignOut(context);
     }
     Response response = await authRepo.logout(context, params: {});
@@ -175,6 +191,8 @@ class AuthCubit extends Cubit<AuthState> {
         (route) => false,
       );
       await localDataSaver.setAuthToken('');
+
+      allStateInit(context);
     }
 
     return response;
@@ -514,7 +532,7 @@ class CategoryRadioCubit extends Cubit<int> {
 }
 
 class LanguagesRadioCubit extends Cubit<int> {
-  LanguagesRadioCubit() : super(0);
+  LanguagesRadioCubit() : super(1);
 
   void selectLanguages(int category) {
     log('typetype ::$category');
@@ -522,7 +540,7 @@ class LanguagesRadioCubit extends Cubit<int> {
   }
 
   init() {
-    emit(0);
+    emit(1);
   }
 }
 

@@ -41,4 +41,5 @@ class AppColor {
   static Color borderColor = Color(0xFFCED8E8);
   static Color disLikeColor = Color(0xFF292D32);
   static Color weekColor = Color(0xFF8C90A5);
+  static Color dailyFilterBg = Color(0xFFf2f4f3);
 }

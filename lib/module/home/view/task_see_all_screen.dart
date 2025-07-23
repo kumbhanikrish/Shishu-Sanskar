@@ -4,6 +4,7 @@ import 'package:shishu_sanskar/module/home/view/widget/custom_home_widget.dart';
 import 'package:shishu_sanskar/utils/constant/app_page.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_app_bar.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_bg.dart';
+import 'package:shishu_sanskar/utils/widgets/custom_text.dart';
 import 'package:sizer/sizer.dart';
 
 class TaskSeeAllScreen extends StatelessWidget {
@@ -30,53 +31,61 @@ class TaskSeeAllScreen extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child:
                       title == 'Today task'
-                          ? GridView.builder(
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  mainAxisSpacing: 10,
-                                ),
-                            itemCount: taskList.today.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              Today today = taskList.today[index];
-                              return customCardView(
-                                width: 100.w,
-                                height: 17.h,
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                    context,
-                                    AppPage.taskDetailScreen,
+                          ? taskList.today.isEmpty
+                              ? CustomEmpty()
+                              : GridView.builder(
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      mainAxisSpacing: 10,
+                                    ),
+                                itemCount: taskList.today.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  Today today = taskList.today[index];
+                                  return customCardView(
+                                    width: 100.w,
+                                    height: 17.h,
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                        context,
+                                        AppPage.taskDetailScreen,
+                                        arguments: {'taskDetail': today},
+                                      );
+                                    },
+                                    image: today.image ?? '',
+                                    title: today.category,
                                   );
                                 },
-                                image: today.image ?? '',
-                                title: today.category,
-                              );
-                            },
-                          )
+                              )
                           : title == 'Daily task'
-                          ? GridView.builder(
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  mainAxisSpacing: 10,
-                                ),
-                            itemCount: taskList.daily.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              Today daily = taskList.daily[index];
-                              return customCardView(
-                                width: 100.w,
-                                height: 17.h,
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                    context,
-                                    AppPage.taskDetailScreen,
+                          ? taskList.daily.isEmpty
+                              ? CustomEmpty()
+                              : GridView.builder(
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      mainAxisSpacing: 10,
+                                    ),
+                                itemCount: taskList.daily.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  Today daily = taskList.daily[index];
+                                  return customCardView(
+                                    width: 100.w,
+                                    height: 17.h,
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                        context,
+                                        AppPage.taskDetailScreen,
+                                        arguments: {'taskDetail': daily},
+                                      );
+                                    },
+                                    image: daily.image ?? '',
+                                    title: daily.category,
                                   );
                                 },
-                                image: daily.image ?? '',
-                                title: daily.category,
-                              );
-                            },
-                          )
+                              )
+                          : taskList.weekly.isEmpty
+                          ? CustomEmpty()
                           : GridView.builder(
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
@@ -93,6 +102,7 @@ class TaskSeeAllScreen extends StatelessWidget {
                                   Navigator.pushNamed(
                                     context,
                                     AppPage.taskDetailScreen,
+                                    arguments: {'taskDetail': weekly},
                                   );
                                 },
                                 image: weekly.image ?? '',

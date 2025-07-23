@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:shishu_sanskar/utils/constant/app_image.dart';
 import 'package:shishu_sanskar/utils/theme/colors.dart';
 import 'package:sizer/sizer.dart';
 
@@ -77,7 +78,7 @@ class CustomCachedImage extends StatelessWidget {
               color: Colors.red[100],
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Icon(Icons.error, color: Colors.red),
+            child: Image.asset(AppImage.imageError, fit: BoxFit.cover),
           ),
     );
   }

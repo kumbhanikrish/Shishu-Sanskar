@@ -6,7 +6,10 @@ class TaskModel {
   TaskModel({required this.today, required this.weekly, required this.daily});
 
   factory TaskModel.fromJson(Map<String, dynamic> json) => TaskModel(
-    today: List<Today>.from(json["today"].map((x) => Today.fromJson(x))),
+    today:
+        json["today"] == null
+            ? []
+            : List<Today>.from(json["today"].map((x) => Today.fromJson(x))),
     weekly:
         json["weekly"] == null
             ? []
@@ -52,11 +55,13 @@ class TodayTask {
   final int id;
   final String title;
   final dynamic description;
+  final String shortDescription;
   String status;
   final String type;
 
   TodayTask({
     required this.id,
+    required this.shortDescription,
     required this.title,
     required this.description,
     required this.status,
@@ -66,6 +71,7 @@ class TodayTask {
   factory TodayTask.fromJson(Map<String, dynamic> json) => TodayTask(
     id: json["id"],
     title: json["title"],
+    shortDescription: json["short_description"] ?? '',
     description: json["description"],
     status: json["status"],
     type: json["type"],
@@ -75,6 +81,7 @@ class TodayTask {
     "id": id,
     "title": title,
     "description": description,
+    "short_description": shortDescription,
     "status": status,
     "type": type,
   };

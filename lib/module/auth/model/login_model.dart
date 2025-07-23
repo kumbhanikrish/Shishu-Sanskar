@@ -12,6 +12,7 @@ class LoginModel {
 
 class UserData {
   int id;
+  String userUniqueId;
   String firstName;
   String middleName;
   String lastName;
@@ -25,8 +26,8 @@ class UserData {
   int categoryId;
   int languageId;
   dynamic lmp;
-  dynamic googleToken;
-  dynamic appleToken;
+  String googleToken;
+  String appleToken;
   String fcmToken;
   int isActive;
   dynamic markedForDeletionAt;
@@ -35,15 +36,18 @@ class UserData {
   DateTime updatedAt;
   bool planActive;
   String fullName;
+  String categoryName;
   Subscription currentSubscription;
   List<Subscription> subscriptions;
 
   UserData({
     required this.id,
     required this.firstName,
+    required this.userUniqueId,
     required this.middleName,
     required this.lastName,
     required this.languageId,
+    required this.categoryName,
     required this.profileImage,
     required this.email,
     required this.gender,
@@ -69,11 +73,13 @@ class UserData {
 
   factory UserData.fromJson(Map<String, dynamic> json) => UserData(
     id: json["id"],
+    userUniqueId: json["user_id"] ?? '',
     firstName: json["first_name"] ?? '',
     middleName: json["middle_name"] ?? '',
     lastName: json["last_name"] ?? '',
     profileImage: json["profile_image"] ?? '',
     email: json["email"] ?? '',
+    categoryName: json["category_name"] ?? '',
     gender: json["gender"] ?? '',
     marital: json["marital"] ?? '',
     noOfKid: json["no_of_kid"] ?? 0,
@@ -125,11 +131,13 @@ class UserData {
 
   Map<String, dynamic> toJson() => {
     "id": id,
+    "user_id": userUniqueId,
     "first_name": firstName,
     "middle_name": middleName,
     "last_name": lastName,
     "profile_image": profileImage,
     "email": email,
+    "category_name": categoryName,
     "gender": gender,
     "marital": marital,
     "no_of_kid": noOfKid,

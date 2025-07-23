@@ -1,10 +1,13 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
+import 'package:intl/intl.dart';
+import 'package:shishu_sanskar/main.dart';
 import 'package:shishu_sanskar/module/auth/cubit/auth_cubit.dart';
 import 'package:shishu_sanskar/module/auth/model/login_model.dart';
 import 'package:shishu_sanskar/module/auth/view/widget/custom_login_widget.dart';
@@ -15,17 +18,23 @@ import 'package:shishu_sanskar/utils/theme/colors.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_app_bar.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_bg.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_button.dart';
+import 'package:shishu_sanskar/utils/widgets/custom_dialog.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_text.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_textfield.dart';
 import 'package:sizer/sizer.dart';
 
-class EditProfileScreen extends StatelessWidget {
+class EditProfileScreen extends StatefulWidget {
   final dynamic argument;
   const EditProfileScreen({super.key, required this.argument});
 
   @override
+  State<EditProfileScreen> createState() => _EditProfileScreenState();
+}
+
+class _EditProfileScreenState extends State<EditProfileScreen> {
+  @override
   Widget build(BuildContext context) {
-    LoginModel loginModel = argument['loginModelValue'];
+    LoginModel loginModel = widget.argument['loginModelValue'];
     final TextEditingController numberController = TextEditingController(
       text: loginModel.user.contactNumber,
     );
@@ -44,6 +53,7 @@ class EditProfileScreen extends StatelessWidget {
     final TextEditingController emailController = TextEditingController(
       text: loginModel.user.email,
     );
+    final TextEditingController lmpController = TextEditingController();
     StoreNumberCubit storeNumberCubit = BlocProvider.of<StoreNumberCubit>(
       context,
     );
@@ -63,6 +73,7 @@ class EditProfileScreen extends StatelessWidget {
     RadioCubit radioCubit = BlocProvider.of<RadioCubit>(context);
     CounterCubit counterCubit = BlocProvider.of<CounterCubit>(context);
     ProfileCubit profileCubit = BlocProvider.of<ProfileCubit>(context);
+    LmpCubit lmpCubit = BlocProvider.of<LmpCubit>(context);
     ProfileImageCubit profileImageCubit = BlocProvider.of<ProfileImageCubit>(
       context,
     );
@@ -210,6 +221,103 @@ class EditProfileScreen extends StatelessWidget {
                             prefixImage: AppImage.email,
                             controller: emailController,
                           ),
+
+                          BlocBuilder<RadioCubit, UserType>(
+                            builder: (context, genderSelect) {
+                              return genderSelect == UserType.male
+                                  ? SizedBox()
+                                  : Column(
+                                    children: [
+                                      Gap(20),
+
+                                      FutureBuilder(
+                                        future: planId(),
+                                        builder: (context, snapshot) {
+                                          return FutureBuilder(
+                                            future: lmpDate(),
+                                            builder: (context, lmpDate) {
+                                              return BlocBuilder<
+                                                LmpCubit,
+                                                DateTime?
+                                              >(
+                                                builder: (
+                                                  context,
+                                                  selectedDate,
+                                                ) {
+                                                  // Format the selected date if available
+                                                  final formattedDate =
+                                                      selectedDate != null
+                                                          ? DateFormat(
+                                                            'yyyy-MM-dd',
+                                                          ).format(selectedDate)
+                                                          : lmpDate.data ?? '';
+
+                                                  lmpController.text =
+                                                      formattedDate;
+
+                                                  return CustomTextField(
+                                                    text: 'LMP',
+                                                    fillColor:
+                                                        snapshot.data != 0 &&
+                                                                lmpController
+                                                                    .text
+                                                                    .isNotEmpty
+                                                            ? AppColor
+                                                                .datePickerBk
+                                                            : AppColor
+                                                                .whiteColor,
+                                                    hintText: 'LMP',
+                                                    readOnly: true,
+                                                    onTap:
+                                                        snapshot.data != 0 &&
+                                                                lmpController
+                                                                    .text
+                                                                    .isNotEmpty
+                                                            ? () {}
+                                                            : () {
+                                                              customDatePicker(
+                                                                context,
+                                                                value: [
+                                                                  selectedDate,
+                                                                ],
+                                                                onValueChanged: (
+                                                                  value,
+                                                                ) async {
+                                                                  final pickedDate =
+                                                                      value
+                                                                          .first ??
+                                                                      DateTime.now();
+
+                                                                  lmpCubit
+                                                                      .selectDate(
+                                                                        pickedDate,
+                                                                      );
+
+                                                                  Navigator.pop(
+                                                                    context,
+                                                                  );
+                                                                },
+                                                              );
+                                                            },
+                                                    prefixImage: '',
+                                                    prefixIcon: Icon(
+                                                      CupertinoIcons.calendar,
+                                                      color:
+                                                          AppColor
+                                                              .themeSecondaryColor,
+                                                    ),
+                                                    controller: lmpController,
+                                                  );
+                                                },
+                                              );
+                                            },
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  );
+                            },
+                          ),
                           Gap(20),
 
                           BlocBuilder<StoreNumberCubit, StoreNumberState>(
@@ -228,6 +336,8 @@ class EditProfileScreen extends StatelessWidget {
                                   ),
                                   Gap(10),
                                   CustomCountyTextfield(
+                                    hintText: 'Contact number',
+
                                     image:
                                         numberFlag == ''
                                             ? AppFlag.inn
@@ -262,6 +372,8 @@ class EditProfileScreen extends StatelessWidget {
                                   ),
                                   Gap(10),
                                   CustomCountyTextfield(
+                                    hintText: 'Whatsapp number',
+
                                     code:
                                         wpNumberCode == ''
                                             ? '+91'
@@ -469,6 +581,7 @@ class EditProfileScreen extends StatelessWidget {
                                       : loginModel.user.profileImage;
                               profileCubit.editProfile(
                                 context,
+                                lmp: lmpController.text.trim(),
                                 firstName: firstNameController.text.trim(),
                                 middleName: middleNameController.text.trim(),
                                 lastName: lastNameController.text.trim(),

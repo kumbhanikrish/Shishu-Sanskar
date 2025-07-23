@@ -216,18 +216,18 @@ class _AuthScreenState extends State<AuthScreen> {
                                 return;
                               }
 
-                              if (wpNumberCode == '+91') {
-                                if (wpNumber.isEmpty) {
-                                  customErrorToast(
-                                    context,
-                                    text: 'Please enter your whatsapp number',
-                                  );
-                                  return;
-                                }
-                              }
+                              // if (wpNumberCode == '+91') {
+                              //   if (wpNumber.isEmpty) {
+                              //     customErrorToast(
+                              //       context,
+                              //       text: 'Please enter your whatsapp number',
+                              //     );
+                              //     return;
+                              //   }
+                              // }
                               await authCubit.sendOtp(
                                 context,
-                                mobile: wpNumberController.text.trim(),
+                                mobile: numberController.text.trim(),
                                 passwordVisibilityCubit:
                                     passwordVisibilityCubit,
                                 resend: false,
@@ -269,14 +269,16 @@ class _AuthScreenState extends State<AuthScreen> {
             builder: (context, languagesSelect) {
               return SelectLanguagesScreen(
                 onTap: () {
-                  if (languagesSelect == 0) {
+                  log('languagesSelectlanguagesSelect ::$languagesSelect');
+                  if (languagesSelect == 1) {
                     customErrorToast(
                       context,
-                      text: 'Please enter your Languages',
+                      text: 'Please Select your Languages',
                     );
                     return;
+                  } else {
+                    stepperCubit.nextStep(step: 3);
                   }
-                  stepperCubit.nextStep(step: 3);
                 },
                 backOnTap: () {
                   passwordVisibilityCubit.init();
@@ -304,15 +306,18 @@ class _AuthScreenState extends State<AuthScreen> {
 
                                 return;
                               }
-                              if ((selectedCategory == 2 ||
-                                      selectedCategory == 3) &&
-                                  selectDate == null) {
-                                customErrorToast(
-                                  context,
-                                  text: 'Please select LMP date',
-                                );
 
-                                return;
+                              if (selectedType == UserType.female) {
+                                if ((selectedCategory == 2 ||
+                                        selectedCategory == 3) &&
+                                    selectDate == null) {
+                                  customErrorToast(
+                                    context,
+                                    text: 'Please select LMP date',
+                                  );
+
+                                  return;
+                                }
                               }
                               authCubit.register(
                                 context,

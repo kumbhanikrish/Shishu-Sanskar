@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:intl/intl.dart';
+import 'package:shishu_sanskar/module/graph/model/daily_report_model.dart';
 import 'package:shishu_sanskar/module/graph/model/weekly_report_model.dart';
 
 Future<String?> getCityName() async {
@@ -128,4 +130,21 @@ String _monthName(int month) {
     'Dec',
   ];
   return months[month - 1];
+}
+
+List<DailyDateModel> generatePastDaysModel(int count) {
+  final now = DateTime.now();
+  List<DailyDateModel> days = [];
+
+  for (int i = 0; i < count; i++) {
+    final date = now.subtract(Duration(days: count - i - 1));
+    final formattedDate = DateFormat('yyyy-MM-dd').format(date);
+    final dayName = DateFormat('EEE').format(date); // e.g., Mon, Tue
+
+    days.add(
+      DailyDateModel(index: i + 1, date: formattedDate, dayName: dayName),
+    );
+  }
+
+  return days;
 }

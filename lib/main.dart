@@ -12,6 +12,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shishu_sanskar/local_data/local_data_sever.dart';
 import 'package:shishu_sanskar/module/auth/cubit/auth_cubit.dart';
+import 'package:shishu_sanskar/module/auth/model/login_model.dart';
 import 'package:shishu_sanskar/module/blog/cubit/blog_cubit.dart';
 import 'package:shishu_sanskar/module/graph/cubit/graph_cubit.dart';
 import 'package:shishu_sanskar/module/home/cubit/event/event_cubit.dart';
@@ -37,6 +38,25 @@ void configLoading() {
     ..userInteractions = false
     ..loadingStyle = EasyLoadingStyle.custom
     ..dismissOnTap = false;
+}
+
+Future<LoginModel> loginData() async {
+  LoginModel loginModel = await localDataSaver.getLoginModel();
+  return loginModel;
+}
+
+Future<int> planId() async {
+  int planId = await localDataSaver.getPlanId();
+  return planId;
+}
+
+Future<String> lmpDate() async {
+  String lmpDate = await localDataSaver.getLmpDate();
+  return lmpDate;
+}
+Future<String> categoryName() async {
+  String lmpDate = await localDataSaver.getCategoryName();
+  return lmpDate;
 }
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -172,6 +192,7 @@ dynamic providers = [
   BlocProvider(create: (context) => MaritalRadioCubit()),
   BlocProvider(create: (context) => CounterCubit()),
   BlocProvider(create: (context) => ProfileCubit()),
+  BlocProvider(create: (context) => LmpCubit()),
 
   BlocProvider(create: (context) => VerifiedNumber()),
   BlocProvider(create: (context) => VerifiedWNumber()),
@@ -191,4 +212,5 @@ dynamic providers = [
   BlocProvider(create: (context) => TaskCubit()),
   BlocProvider(create: (context) => GraphCubit()),
   BlocProvider(create: (context) => LanguagesRadioCubit()),
+  BlocProvider(create: (context) => SelectedDateCubit()),
 ];
