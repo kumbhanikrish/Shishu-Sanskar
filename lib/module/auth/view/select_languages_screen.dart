@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -70,6 +72,14 @@ class SelectLanguagesScreenState extends State<SelectLanguagesScreen> {
                       builder: (context, state) {
                         if (state is LanguagesState) {
                           languagesList = state.languagesList;
+
+                          log('selectedLanguages ::$selectedLanguages');
+                          if (selectedLanguages == -1 &&
+                              languagesList.isNotEmpty) {
+                            context.read<LanguagesRadioCubit>().selectLanguages(
+                              languagesList.first.id,
+                            );
+                          }
                         }
                         return ListView.separated(
                           shrinkWrap: true,

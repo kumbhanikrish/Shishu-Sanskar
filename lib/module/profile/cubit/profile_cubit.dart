@@ -77,6 +77,10 @@ class ProfileCubit extends Cubit<ProfileState> {
     required String noOfKid,
     required String profileImage,
     required String lmp,
+    required String country,
+    required String address,
+    required String city,
+    required String cityState,
   }) async {
     Map<String, dynamic> editProfileParams = {
       "first_name": firstName,
@@ -89,6 +93,10 @@ class ProfileCubit extends Cubit<ProfileState> {
       "marital": marital,
       "no_of_kid": noOfKid,
       "lmp": lmp,
+      "address": address,
+      "city": city,
+      "state": cityState,
+      "country": country,
     };
 
     log('profileImage ::$profileImage');
@@ -121,6 +129,9 @@ class ProfileCubit extends Cubit<ProfileState> {
 
         loginModel.user.profileImage =
             response.data['data']['profile_image'] ?? ' ';
+        loginModel.user.city = response.data['data']['city'] ?? ' ';
+        loginModel.user.state = response.data['data']['state'] ?? ' ';
+        loginModel.user.country = response.data['data']['country'] ?? ' ';
 
         localDataSaver.setLoginData(loginModel);
       });

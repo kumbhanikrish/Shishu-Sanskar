@@ -6,6 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:shishu_sanskar/main.dart';
+import 'package:path_provider/path_provider.dart';
+
 import 'package:shishu_sanskar/module/auth/cubit/auth_cubit.dart';
 import 'package:shishu_sanskar/module/blog/cubit/blog_cubit.dart';
 import 'package:shishu_sanskar/module/home/cubit/home_cubit.dart';
@@ -16,10 +18,8 @@ import 'package:shishu_sanskar/utils/widgets/custom_button.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_image.dart';
 import 'package:shishu_sanskar/utils/widgets/custom_text.dart';
 import 'package:sizer/sizer.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
-import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -377,14 +377,26 @@ class _ChewieVideoPlayerState extends State<ChewieVideoPlayer> {
   Widget build(BuildContext context) {
     if (_chewieController == null ||
         !_videoPlayerController.value.isInitialized) {
-      return const Center(child: CircularProgressIndicator());
+      return Center(
+        child: SizedBox(
+          height: 20,
+          width: 20,
+          child: CircularProgressIndicator(
+            color: AppColor.themeSecondaryColor,
+            strokeWidth: 0.5,
+          ),
+        ),
+      );
     }
 
     return SizedBox(
-      height: 50.h,
-      child: AspectRatio(
-        aspectRatio: _videoPlayerController.value.aspectRatio,
-        child: Chewie(controller: _chewieController!),
+      height: 30.h,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: AspectRatio(
+          aspectRatio: _videoPlayerController.value.aspectRatio,
+          child: Chewie(controller: _chewieController!),
+        ),
       ),
     );
   }
@@ -466,10 +478,26 @@ class _ChewieVideoPlayerState extends State<ChewieVideoPlayer> {
 //   }
 // }
 
+Future<String> downloadAudio(String url) async {
+  log('urlurl ::$url');
+  // get cache directory
+  final dir = await getTemporaryDirectory();
+  final filePath = "${dir.path}/sample.mp3";
+
+  // download file with Dio
+
+  return filePath; // return local path
+}
+
 class CustomAudioPlayer extends StatefulWidget {
   final String audioUrl;
+  final bool downloadAudioPath;
 
-  const CustomAudioPlayer({super.key, required this.audioUrl});
+  const CustomAudioPlayer({
+    super.key,
+    required this.audioUrl,
+    this.downloadAudioPath = false,
+  });
 
   @override
   State<CustomAudioPlayer> createState() => _CustomAudioPlayerState();
@@ -484,7 +512,9 @@ class _CustomAudioPlayerState extends State<CustomAudioPlayer> {
   @override
   void initState() {
     super.initState();
-
+    if (widget.downloadAudioPath) {
+      downloadAudio(widget.audioUrl);
+    }
     // Listen for duration updates
     _player.onDurationChanged.listen((Duration d) {
       setState(() => _duration = d);
@@ -504,25 +534,47 @@ class _CustomAudioPlayerState extends State<CustomAudioPlayer> {
     });
   }
 
-  void _togglePlayPause() async {
+  Future<void> _togglePlayPause() async {
     if (isPlaying) {
       await _player.pause();
+      setState(() => isPlaying = false);
     } else {
-      await _player.play(UrlSource(widget.audioUrl));
+      try {
+        if (widget.downloadAudioPath) {
+          // Download once, reuse later
+          final localPath = await downloadAudio(widget.audioUrl);
+          log('Playing from local file: $localPath');
+
+          await _player.play(UrlSource(localPath, mimeType: "audio/mpeg"));
+        } else {
+          log('Playing from URL: ${widget.audioUrl}');
+          await _player.play(
+            UrlSource(widget.audioUrl, mimeType: "audio/mpeg"),
+          );
+        }
+
+        setState(() => isPlaying = true);
+      } catch (e) {
+        log("Audio play error: $e");
+        setState(() => isPlaying = false);
+      }
     }
-    setState(() => isPlaying = !isPlaying);
   }
 
-  void _stop() async {
-    await _player.stop();
+  Future<void> _stop() async {
+    try {
+      await _player.stop();
+    } catch (e) {
+      log("Audio stop error: $e");
+    }
     setState(() {
       isPlaying = false;
       _position = Duration.zero;
     });
   }
-
+ 
   void _seekTo(double value) {
-    final position = Duration(seconds: value.toInt());
+    final position = Duration(seconds: value.toInt());    
     _player.seek(position);
   }
 

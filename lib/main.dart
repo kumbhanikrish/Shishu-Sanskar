@@ -54,6 +54,7 @@ Future<String> lmpDate() async {
   String lmpDate = await localDataSaver.getLmpDate();
   return lmpDate;
 }
+
 Future<String> categoryName() async {
   String lmpDate = await localDataSaver.getCategoryName();
   return lmpDate;
@@ -67,94 +68,115 @@ LocalDataSaver localDataSaver = LocalDataSaver();
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
-
-void main() async {
-  await dotenv.load();
-  WidgetsFlutterBinding.ensureInitialized();
-  await SharedPreferences.getInstance();
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
+  log("Handling background message: ${message.messageId}");
+  showNotification(message);
+}
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load();
+  await Firebase.initializeApp();
+  await SharedPreferences.getInstance();
+
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  await FirebaseMessaging.instance.requestPermission();
+
+  NotificationSettings settings =
+      await FirebaseMessaging.instance.requestPermission();
+  log('🔔 Notification permission status: ${settings.authorizationStatus}');
+
   const AndroidInitializationSettings initializationSettingsAndroid =
       AndroidInitializationSettings('@mipmap/ic_launcher');
+
   const InitializationSettings initializationSettings = InitializationSettings(
     android: initializationSettingsAndroid,
   );
+
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
   runApp(const MyApp());
   configLoading();
 }
 
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
-  log("Handling background message: ${message.messageId}");
-
-  showNotification(message);
-}
-
 void showNotification(RemoteMessage message) async {
-  const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
-    'channel_id',
-    'channel_name',
+  const AndroidNotificationChannel channel = AndroidNotificationChannel(
+    'high_importance_channel',
+    'High Importance Notifications',
+    description: 'This channel is used for important notifications.',
+    importance: Importance.max,
+  );
+
+  await flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin
+      >()
+      ?.createNotificationChannel(channel);
+
+  final androidDetails = AndroidNotificationDetails(
+    channel.id,
+    channel.name,
+    channelDescription: channel.description,
     importance: Importance.max,
     priority: Priority.high,
+    icon: '@mipmap/ic_launcher',
   );
 
-  const NotificationDetails platformDetails = NotificationDetails(
-    android: androidDetails,
-  );
+  final platformDetails = NotificationDetails(android: androidDetails);
 
   await flutterLocalNotificationsPlugin.show(
     0,
-    message.notification?.title ?? 'No Title',
-    message.notification?.body ?? 'No Body',
+    message.notification?.title ?? message.data['title'] ?? 'No Title',
+    message.notification?.body ?? message.data['body'] ?? 'No Body',
     platformDetails,
   );
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       bool notificationsEnabled =
           await localDataSaver.getNotificationsEnabled();
+      log('📲 Foreground message received $notificationsEnabled');
 
       if (notificationsEnabled == true) {
-        log('notificationsEnablednotificationsEnabled ::$notificationsEnabled');
+        log('📢 Notifications enabled, displaying notification');
         showNotification(message);
       }
     });
-    handleMessageNavigation(RemoteMessage message) {
-      final screen = message.data['screen'];
 
-      log('screen');
-      // if (screen == 'offers') {
-      //   navigatorKey.currentState?.pushNamed('/offersScreen');
-      // } else if (screen == 'profile') {
-      //   navigatorKey.currentState?.pushNamed('/profileScreen');
-      // }
+    void handleMessageNavigation(RemoteMessage message) {
+      final screen = message.data['screen'];
+      log('🔁 Navigating to screen from notification: $screen');
+
+      if (screen == 'offers') {
+        navigatorKey.currentState?.pushNamed('/offersScreen');
+      } else if (screen == 'profile') {
+        navigatorKey.currentState?.pushNamed('/profileScreen');
+      }
     }
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      log('🔁 App opened from background via notification');
+      log('🟢 App opened from background notification');
       handleMessageNavigation(message);
     });
+
     return Sizer(
       builder: (context, orientation, deviceType) {
         return MultiBlocProvider(
           providers: providers,
           child: MaterialApp(
             navigatorKey: navigatorKey,
-
             debugShowCheckedModeBanner: false,
             title: 'Flutter Demo',
             theme: ThemeData(
-              dialogTheme: DialogThemeData(
+              dialogTheme: DialogTheme(
                 backgroundColor: AppColor.whiteColor,
                 surfaceTintColor: AppColor.whiteColor,
               ),
-
               appBarTheme: AppBarTheme(
                 backgroundColor: AppColor.whiteColor,
                 surfaceTintColor: AppColor.whiteColor,
@@ -193,7 +215,6 @@ dynamic providers = [
   BlocProvider(create: (context) => CounterCubit()),
   BlocProvider(create: (context) => ProfileCubit()),
   BlocProvider(create: (context) => LmpCubit()),
-
   BlocProvider(create: (context) => VerifiedNumber()),
   BlocProvider(create: (context) => VerifiedWNumber()),
   BlocProvider(create: (context) => ReasonCubit()),

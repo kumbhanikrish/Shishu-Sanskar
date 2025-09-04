@@ -1,13 +1,11 @@
 // graph_screen.dart
 
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'package:shishu_sanskar/main.dart';
 import 'package:shishu_sanskar/module/graph/cubit/graph_cubit.dart';
 import 'package:shishu_sanskar/module/graph/model/daily_report_model.dart';
 import 'package:shishu_sanskar/module/graph/model/graph_tab_model.dart';

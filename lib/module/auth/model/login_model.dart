@@ -37,6 +37,9 @@ class UserData {
   bool planActive;
   String fullName;
   String categoryName;
+  String city;
+  String state;
+  String country;
   Subscription currentSubscription;
   List<Subscription> subscriptions;
 
@@ -49,6 +52,9 @@ class UserData {
     required this.languageId,
     required this.categoryName,
     required this.profileImage,
+    required this.city,
+    required this.state,
+    required this.country,
     required this.email,
     required this.gender,
     required this.marital,
@@ -82,6 +88,9 @@ class UserData {
     categoryName: json["category_name"] ?? '',
     gender: json["gender"] ?? '',
     marital: json["marital"] ?? '',
+    city: json["city"] ?? '',
+    state: json["state"] ?? '',
+    country: json["country"] ?? '',
     noOfKid: json["no_of_kid"] ?? 0,
     languageId: json["language_id"] ?? 0,
     contactNumber: json["contact_number"] ?? '',
@@ -140,6 +149,9 @@ class UserData {
     "category_name": categoryName,
     "gender": gender,
     "marital": marital,
+    "state": state,
+    "city": city,
+    "country": country,
     "no_of_kid": noOfKid,
     "contact_number": contactNumber,
     "whatsapp_number": whatsappNumber,

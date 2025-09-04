@@ -393,7 +393,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
                                 context,
                                 index: 3,
                                 currentIndex: state,
-                                icon: AppImage.pricing, 
+                                icon: AppImage.pricing,
                                 label: "Pricing",
                               ),
 

@@ -270,7 +270,7 @@ class _AuthScreenState extends State<AuthScreen> {
               return SelectLanguagesScreen(
                 onTap: () {
                   log('languagesSelectlanguagesSelect ::$languagesSelect');
-                  if (languagesSelect == 1) {
+                  if (languagesSelect == -1) {
                     customErrorToast(
                       context,
                       text: 'Please Select your Languages',

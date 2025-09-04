@@ -80,47 +80,58 @@ class _PlanHistoryScreenState extends State<PlanHistoryScreen> {
                                   children: [
                                     Expanded(
                                       child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           SvgPicture.asset(AppImage.online),
                                           Gap(10),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              CustomText(
-                                                text:
-                                                    subscription.plan?.title ??
-                                                    '',
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-
-                                              CustomText(
-                                                text: DateFormat(
-                                                  'dd MMM yyyy',
-                                                ).format(
-                                                  subscription
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                CustomText(
+                                                  text:
+                                                      subscription
                                                           .plan
-                                                          ?.createdAt ??
-                                                      DateTime.now(),
+                                                          ?.title ??
+                                                      '',
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600,
                                                 ),
-                                                fontSize: 12,
-                                                color: AppColor.subTitleColor,
-                                              ),
-                                            ],
+
+                                                CustomText(
+                                                  text: DateFormat(
+                                                    'dd MMM yyyy',
+                                                  ).format(
+                                                    subscription
+                                                            .plan
+                                                            ?.createdAt ??
+                                                        DateTime.now(),
+                                                  ),
+                                                  fontSize: 12,
+                                                  color: AppColor.subTitleColor,
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ],
                                       ),
                                     ),
+                                    Gap(10),
                                     Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        CustomText(
-                                          text: '₹${subscription.plan?.price}',
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w600,
-                                          color: AppColor.themePrimaryColor,
+                                        SizedBox(
+                                          width: 100,
+                                          child: CustomText(
+                                            text:
+                                                '₹${subscription.plan?.price}',
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w600,
+                                            color: AppColor.themePrimaryColor,
+                                          ),
                                         ),
                                         Container(
                                           decoration: BoxDecoration(

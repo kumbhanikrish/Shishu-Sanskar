@@ -14,6 +14,7 @@ import 'package:shishu_sanskar/module/auth/model/auth_category_model.dart';
 import 'package:shishu_sanskar/module/auth/model/languages_model.dart';
 import 'package:shishu_sanskar/module/auth/model/login_model.dart';
 import 'package:shishu_sanskar/module/auth/repo/auth_repo.dart';
+import 'package:shishu_sanskar/services/api_services.dart';
 import 'package:shishu_sanskar/utils/constant/app_page.dart';
 import 'package:shishu_sanskar/utils/enum/enums.dart';
 import 'package:shishu_sanskar/utils/formatter/format.dart';
@@ -168,6 +169,9 @@ class AuthCubit extends Cubit<AuthState> {
     Response response = await authRepo.sendOtp(context, params: sendOtpParams);
 
     if (response.data['success'] == true) {
+      await localDataSaver.setVerificationId(
+        response.data['data'].isNotEmpty ? response.data['data'] : '',
+      );
       if (!resend) {
         passwordVisibilityCubit.toggleVisibility();
       }
@@ -310,7 +314,12 @@ class AuthCubit extends Cubit<AuthState> {
     required VerifiedNumber verifiedNumber,
     required VerifiedWNumber verifiedWNumber,
   }) async {
-    Map<String, dynamic> sendOtpParams = {"otp": opt, 'mobile': mobile};
+    String verificationId = await dataSaver.getVerificationId();
+    Map<String, dynamic> sendOtpParams = {
+      "otp": opt,
+      'mobile': mobile,
+      'verificationId': verificationId,
+    };
 
     Response response = await authRepo.verifyOtp(
       context,
@@ -532,7 +541,7 @@ class CategoryRadioCubit extends Cubit<int> {
 }
 
 class LanguagesRadioCubit extends Cubit<int> {
-  LanguagesRadioCubit() : super(1);
+  LanguagesRadioCubit() : super(-1);
 
   void selectLanguages(int category) {
     log('typetype ::$category');
@@ -540,7 +549,7 @@ class LanguagesRadioCubit extends Cubit<int> {
   }
 
   init() {
-    emit(1);
+    emit(-1);
   }
 }
 

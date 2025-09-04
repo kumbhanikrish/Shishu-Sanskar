@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -82,8 +84,14 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
 
                       Widget descriptionWidget;
 
+                      log('dfdfg ::${description.toString()}');
                       switch (type) {
                         case 'audio_url':
+                          descriptionWidget = CustomAudioPlayer(
+                            audioUrl: description.toString(),
+                            downloadAudioPath: true,
+                          );
+                          break;
                         case 'web_url':
                           final Uri url = Uri.parse(description.toString());
                           descriptionWidget = GestureDetector(

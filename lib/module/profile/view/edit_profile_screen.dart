@@ -12,6 +12,7 @@ import 'package:shishu_sanskar/module/auth/cubit/auth_cubit.dart';
 import 'package:shishu_sanskar/module/auth/model/login_model.dart';
 import 'package:shishu_sanskar/module/auth/view/widget/custom_login_widget.dart';
 import 'package:shishu_sanskar/module/profile/cubit/profile_cubit.dart';
+import 'package:shishu_sanskar/module/profile/view/country_state_city_select.dart';
 import 'package:shishu_sanskar/utils/constant/app_image.dart';
 import 'package:shishu_sanskar/utils/enum/enums.dart';
 import 'package:shishu_sanskar/utils/theme/colors.dart';
@@ -32,9 +33,15 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
+  final TextEditingController countryController = TextEditingController();
+  final TextEditingController stateController = TextEditingController();
+  final TextEditingController cityController = TextEditingController();
+  final TextEditingController addressController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     LoginModel loginModel = widget.argument['loginModelValue'];
+
+    log('loginModel.user.country ::${loginModel.user.state}');
     final TextEditingController numberController = TextEditingController(
       text: loginModel.user.contactNumber,
     );
@@ -505,6 +512,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           ),
 
                           Gap(10),
+                          CustomTextField(
+                            hintText: 'Enter Address',
+                            text: 'Address',
+                            controller: addressController,
+                            line: 4,
+                          ),
+                          Gap(10),
+                          LocationPicker(
+                            countryController: countryController,
+                            stateController: stateController,
+                            cityController: cityController,
+                            city: loginModel.user.city,
+                            state: loginModel.user.state,
+                            country: loginModel.user.country,
+                          ),
+                          Gap(10),
                           BlocBuilder<MaritalRadioCubit, MaritalType>(
                             builder: (context, selectedType) {
                               return selectedType == MaritalType.single
@@ -579,6 +602,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   pickedImagePath.isNotEmpty
                                       ? pickedImagePath
                                       : loginModel.user.profileImage;
+
+                              log('imageToUpload ::${countryController.text}');
                               profileCubit.editProfile(
                                 context,
                                 lmp: lmpController.text.trim(),
@@ -600,6 +625,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 noOfKid: counterCubit.state.toString(),
 
                                 profileImage: imageToUpload,
+                                address: addressController.text.trim(),
+                                city: cityController.text.trim(),
+                                cityState: stateController.text.trim(),
+                                country: countryController.text.trim(),
                               );
                             },
                           ),

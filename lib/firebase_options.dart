@@ -41,48 +41,48 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBYsDkd7RwTUiFn7YtwdiSNm_Exdw9PCV0',
-    appId: '1:392298455531:web:ba3d1fab736edb7756f9ae',
-    messagingSenderId: '392298455531',
-    projectId: 'shishu-sanskar-app',
-    authDomain: 'shishu-sanskar-app.firebaseapp.com',
-    storageBucket: 'shishu-sanskar-app.firebasestorage.app',
-    measurementId: 'G-KF8CF8E2B9',
+    apiKey: 'AIzaSyDkdxITf2KApo2duKjrd99m0IBsjROGCI0',
+    appId: '1:347680811790:web:96c6ddf3ade1263152055f',
+    messagingSenderId: '347680811790',
+    projectId: 'shishu-sanskar-7a4e6',
+    authDomain: 'shishu-sanskar-7a4e6.firebaseapp.com',
+    storageBucket: 'shishu-sanskar-7a4e6.firebasestorage.app',
+    measurementId: 'G-YN75MQJR1K',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDvqWSNqzgtRfQuEEiAy4Q9eQXTK1CakNc',
-    appId: '1:392298455531:android:7c7a56e09418bf3e56f9ae',
-    messagingSenderId: '392298455531',
-    projectId: 'shishu-sanskar-app',
-    storageBucket: 'shishu-sanskar-app.firebasestorage.app',
+    apiKey: 'AIzaSyAyZYMyncnvDt4UCnXHj_c4POysmoQItAQ',
+    appId: '1:347680811790:android:02cf082025c20f7a52055f',
+    messagingSenderId: '347680811790',
+    projectId: 'shishu-sanskar-7a4e6',
+    storageBucket: 'shishu-sanskar-7a4e6.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCPUBSDzHDyNVZc0U0lJdbjiwFvWICdIZw',
-    appId: '1:392298455531:ios:dd23ab48327d225456f9ae',
-    messagingSenderId: '392298455531',
-    projectId: 'shishu-sanskar-app',
-    storageBucket: 'shishu-sanskar-app.firebasestorage.app',
+    apiKey: 'AIzaSyA6R1GEjSfyWvPPgjntFCAGRgL5t5ayueE',
+    appId: '1:347680811790:ios:4a64072824c74b4b52055f',
+    messagingSenderId: '347680811790',
+    projectId: 'shishu-sanskar-7a4e6',
+    storageBucket: 'shishu-sanskar-7a4e6.firebasestorage.app',
     iosBundleId: 'com.example.shishuSanskar',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyCPUBSDzHDyNVZc0U0lJdbjiwFvWICdIZw',
-    appId: '1:392298455531:ios:dd23ab48327d225456f9ae',
-    messagingSenderId: '392298455531',
-    projectId: 'shishu-sanskar-app',
-    storageBucket: 'shishu-sanskar-app.firebasestorage.app',
+    apiKey: 'AIzaSyA6R1GEjSfyWvPPgjntFCAGRgL5t5ayueE',
+    appId: '1:347680811790:ios:4a64072824c74b4b52055f',
+    messagingSenderId: '347680811790',
+    projectId: 'shishu-sanskar-7a4e6',
+    storageBucket: 'shishu-sanskar-7a4e6.firebasestorage.app',
     iosBundleId: 'com.example.shishuSanskar',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyBYsDkd7RwTUiFn7YtwdiSNm_Exdw9PCV0',
-    appId: '1:392298455531:web:1cbebe671683e3ee56f9ae',
-    messagingSenderId: '392298455531',
-    projectId: 'shishu-sanskar-app',
-    authDomain: 'shishu-sanskar-app.firebaseapp.com',
-    storageBucket: 'shishu-sanskar-app.firebasestorage.app',
-    measurementId: 'G-XY4T83EQBQ',
+    apiKey: 'AIzaSyDkdxITf2KApo2duKjrd99m0IBsjROGCI0',
+    appId: '1:347680811790:web:4c2d93c82ba9775652055f',
+    messagingSenderId: '347680811790',
+    projectId: 'shishu-sanskar-7a4e6',
+    authDomain: 'shishu-sanskar-7a4e6.firebaseapp.com',
+    storageBucket: 'shishu-sanskar-7a4e6.firebasestorage.app',
+    measurementId: 'G-KTJZ4PJ0EQ',
   );
 }

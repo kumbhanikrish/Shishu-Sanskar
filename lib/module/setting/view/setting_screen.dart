@@ -243,19 +243,24 @@ class _SettingScreenState extends State<SettingScreen> {
                                                   fontWeight: FontWeight.w600,
                                                 ),
                                               )
-                                              : CustomText(
-                                                text:
-                                                    userDataModel
-                                                        .currentSubscription
-                                                        .plan
-                                                        ?.title ??
-                                                    '',
+                                              : SizedBox(
+                                                width: 200,
+                                                child: CustomText(
+                                                  textAlign: TextAlign.right,
+                                                  text:
+                                                      userDataModel
+                                                          .currentSubscription
+                                                          .plan
+                                                          ?.title ??
+                                                      '',
 
-                                                color:
-                                                    AppColor
-                                                        .themeSecondaryColor,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w600,
+                                                  color:
+                                                      AppColor
+                                                          .themeSecondaryColor,
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w600,
+                                                  overflow: true,
+                                                ),
                                               ),
                                       onTap: () {},
                                     );

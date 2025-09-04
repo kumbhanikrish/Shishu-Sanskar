@@ -35,7 +35,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   shared_preferences: ^2.5.3
-  animated_snack_bar: ^0.4.0
+  animated_snack_bar: 
   dio: ^5.8.0+1
   flutter_easyloading: ^3.0.5
   flutter_dotenv: ^5.2.1
@@ -73,6 +73,10 @@ dependencies:
   chewie: ^1.12.1
   youtube_player_flutter: ^9.1.1
   webview_flutter: ^4.13.0
+  # flutter_windowmanager: ^0.2.0
+  csc_picker_plus: ^0.0.3
+  path_provider: ^2.1.5
+  # flutter_windowmanager: ^0.2.0
   
   
 
